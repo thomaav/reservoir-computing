@@ -1,0 +1,7 @@
+*.log
+*.pdf
+*latexmk*
+*.dvi
+*.aux
+_region_.tex
+*.fls
