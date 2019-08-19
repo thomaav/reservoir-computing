@@ -5,3 +5,5 @@
 *.aux
 _region_.tex
 *.fls
+*.blg
+*.bbl
