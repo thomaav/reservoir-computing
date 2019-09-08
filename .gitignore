@@ -9,3 +9,4 @@ _region_.tex
 *.bbl
 *.fmt
 *_region_*
+*~.lock*
