@@ -10,3 +10,4 @@ _region_.tex
 *.fmt
 *_region_*
 *~.lock*
+.tex
