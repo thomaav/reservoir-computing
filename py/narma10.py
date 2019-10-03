@@ -158,8 +158,14 @@ noise_stddev = 0.0
 # print("noise_u average power:", noise_u_avg_power)
 
 
-def evaluate_esn(esn, u, y):
+def evaluate_esn(esn, u, y, plot=False):
     y_predicted = esn(u)
+
+    if plot:
+        plt.plot(y[0, :, 0], 'black', linestyle='dashed')
+        plt.plot(y_predicted[0, :, 0], 'green')
+        plt.show()
+
     mse = echotorch.utils.mse(y_predicted, y)
     nrmse = echotorch.utils.nrmse(y_predicted, y)
     return mse, nrmse
@@ -198,9 +204,6 @@ def explore_input_connectivity():
 
         input_connectivity += 1
 
-    print(nrmse_list)
-    print(np.mean(nrmse_list, axis=1))
-
     plt.plot(np.mean(nrmse_list, axis=1))
     plt.show()
 
@@ -237,9 +240,6 @@ def explore_output_connectivity():
             nrmse_list[i].append(nrmse)
 
         output_connectivity += 1
-
-    print(nrmse_list)
-    print(np.mean(nrmse_list, axis=1))
 
     plt.plot(np.mean(nrmse_list, axis=1))
     plt.xlabel('Output connectivity')
