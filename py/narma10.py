@@ -31,33 +31,12 @@ import matplotlib.pyplot as plt
 from scipy import stats
 import tqdm
 
-train_sample_length = 3000
-test_sample_length = 2000
-n_train_samples = 1
-n_test_samples = 1
-
 use_cuda = False
 use_cuda = torch.cuda.is_available() if use_cuda else False
 
 # Manual seed for now.
 # np.random.seed(2)
 # torch.manual_seed(1)
-
-narma10_train_dataset = NARMADataset(train_sample_length, n_train_samples, system_order=10)
-narma10_test_dataset = NARMADataset(test_sample_length, n_test_samples, system_order=10)
-
-trainloader = DataLoader(narma10_train_dataset, shuffle=False, num_workers=2)
-testloader = DataLoader(narma10_test_dataset, shuffle=False, num_workers=2)
-
-dataiter = iter(trainloader)
-train_u, train_y = dataiter.next()
-train_u, train_y = Variable(train_u), Variable(train_y)
-if use_cuda: train_u, train_y = train_u.cuda(), train_y.cuda()
-
-dataiter = iter(testloader)
-test_u, test_y = dataiter.next()
-test_u, test_y = Variable(test_u), Variable(test_y)
-if use_cuda: test_u, test_y = test_u.cuda(), test_y.cuda()
 
 # ----------
 # Just print the difference given a noise distribution.
@@ -133,6 +112,26 @@ if use_cuda: test_u, test_y = test_u.cuda(), test_y.cuda()
 # print("noise_u average power:", noise_u_avg_power)
 
 
+def narma(train_length, test_length, order=10):
+    narma_train_dataset = NARMADataset(train_length, n_samples=1, system_order=10)
+    narma_test_dataset = NARMADataset(test_length, n_samples=1, system_order=10)
+
+    trainloader = DataLoader(narma_train_dataset, shuffle=False, num_workers=2)
+    testloader = DataLoader(narma_test_dataset, shuffle=False, num_workers=2)
+
+    dataiter = iter(trainloader)
+    train_u, train_y = dataiter.next()
+    train_u, train_y = Variable(train_u), Variable(train_y)
+    if use_cuda: train_u, train_y = train_u.cuda(), train_y.cuda()
+
+    dataiter = iter(testloader)
+    test_u, test_y = dataiter.next()
+    test_u, test_y = Variable(test_u), Variable(test_y)
+    if use_cuda: test_u, test_y = test_u.cuda(), test_y.cuda()
+
+    return train_u, train_y, test_u, test_y
+
+
 def evaluate_esn(esn, u, y, plot=False):
     y_predicted = esn(u)
 
@@ -148,9 +147,13 @@ def evaluate_esn(esn, u, y, plot=False):
 
 
 def explore_input_connectivity():
-    input_connectivity = 100
-    reservoir_size = 200
-    reservoirs_per_iteration = 10
+    reservoir_size = 100
+    reservoirs_per_iteration = 5
+    train_length, test_length = 1000, 700
+    test_u, test_y, train_u, train_y = narma(train_length, test_length, order=10)
+
+    input_connectivity = 1
+    ic_step_size = 5
 
     mse_list = []
     nrmse_list = []
@@ -172,12 +175,9 @@ def explore_input_connectivity():
                 input_connectivity=input_connectivity
             )
 
-            for data in trainloader:
-                inputs, targets = data
-                inputs, targets = Variable(inputs), Variable(targets)
-                if use_cuda: inputs, targets = inputs.cuda(), targets.cuda()
-                esn(inputs, targets)
-
+            inputs, targets = Variable(train_u), Variable(train_y)
+            if use_cuda: inputs, targets = inputs.cuda(), targets.cuda()
+            esn(inputs, targets)
             esn.finalize()
 
             mse, nrmse = evaluate_esn(esn, test_u, test_y.data)
@@ -188,7 +188,7 @@ def explore_input_connectivity():
         mean_nrmse = np.mean(nrmse_list[i])
         print("IC: {}\tMSE: {:.8f}\t NRMSE: {:.8f}".format(input_connectivity, mean_mse, mean_nrmse))
 
-        input_connectivity += 2
+        input_connectivity += ic_step_size
         i += 1
 
     plt.plot(connectivities, np.mean(nrmse_list, axis=1))
@@ -245,7 +245,7 @@ def tune_esn():
     use_cuda = False
     use_cuda = torch.cuda.is_available() if use_cuda else False
 
-    narma10_train_dataset = NARMADataset(train_sample_length, n_samples=1, system_order=10)
+    narma10_train_dataset = NARMADataset(train_length, n_samples=1, system_order=10)
     narma10_test_dataset = NARMADataset(test_sample_length, n_samples=1, system_order=10)
 
     trainloader = DataLoader(narma10_train_dataset, shuffle=False, num_workers=2)
