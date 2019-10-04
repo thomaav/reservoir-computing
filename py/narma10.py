@@ -31,8 +31,8 @@ import matplotlib.pyplot as plt
 from scipy import stats
 import tqdm
 
-train_sample_length = 5000
-test_sample_length = 5000
+train_sample_length = 3000
+test_sample_length = 2000
 n_train_samples = 1
 n_test_samples = 1
 
@@ -49,27 +49,6 @@ narma10_test_dataset = NARMADataset(test_sample_length, n_test_samples, system_o
 trainloader = DataLoader(narma10_train_dataset, shuffle=False, num_workers=2)
 testloader = DataLoader(narma10_test_dataset, shuffle=False, num_workers=2)
 
-esn = etnn.ESN(
-    input_dim=1,
-    hidden_dim=500,
-    output_dim=1,
-    spectral_radius=1.1,
-    learning_algo='inv',
-    awgn_stddev=0.0,
-    input_connectivity=50
-)
-
-if use_cuda:
-    esn.cuda()
-
-for data in trainloader:
-    inputs, targets = data
-    inputs, targets = Variable(inputs), Variable(targets)
-    if use_cuda: inputs, targets = inputs.cuda(), targets.cuda()
-    esn(inputs, targets)
-
-esn.finalize()
-
 dataiter = iter(trainloader)
 train_u, train_y = dataiter.next()
 train_u, train_y = Variable(train_u), Variable(train_y)
@@ -79,10 +58,6 @@ dataiter = iter(testloader)
 test_u, test_y = dataiter.next()
 test_u, test_y = Variable(test_u), Variable(test_y)
 if use_cuda: test_u, test_y = test_u.cuda(), test_y.cuda()
-y_predicted = esn(test_u)
-
-noise_mean = 0.0
-noise_stddev = 0.0
 
 # ----------
 # Just print the difference given a noise distribution.
@@ -168,24 +143,31 @@ def evaluate_esn(esn, u, y, plot=False):
 
     mse = echotorch.utils.mse(y_predicted, y)
     nrmse = echotorch.utils.nrmse(y_predicted, y)
+    nmse = echotorch.utils.nmse(y_predicted, y)
     return mse, nrmse
 
 
 def explore_input_connectivity():
-    input_connectivity = 1
-    reservoir_size = 50
-    reservoirs_per_iteration = 100
+    input_connectivity = 100
+    reservoir_size = 200
+    reservoirs_per_iteration = 10
 
-    mse_list = [[] for _ in range(reservoir_size)]
-    nrmse_list = [[] for _ in range(reservoir_size)]
+    mse_list = []
+    nrmse_list = []
+    connectivities = []
 
-    for i in tqdm.tqdm(range(reservoir_size)):
+    i = 0
+    while input_connectivity <= reservoir_size:
+        mse_list.append([])
+        nrmse_list.append([])
+        connectivities.append(input_connectivity)
+
         for j in range(reservoirs_per_iteration):
             esn = etnn.ESN(
                 input_dim=1,
                 hidden_dim=reservoir_size,
                 output_dim=1,
-                spectral_radius=1.1,
+                spectral_radius=0.9,
                 learning_algo='inv',
                 input_connectivity=input_connectivity
             )
@@ -202,9 +184,14 @@ def explore_input_connectivity():
             mse_list[i].append(mse)
             nrmse_list[i].append(nrmse)
 
-        input_connectivity += 1
+        mean_mse = np.mean(mse_list[i])
+        mean_nrmse = np.mean(nrmse_list[i])
+        print("IC: {}\tMSE: {:.8f}\t NRMSE: {:.8f}".format(input_connectivity, mean_mse, mean_nrmse))
 
-    plt.plot(np.mean(nrmse_list, axis=1))
+        input_connectivity += 2
+        i += 1
+
+    plt.plot(connectivities, np.mean(nrmse_list, axis=1))
     plt.show()
 
 
@@ -247,17 +234,70 @@ def explore_output_connectivity():
     plt.show()
 
 
+def tune_esn():
+    reservoir_size = 200
+    input_connectivity = None
+    output_connectivity = None
+
+    train_sample_length = 3000
+    test_sample_length = 2000
+
+    use_cuda = False
+    use_cuda = torch.cuda.is_available() if use_cuda else False
+
+    narma10_train_dataset = NARMADataset(train_sample_length, n_samples=1, system_order=10)
+    narma10_test_dataset = NARMADataset(test_sample_length, n_samples=1, system_order=10)
+
+    trainloader = DataLoader(narma10_train_dataset, shuffle=False, num_workers=2)
+    testloader = DataLoader(narma10_test_dataset, shuffle=False, num_workers=2)
+
+    dataiter = iter(trainloader)
+    train_u, train_y = dataiter.next()
+    train_u, train_y = Variable(train_u), Variable(train_y)
+    if use_cuda: train_u, train_y = train_u.cuda(), train_y.cuda()
+
+    dataiter = iter(testloader)
+    test_u, test_y = dataiter.next()
+    test_u, test_y = Variable(test_u), Variable(test_y)
+    if use_cuda: test_u, test_y = test_u.cuda(), test_y.cuda()
+
+    esn = etnn.ESN(
+        input_dim=1,
+        hidden_dim=reservoir_size,
+        output_dim=1,
+        spectral_radius=0.9,
+        learning_algo='inv',
+        input_connectivity=input_connectivity,
+        output_connectivity=output_connectivity
+    )
+
+    for data in trainloader:
+        inputs, targets = data
+        ninputs, targets = Variable(inputs), Variable(targets)
+        if use_cuda: inputs, targets = inputs.cuda(), targets.cuda()
+        esn(inputs, targets)
+
+    esn.finalize()
+
+    mse, nrmse = evaluate_esn(esn, test_u, test_y.data, plot=True)
+    print('MSE:', mse)
+    print('NRMSE:', nrmse)
+
+
 def main():
     import argparse
     parser = argparse.ArgumentParser(description='tms RC')
     parser.add_argument('--ic', help='Explore input connectivity', action='store_true')
     parser.add_argument('--oc', help='Explore output connectivity', action='store_true')
+    parser.add_argument('--tune', help='Explore tuning of single net', action='store_true')
     args = parser.parse_args()
 
     if args.ic:
         explore_input_connectivity()
     elif args.oc:
         explore_output_connectivity()
+    elif args.tune:
+        tune_esn()
 
 
 if __name__ == '__main__':
