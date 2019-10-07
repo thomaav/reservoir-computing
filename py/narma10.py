@@ -174,6 +174,7 @@ def explore_input_connectivity():
                 spectral_radius=1.0,
                 learning_algo='inv',
                 win_distrib='gaussian',
+                w_distrib='gaussian',
                 input_scaling=2.0,
                 input_connectivity=input_connectivity
             )
@@ -289,7 +290,8 @@ def explore_input_connectivity_scaling():
                     spectral_radius=1.0,
                     learning_algo='inv',
                     win_distrib='gaussian',
-                    input_scaling=2.0,
+                    w_distrib='gaussian',
+                    input_scaling=input_scaling,
                     input_connectivity=input_connectivity
                 )
 
@@ -327,6 +329,89 @@ def explore_input_connectivity_scaling():
 
     plt.xlabel('Input connectivity')
     plt.ylabel('Input scaling')
+
+    plt.show()
+
+
+def explore_partial_visibility():
+    reservoirs_per_iteration = 10
+    train_length, test_length = 5000, 3000
+    test_u, test_y, train_u, train_y = narma(train_length, test_length, order=10)
+
+    initial_output_connectivity = 30
+    output_connectivity = 30
+    oc_step_size = 10
+    reservoir_size_step_size = 10
+
+    mse_list = []
+    nrmse_list = []
+    reservoir_sizes = []
+
+    while output_connectivity <= 200:
+        print('Output connectivity:', output_connectivity)
+        reservoir_size = output_connectivity
+
+        offset = int((output_connectivity-initial_output_connectivity)/oc_step_size)
+        mse_list.insert(0, [0]*offset)
+        nrmse_list.insert(0, [0]*offset)
+
+        while reservoir_size <= 200:
+            reservoir_sizes.append(reservoir_size)
+
+            mses = []
+            nrmses = []
+
+            for j in range(reservoirs_per_iteration):
+                esn = etnn.ESN(
+                    input_dim=1,
+                    hidden_dim=reservoir_size,
+                    output_dim=1,
+                    spectral_radius=1.0,
+                    learning_algo='inv',
+                    win_distrib='gaussian',
+                    w_distrib='gaussian',
+                    output_connectivity=output_connectivity
+                )
+
+                inputs, targets = Variable(train_u), Variable(train_y)
+                if use_cuda: inputs, targets = inputs.cuda(), targets.cuda()
+                esn(inputs, targets)
+                esn.finalize()
+
+                mse, nrmse = evaluate_esn(esn, test_u, test_y.data)
+                mses.append(mse)
+                nrmses.append(nrmse)
+
+            mean_mse = np.mean(mses)
+            mean_nrmse = np.mean(nrmses)
+            mse_list[0].append(mean_mse)
+            nrmse_list[0].append(mean_nrmse)
+            print("Size: {}\tMSE: {:.8f}\t NRMSE: {:.8f}".format(reservoir_size, mean_mse, mean_nrmse))
+
+            reservoir_size += reservoir_size_step_size
+        output_connectivity += oc_step_size
+
+    mask = np.zeros_like(nrmse_list, dtype=np.bool)
+    mask[np.triu_indices_from(mask)] = True
+    mask = np.fliplr(mask)
+
+    sns.heatmap(nrmse_list, vmin=0.0, vmax=1.0, square=True, mask=mask)
+    ax = plt.axes()
+
+    # Fix half cells at the top and bottom.
+    ax.set_ylim(ax.get_ylim()[0]+0.5, 0.0)
+
+    x_width = ax.get_xlim()[1]
+    y_width = ax.get_ylim()[0]
+
+    plt.xticks([0.0, 0.5*x_width, x_width], [30, 115, 200])
+    plt.yticks([0.0, 0.5*y_width, y_width], [200, 115, 30])
+
+    ax.xaxis.set_ticks_position('none')
+    ax.yaxis.set_ticks_position('none')
+
+    plt.xlabel('Reservoir size')
+    plt.ylabel('Output connectivity')
 
     plt.show()
 
@@ -388,6 +473,7 @@ def main():
     parser.add_argument('--oc', help='Explore output connectivity', action='store_true')
     parser.add_argument('--tune', help='Explore tuning of single net', action='store_true')
     parser.add_argument('--scale', help='Scale connectivity', action='store_true')
+    parser.add_argument('--partial', help='Explore partial visibility', action='store_true')
     args = parser.parse_args()
 
     if args.ic:
@@ -399,6 +485,8 @@ def main():
         explore_output_connectivity()
     elif args.tune:
         tune_esn()
+    elif args.partial:
+        explore_partial_visibility()
 
 
 if __name__ == '__main__':
