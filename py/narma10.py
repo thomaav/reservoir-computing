@@ -28,8 +28,9 @@ from torch.utils.data.dataloader import DataLoader
 import numpy as np
 
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 from scipy import stats
-import tqdm
+import seaborn as sns
 
 use_cuda = False
 use_cuda = torch.cuda.is_available() if use_cuda else False
@@ -147,13 +148,13 @@ def evaluate_esn(esn, u, y, plot=False):
 
 
 def explore_input_connectivity():
-    reservoir_size = 100
-    reservoirs_per_iteration = 5
-    train_length, test_length = 1000, 700
+    reservoir_size = 200
+    reservoirs_per_iteration = 10
+    train_length, test_length = 5000, 3000
     test_u, test_y, train_u, train_y = narma(train_length, test_length, order=10)
 
     input_connectivity = 1
-    ic_step_size = 5
+    ic_step_size = 10
 
     mse_list = []
     nrmse_list = []
@@ -163,15 +164,17 @@ def explore_input_connectivity():
     while input_connectivity <= reservoir_size:
         mse_list.append([])
         nrmse_list.append([])
-        connectivities.append(input_connectivity)
+        connectivities.append(input_connectivity / reservoir_size)
 
         for j in range(reservoirs_per_iteration):
             esn = etnn.ESN(
                 input_dim=1,
                 hidden_dim=reservoir_size,
                 output_dim=1,
-                spectral_radius=0.9,
+                spectral_radius=1.0,
                 learning_algo='inv',
+                win_distrib='gaussian',
+                input_scaling=2.0,
                 input_connectivity=input_connectivity
             )
 
@@ -191,46 +194,140 @@ def explore_input_connectivity():
         input_connectivity += ic_step_size
         i += 1
 
-    plt.plot(connectivities, np.mean(nrmse_list, axis=1))
+    plt.plot(connectivities, np.mean(nrmse_list, axis=1), color='black', marker='.')
+    plt.ylabel('NARMA10 - NRMSE')
+    plt.xlabel('Input connectivity')
+    plt.ylim(0.0, 1.0)
     plt.show()
 
 
 def explore_output_connectivity():
-    output_connectivity = 1
-    reservoir_size = 50
+    reservoir_size = 200
     reservoirs_per_iteration = 10
+    train_length, test_length = 5000, 3000
+    test_u, test_y, train_u, train_y = narma(train_length, test_length, order=10)
 
-    mse_list = [[] for _ in range(reservoir_size)]
-    nrmse_list = [[] for _ in range(reservoir_size)]
+    output_connectivity = 1
+    oc_step_size = 10
 
-    for i in tqdm.tqdm(range(reservoir_size)):
+    mse_list = []
+    nrmse_list = []
+    connectivities = []
+
+    i = 0
+    while output_connectivity - oc_step_size < reservoir_size:
+        if output_connectivity > reservoir_size:
+            output_connectivity = reservoir_size
+
+        mse_list.append([])
+        nrmse_list.append([])
+        connectivities.append(output_connectivity / reservoir_size)
+
         for j in range(reservoirs_per_iteration):
             esn = etnn.ESN(
                 input_dim=1,
                 hidden_dim=reservoir_size,
                 output_dim=1,
-                spectral_radius=1.1,
+                spectral_radius=1.0,
                 learning_algo='inv',
                 output_connectivity=output_connectivity
             )
 
-            for data in trainloader:
-                inputs, targets = data
-                inputs, targets = Variable(inputs), Variable(targets)
-                if use_cuda: inputs, targets = inputs.cuda(), targets.cuda()
-                esn(inputs, targets)
-
+            inputs, targets = Variable(train_u), Variable(train_y)
+            if use_cuda: inputs, targets = inputs.cuda(), targets.cuda()
+            esn(inputs, targets)
             esn.finalize()
 
             mse, nrmse = evaluate_esn(esn, test_u, test_y.data)
             mse_list[i].append(mse)
             nrmse_list[i].append(nrmse)
 
-        output_connectivity += 1
+        mean_mse = np.mean(mse_list[i])
+        mean_nrmse = np.mean(nrmse_list[i])
+        print("OC: {}\tMSE: {:.8f}\t NRMSE: {:.8f}".format(output_connectivity, mean_mse, mean_nrmse))
 
-    plt.plot(np.mean(nrmse_list, axis=1))
+        output_connectivity += oc_step_size
+        i += 1
+
+    plt.plot(connectivities, np.mean(nrmse_list, axis=1), color='black', marker='.')
+    plt.ylabel('NARMA10 - NRMSE')
     plt.xlabel('Output connectivity')
-    plt.ylabel('NRMSE')
+    plt.ylim(0.0, 1.0)
+    plt.show()
+
+
+def explore_input_connectivity_scaling():
+    reservoir_size = 200
+    reservoirs_per_iteration = 10
+    train_length, test_length = 5000, 3000
+    test_u, test_y, train_u, train_y = narma(train_length, test_length, order=10)
+
+    ic_step_size = 10
+
+    input_scaling = 0.1
+    input_scaling_step_size = 0.1
+
+    mse_list = []
+    nrmse_list = []
+    connectivities = []
+
+    while input_scaling <= 2.01:
+        print('Input scaling:', input_scaling)
+        input_connectivity = 1
+        mse_list.insert(0, [])
+        nrmse_list.insert(0, [])
+        while input_connectivity <= reservoir_size:
+            connectivities.append(input_connectivity / reservoir_size)
+
+            it_mse_list = []
+            it_nrmse_list = []
+            for j in range(reservoirs_per_iteration):
+                esn = etnn.ESN(
+                    input_dim=1,
+                    hidden_dim=reservoir_size,
+                    output_dim=1,
+                    spectral_radius=1.0,
+                    learning_algo='inv',
+                    win_distrib='gaussian',
+                    input_scaling=2.0,
+                    input_connectivity=input_connectivity
+                )
+
+                inputs, targets = Variable(train_u), Variable(train_y)
+                if use_cuda: inputs, targets = inputs.cuda(), targets.cuda()
+                esn(inputs, targets)
+                esn.finalize()
+
+                mse, nrmse = evaluate_esn(esn, test_u, test_y.data)
+                it_mse_list.append(mse)
+                it_nrmse_list.append(nrmse)
+
+            mean_mse = np.mean(it_mse_list)
+            mean_nrmse = np.mean(it_nrmse_list)
+            mse_list[0].append(mean_mse)
+            nrmse_list[0].append(mean_nrmse)
+            print("IC: {}\tMSE: {:.8f}\t NRMSE: {:.8f}".format(input_connectivity, mean_mse, mean_nrmse))
+            input_connectivity += ic_step_size
+        input_scaling += input_scaling_step_size
+
+    sns.heatmap(nrmse_list, vmin=0.0, vmax=1.0, square=True)
+    ax = plt.axes()
+
+    # Fix half cells at the top and bottom.
+    ax.set_ylim(ax.get_ylim()[0]+0.5, 0.0)
+
+    x_width = ax.get_xlim()[1]
+    y_width = ax.get_ylim()[0]
+
+    plt.xticks([0.0, 0.25*x_width, 0.5*x_width, 0.75*x_width, x_width], ['', 0.25, 0.5, 0.75, ''])
+    plt.yticks([0.0, 0.5*y_width, y_width], [2, 1, ''])
+
+    ax.xaxis.set_ticks_position('none')
+    ax.yaxis.set_ticks_position('none')
+
+    plt.xlabel('Input connectivity')
+    plt.ylabel('Input scaling')
+
     plt.show()
 
 
@@ -290,10 +387,14 @@ def main():
     parser.add_argument('--ic', help='Explore input connectivity', action='store_true')
     parser.add_argument('--oc', help='Explore output connectivity', action='store_true')
     parser.add_argument('--tune', help='Explore tuning of single net', action='store_true')
+    parser.add_argument('--scale', help='Scale connectivity', action='store_true')
     args = parser.parse_args()
 
     if args.ic:
-        explore_input_connectivity()
+        if args.scale:
+            explore_input_connectivity_scaling()
+        else:
+            explore_input_connectivity()
     elif args.oc:
         explore_output_connectivity()
     elif args.tune:
