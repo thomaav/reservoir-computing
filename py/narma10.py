@@ -32,7 +32,7 @@ import matplotlib.ticker as mticker
 from scipy import stats
 import seaborn as sns
 
-use_cuda = False
+use_cuda = True
 use_cuda = torch.cuda.is_available() if use_cuda else False
 
 # Manual seed for now.
@@ -137,8 +137,8 @@ def evaluate_esn(esn, u, y, plot=False):
     y_predicted = esn(u)
 
     if plot:
-        plt.plot(y[0, :, 0], 'black', linestyle='dashed')
-        plt.plot(y_predicted[0, :, 0], 'green')
+        plt.plot(y.cpu().numpy()[0, :, 0], 'black', linestyle='dashed')
+        plt.plot(y_predicted.cpu().numpy()[0, :, 0], 'green')
         plt.show()
 
     mse = echotorch.utils.mse(y_predicted, y)
@@ -178,6 +178,9 @@ def explore_input_connectivity():
                 input_scaling=2.0,
                 input_connectivity=input_connectivity
             )
+
+            if use_cuda:
+                esn.cuda()
 
             inputs, targets = Variable(train_u), Variable(train_y)
             if use_cuda: inputs, targets = inputs.cuda(), targets.cuda()
@@ -424,10 +427,7 @@ def tune_esn():
     train_sample_length = 3000
     test_sample_length = 2000
 
-    use_cuda = False
-    use_cuda = torch.cuda.is_available() if use_cuda else False
-
-    narma10_train_dataset = NARMADataset(train_length, n_samples=1, system_order=10)
+    narma10_train_dataset = NARMADataset(train_sample_length, n_samples=1, system_order=10)
     narma10_test_dataset = NARMADataset(test_sample_length, n_samples=1, system_order=10)
 
     trainloader = DataLoader(narma10_train_dataset, shuffle=False, num_workers=2)
@@ -452,6 +452,9 @@ def tune_esn():
         input_connectivity=input_connectivity,
         output_connectivity=output_connectivity
     )
+
+    if use_cuda:
+        esn.cuda()
 
     for data in trainloader:
         inputs, targets = data
