@@ -439,7 +439,7 @@ def tune_esn():
     use_cuda = False
     use_cuda = torch.cuda.is_available() if use_cuda else False
 
-    narma10_train_dataset = NARMADataset(train_length, n_samples=1, system_order=10)
+    narma10_train_dataset = NARMADataset(train_sample_length, n_samples=1, system_order=10)
     narma10_test_dataset = NARMADataset(test_sample_length, n_samples=1, system_order=10)
 
     trainloader = DataLoader(narma10_train_dataset, shuffle=False, num_workers=2)
