@@ -459,8 +459,10 @@ def tune_esn():
         input_dim=1,
         hidden_dim=reservoir_size,
         output_dim=1,
-        spectral_radius=0.9,
+        spectral_radius=1.0,
         learning_algo='inv',
+        win_distrib='global',
+        input_scaling=0.3,
         input_connectivity=input_connectivity,
         output_connectivity=output_connectivity
     )
