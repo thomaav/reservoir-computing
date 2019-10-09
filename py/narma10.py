@@ -39,79 +39,6 @@ use_cuda = torch.cuda.is_available() if use_cuda else False
 # np.random.seed(2)
 # torch.manual_seed(1)
 
-# ----------
-# Just print the difference given a noise distribution.
-# ----------
-
-# noise = Variable(test_u.data.new(test_u.size()).normal_(noise_mean, noise_stddev))
-
-# noise_u = test_u + noise
-# noise_predicted = esn(noise_u)
-
-# print(u"Noise MSE: {}".format(echotorch.utils.mse(noise_predicted.data, test_y.data)))
-# print(u"Noise NRMSE: {}".format(echotorch.utils.nrmse(noise_predicted.data, test_y.data)))
-# print(u"")
-
-# plt.plot(test_y.data[0, 2000:2100, 0], 'black', linestyle='dashed')
-# plt.plot(y_predicted.data[0, 2000:2100, 0], 'green')
-# plt.plot(noise_predicted.data[0, 2000:2100, 0], 'orange')
-# plt.show()
-
-# ----------
-# How does the error develop with increasing noise?
-# ----------
-
-# u_var = test_u.var()
-# noise_stddev = 0.00
-# stddevs = []
-# nrmses = []
-# snrs = []
-
-# for i in range(50):
-#     noise = Variable(test_u.data.new(test_u.size()).normal_(noise_mean, noise_stddev))
-
-#     noise_u = test_u + noise
-#     noise_predicted = esn(noise_u)
-
-#     print(u"Noise MSE: {}".format(echotorch.utils.mse(noise_predicted.data, test_y.data)))
-#     print(u"Noise NRMSE: {}".format(echotorch.utils.nrmse(noise_predicted.data, test_y.data)))
-#     print(u"")
-
-#     stddevs.append(noise_stddev)
-#     snrs.append(10 * np.log10(u_var / (noise_stddev*noise_stddev)))
-#     nrmses.append(echotorch.utils.nrmse(noise_predicted.data, test_y.data))
-
-#     noise_stddev += 0.02
-
-# plt.plot(stddevs, nrmses, 'black')
-# plt.show()
-
-# plt.plot(snrs, nrmses, 'black')
-# plt.show()
-
-# ----------
-# SNR stuff.
-# ----------
-
-# Information Processing Capacity of Dynamical Systems uses SNR as
-# 10*log10(var(u)/var(v)) where u is input signal and v is noise.
-
-# test_u_mean = test_u.mean()
-# test_u_var = test_u.var()
-# test_u_avg_power = test_u_mean*test_u_mean + test_u_var
-
-# noise_u_mean = noise_mean
-# noise_u_var = noise_stddev*noise_stddev
-# noise_u_avg_power = noise_mean*noise_mean + noise_u_var
-
-# print("test_u mean:", test_u_mean)
-# print("test_u variance:", test_u_var)
-# print("test_u average power:", test_u_avg_power)
-
-# print("noise_u mean:", noise_u_mean)
-# print("noise_u variance:", noise_u_var)
-# print("noise_u average power:", noise_u_avg_power)
-
 
 def narma(train_length, test_length, order=10):
     narma_train_dataset = NARMADataset(train_length, n_samples=1, system_order=10)
@@ -147,6 +74,91 @@ def evaluate_esn(esn, u, y, plot=False):
     return mse, nrmse
 
 
+def explore_input_noise():
+    train_length, test_length = 5000, 3000
+    test_u, test_y, train_u, train_y = narma(train_length, test_length, order=10)
+
+    # ESN that is not trained with noise.
+    esn = etnn.ESN(
+        input_dim=1,
+        hidden_dim=200,
+        output_dim=1,
+        spectral_radius=1.0,
+        learning_algo='inv',
+        win_distrib='gaussian',
+        w_distrib='gaussian',
+        input_scaling=1.0,
+    )
+
+    inputs, targets = Variable(train_u), Variable(train_y)
+    if use_cuda: inputs, targets = inputs.cuda(), targets.cuda()
+    esn(inputs, targets)
+    esn.finalize()
+
+    # ESN that is trained with noise.
+    noise_esn = etnn.ESN(
+        input_dim=1,
+        hidden_dim=200,
+        output_dim=1,
+        spectral_radius=1.0,
+        learning_algo='inv',
+        win_distrib='gaussian',
+        w_distrib='gaussian',
+        input_scaling=1.0,
+    )
+
+    train_noise_mean = 0.0
+    train_noise_stddev = 0.1
+    train_noise = Variable(test_u.data.new(train_u.size()).normal_(train_noise_mean, train_noise_stddev))
+
+    inputs, targets = Variable(train_u), Variable(train_y)
+    inputs += train_noise
+    if use_cuda: inputs, targets = inputs.cuda(), targets.cuda()
+    noise_esn(inputs, targets)
+    noise_esn.finalize()
+
+    u_var = test_u.var()
+    noise_mean = 0.0
+    noise_stddev = 0.0
+    stddevs = []
+
+    nrmses = []
+    noise_nrmses = []
+    snrs = []
+
+    for i in range(50):
+        noise = Variable(test_u.data.new(test_u.size()).normal_(noise_mean, noise_stddev))
+
+        noise_u = test_u + noise
+        noise_predicted = esn(noise_u)
+        noise_esn_predicted = noise_esn(noise_u)
+
+        print(u"Noise MSE: {}".format(echotorch.utils.mse(noise_predicted.data, test_y.data)))
+        print(u"Noise NRMSE: {}".format(echotorch.utils.nrmse(noise_predicted.data, test_y.data)))
+        print(u"")
+
+        stddevs.append(noise_stddev)
+        snrs.append(10 * np.log10(u_var / (noise_stddev*noise_stddev)))
+        nrmses.append(echotorch.utils.nrmse(noise_predicted.data, test_y.data))
+        noise_nrmses.append(echotorch.utils.nrmse(noise_esn_predicted.data, test_y.data))
+
+        noise_stddev += 0.02
+
+    plt.plot(stddevs, nrmses, 'black', label='Trained without noise')
+    plt.plot(stddevs, noise_nrmses, 'black', linestyle='dashed', label='Trained with noise')
+    plt.ylabel('NARMA10 - NRMSE')
+    plt.xlabel('Noise standard deviation')
+    plt.legend()
+    plt.show()
+
+    plt.plot(snrs, nrmses, 'black', label='Trained without noise')
+    plt.plot(snrs, noise_nrmses, 'black', linestyle='dashed', label='Trained with noise')
+    plt.ylabel('NARMA10 - NRMSE')
+    plt.xlabel('SNR')
+    plt.legend()
+    plt.show()
+
+
 def explore_input_connectivity():
     reservoir_size = 200
     reservoirs_per_iteration = 10
@@ -175,7 +187,7 @@ def explore_input_connectivity():
                 learning_algo='inv',
                 win_distrib='gaussian',
                 w_distrib='gaussian',
-                input_scaling=2.0,
+                input_scaling=1.0,
                 input_connectivity=input_connectivity
             )
 
@@ -474,6 +486,8 @@ def main():
     parser.add_argument('--tune', help='Explore tuning of single net', action='store_true')
     parser.add_argument('--scale', help='Scale connectivity', action='store_true')
     parser.add_argument('--partial', help='Explore partial visibility', action='store_true')
+    parser.add_argument('--input_noise', help='Explore input noise', action='store_true')
+    parser.add_argument('--output_noise', help='Explore output noise', action='store_true')
     args = parser.parse_args()
 
     if args.ic:
@@ -487,6 +501,10 @@ def main():
         tune_esn()
     elif args.partial:
         explore_partial_visibility()
+    elif args.input_noise:
+        explore_input_noise()
+    elif args.output_noise:
+        explore_output_noise()
 
 
 if __name__ == '__main__':
