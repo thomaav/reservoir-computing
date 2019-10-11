@@ -1,3 +1,11 @@
+Training Recurrent Neural Networks is an intrinsically difficult task, as gradient descent methods that use loss information become increasingly inefficient on problems with long-range temporal dependencies (TODO: as the range grows, rewrite).  A continuous search in the parameter space may cause bifurcations points in the dynamics of the system, causing non-convergent training \cite{doya_bifurcations_nodate}. Moreover, due to the nature of vanishing gradients, a converging network is slow and expensive to train, and will oftentimes lead to insufficient local minima (TODO: change vanishing gradients to something better, and rewrite this to fit citation) \cite{bengio_learning_1994}. Next: LSM and ESN introduction, RC introduction.
+
+While error backpropagation Recurrent Reservoir Computing (RC) but forth as a way to compute with recurrent neural networks.
+
+Readout is memoryless.
+
+RC may have left being RNN training method, to way of using any substrate computation.
+
 RNNs are hard. Bifurcations. Kenji Doya's paper.
 
 Physical substrates present difficulties, no longer possible to just tune the spectral radius.
@@ -7,3 +15,8 @@ LSM. ESN. Also spawned physical reservoirs: neurons, echoli, lasers etc. Consult
 Readout typically linear feed forward, can be written as y = wx etc. Ridge regression and other methods.
 
 ''Natural computational systems must have specific topologies, and the uniform random connectivity is not appropriate.'' Topology discussion, Manevitz et. al.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End:
