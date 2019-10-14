@@ -60,18 +60,18 @@ def narma(train_length, test_length, order=10):
     return train_u, train_y, test_u, test_y
 
 
-def evaluate_esn(esn, u, y, plot=False):
+def evaluate_esn(esn, u, y, plot=False, washout=0):
     y_predicted = esn(u)
 
     if plot:
-        plt.plot(y[0, :, 0], 'black', linestyle='dashed')
+        plt.plot(y[0, washout:, 0], 'black', linestyle='dashed')
         plt.plot(y_predicted[0, :, 0], 'green')
         plt.show()
 
-    mse = echotorch.utils.mse(y_predicted, y)
-    nrmse = echotorch.utils.nrmse(y_predicted, y)
-    nmse = echotorch.utils.nmse(y_predicted, y)
-    return mse, nrmse
+    mse = echotorch.utils.mse(y_predicted[0, :, 0], y[0, washout:, 0])
+    nrmse = echotorch.utils.nrmse(y_predicted[0, :, 0], y[0, washout:, 0])
+    nmse = echotorch.utils.nmse(y_predicted[0, :, 0], y[0, washout:, 0])
+    return mse, nrmse, nmse
 
 
 def explore_input_noise():
@@ -251,7 +251,7 @@ def explore_output_connectivity():
             esn(inputs, targets)
             esn.finalize()
 
-            mse, nrmse = evaluate_esn(esn, test_u, test_y.data)
+            mse, nrmse, nmse = evaluate_esn(esn, test_u, test_y.data)
             mse_list[i].append(mse)
             nrmse_list[i].append(nrmse)
 
@@ -312,7 +312,7 @@ def explore_input_connectivity_scaling():
                 esn(inputs, targets)
                 esn.finalize()
 
-                mse, nrmse = evaluate_esn(esn, test_u, test_y.data)
+                mse, nrmse, nmse = evaluate_esn(esn, test_u, test_y.data)
                 it_mse_list.append(mse)
                 it_nrmse_list.append(nrmse)
 
@@ -390,7 +390,7 @@ def explore_partial_visibility():
                 esn(inputs, targets)
                 esn.finalize()
 
-                mse, nrmse = evaluate_esn(esn, test_u, test_y.data)
+                mse, nrmse, nmse = evaluate_esn(esn, test_u, test_y.data)
                 mses.append(mse)
                 nrmses.append(nrmse)
 
@@ -429,12 +429,9 @@ def explore_partial_visibility():
 
 
 def tune_esn():
-    reservoir_size = 200
-    input_connectivity = None
-    output_connectivity = None
-
-    train_sample_length = 3000
-    test_sample_length = 2000
+    washout = 200
+    train_sample_length = 2000 + washout
+    test_sample_length = 3000 + washout
 
     use_cuda = False
     use_cuda = torch.cuda.is_available() if use_cuda else False
@@ -457,14 +454,18 @@ def tune_esn():
 
     esn = etnn.ESN(
         input_dim=1,
-        hidden_dim=reservoir_size,
+        hidden_dim=200,
         output_dim=1,
-        spectral_radius=1.0,
+        spectral_radius=0.9,
+        nonlin_func=torch.tanh,
         learning_algo='inv',
-        win_distrib='global',
-        input_scaling=0.3,
-        input_connectivity=input_connectivity,
-        output_connectivity=output_connectivity
+        win_distrib='gaussian',
+        w_distrib='gaussian',
+        input_scaling=1.0,
+        w_sparsity=0.2,
+        # input_connectivity=30,
+        washout=washout,
+        # output_connectivity=None
     )
 
     for data in trainloader:
@@ -475,9 +476,15 @@ def tune_esn():
 
     esn.finalize()
 
-    mse, nrmse = evaluate_esn(esn, test_u, test_y.data, plot=True)
-    print('MSE:', mse)
-    print('NRMSE:', nrmse)
+    # mse, nrmse, nmse = evaluate_esn(esn, train_u, train_y.data, plot=True)
+    # print('Train MSE:', mse)
+    # print('Train NRMSE:', nrmse)
+    # print('Train NMSE:', nmse)
+    # print()
+    mse, nrmse, nmse = evaluate_esn(esn, test_u, test_y.data, plot=True, washout=washout)
+    print('Test MSE:', mse)
+    print('Test NRMSE:', nrmse)
+    print('Test NMSE:', nmse)
 
 
 def main():
