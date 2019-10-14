@@ -470,7 +470,7 @@ def tune_esn():
 
     for data in trainloader:
         inputs, targets = data
-        ninputs, targets = Variable(inputs), Variable(targets)
+        inputs, targets = Variable(inputs), Variable(targets)
         if use_cuda: inputs, targets = inputs.cuda(), targets.cuda()
         esn(inputs, targets)
 
