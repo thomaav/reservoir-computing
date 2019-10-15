@@ -12,3 +12,4 @@ _region_.tex
 *~.lock*
 .tex
 todo.org
+__pycache__
