@@ -57,10 +57,10 @@ def grid_search_input_sparsity(dataset):
 def grid_search_output_sparsity(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
-    sparsity = np.arange(0.0, 1.1, 0.1)
+    output_sparsity = np.arange(0.0, 1.1, 0.1)
     params = {
         'hidden_nodes': [200],
-        'w_out_sparsity': sparsity,
+        'w_out_sparsity': output_sparsity,
     }
 
     nrmses = evaluate_esn_grid_search_2d(dataset, params,
@@ -71,6 +71,40 @@ def grid_search_output_sparsity(dataset):
     plt.ylabel('NARMA10 - NRMSE')
     plt.xlabel('Output sparsity')
     plt.ylim(0.0, 1.0)
+    plt.show()
+
+
+def grid_search_input_sparsity_input_scaling(dataset):
+    input_scaling = np.arange(0.0, 2.1, 0.1)
+    input_sparsity = np.arange(0.0, 1.05, 0.05)
+    params = {
+        'input_scaling': input_scaling,
+        'w_in_sparsity': input_sparsity,
+    }
+
+    nrmses = evaluate_esn_grid_search_2d(dataset, params,
+                                         evaluate_esn_input_sparsity_scaling,
+                                         runs_per_iteration=10)
+
+    sns.heatmap(list(reversed(nrmses)), vmin=0.0, vmax=1.0, square=True)
+    ax = plt.axes()
+
+    # Fix half cells at the top and bottom. This is a current bug in Matplotlib.
+    ax.set_ylim(ax.get_ylim()[0]+0.5, 0.0)
+
+    x_width = ax.get_xlim()[1]
+    y_width = ax.get_ylim()[0]
+
+    plt.xticks([0.0, 0.5*x_width, x_width], [0.0, 0.5, 1.0])
+    plt.yticks([0.0, 0.5*y_width, y_width], [2, 1, ''])
+
+    ax.xaxis.set_ticks_position('none')
+    ax.yaxis.set_ticks_position('none')
+
+    plt.xlabel('Input sparsity')
+    plt.ylabel('Input scaling')
+    ax.collections[0].colorbar.set_label('NRMSE')
+
     plt.show()
 
 
@@ -101,17 +135,21 @@ def grid_search_partial_visibility(dataset):
     ax.xaxis.set_ticks_position('none')
     ax.yaxis.set_ticks_position('none')
 
-    plt.xlabel('Output connectivity')
+    plt.xlabel('Output sparsity')
     plt.ylabel('Reservoir size')
     ax.collections[0].colorbar.set_label('NRMSE')
 
     plt.show()
 
 
+def input_noise(dataset):
+    pass
+
+
 def run_single_esn(dataset):
     esn = ESN(
         hidden_nodes=200,
-        w_out_sparsity=0.7
+        input_scaling=2.0,
     )
 
     print('NRMSE:', evaluate_esn(dataset, esn))
@@ -124,18 +162,24 @@ def main():
 
     import argparse
     parser = argparse.ArgumentParser(description='tms RC')
-    parser.add_argument('--input_sparsity', help='Explore input sparsity', action='store_true')
-    parser.add_argument('--output_sparsity', help='Explore output sparsity', action='store_true')
-    parser.add_argument('--partial', help='Explore partial visibility', action='store_true')
-    parser.add_argument('--single_esn', help='Test performance of a singles ESN', action='store_true')
+    parser.add_argument('--input_sparsity', action='store_true')
+    parser.add_argument('--input_sparsity_scaling', action='store_true')
+    parser.add_argument('--output_sparsity', action='store_true')
+    parser.add_argument('--partial', action='store_true')
+    parser.add_argument('--input_noise', action='store_true')
+    parser.add_argument('--single_esn', action='store_true')
     args = parser.parse_args()
 
     if args.input_sparsity:
         grid_search_input_sparsity(dataset)
+    if args.input_sparsity_scaling:
+        grid_search_input_sparsity_input_scaling(dataset)
     elif args.output_sparsity:
         grid_search_output_sparsity(dataset)
     elif args.partial:
         grid_search_partial_visibility(dataset)
+    elif args.input_noise:
+        input_noise(dataset)
     elif args.single_esn:
         run_single_esn(dataset)
 

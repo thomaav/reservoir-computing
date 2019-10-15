@@ -6,7 +6,7 @@ from util import spectral_radius as _spectral_radius
 
 class ESN(nn.Module):
     def __init__(self, hidden_nodes, spectral_radius=0.9, washout=200,
-                 w_in_sparsity=1.0, w_out_sparsity=1.0):
+                 w_in_sparsity=1.0, w_out_sparsity=1.0, input_scaling=1.0):
         super(ESN, self).__init__()
 
         self.hidden_nodes = hidden_nodes
@@ -15,6 +15,7 @@ class ESN(nn.Module):
         self.w_res_sparsity = 0.2
         self.w_in_sparsity = w_in_sparsity
         self.washout = washout
+        self.input_scaling = input_scaling
 
         # We can't just mask w_out with the sparsity, as the masked out nodes
         # must be hidden during training as well.
@@ -27,6 +28,7 @@ class ESN(nn.Module):
         w_res *= self.spectral_radius / _spectral_radius(w_res)
         w_in = (torch.rand(self.hidden_nodes) - 0.5)
         w_in[torch.rand(self.hidden_nodes) > self.w_in_sparsity] = 0.0
+        w_in *= self.input_scaling
         w_out = torch.ones(self.hidden_nodes)
 
         self.register_buffer('w_res', w_res)
