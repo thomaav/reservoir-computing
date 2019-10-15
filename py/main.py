@@ -7,8 +7,8 @@ from ESN import ESN
 
 
 def main():
-    u_train, y_train = NARMA(sample_len = 4000)
-    u_test, y_test = NARMA(sample_len = 1000)
+    u_train, y_train = NARMA(sample_len = 2000)
+    u_test, y_test = NARMA(sample_len = 3000)
 
     esn = ESN()
     esn(u_train, y_train)
