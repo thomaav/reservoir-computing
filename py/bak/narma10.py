@@ -346,7 +346,7 @@ def explore_input_connectivity_scaling():
 
 
 def explore_partial_visibility():
-    reservoirs_per_iteration = 10
+    reservoirs_per_iteration = 1
     train_length, test_length = 5000, 3000
     test_u, test_y, train_u, train_y = narma(train_length, test_length, order=10)
 
@@ -359,7 +359,7 @@ def explore_partial_visibility():
     nrmse_list = []
     reservoir_sizes = []
 
-    while output_connectivity <= 200:
+    while output_connectivity <= 60:
         print('Output connectivity:', output_connectivity)
         reservoir_size = output_connectivity
 
@@ -367,7 +367,7 @@ def explore_partial_visibility():
         mse_list.insert(0, [0]*offset)
         nrmse_list.insert(0, [0]*offset)
 
-        while reservoir_size <= 200:
+        while reservoir_size <= 60:
             reservoir_sizes.append(reservoir_size)
 
             mses = []
@@ -407,6 +407,7 @@ def explore_partial_visibility():
     mask[np.triu_indices_from(mask)] = True
     mask = np.fliplr(mask)
 
+    print(nrmse_list)
     sns.heatmap(nrmse_list, vmin=0.0, vmax=1.0, square=True, mask=mask)
     ax = plt.axes()
 
