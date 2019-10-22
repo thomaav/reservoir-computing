@@ -1,15 +1,44 @@
-Training Recurrent Neural Networks is an intrinsically difficult task, as
-gradient descent methods that use loss information become increasingly
-inefficient on problems with long-range temporal dependencies (TODO: as the
-range grows, rewrite).  A continuous search in the parameter space may cause
+Training Recurrent Neural Networks is an inherently difficult task. Gradient
+descent methods that use loss information become increasingly inefficient on
+problems with long-range temporal dependencies, making the backpropagation
+algorithm used with feed-forward structures less attractive. Specifically, a
+continuous search in the parameter space of recurrent networks may cause
 bifurcations points in the dynamics of the system, causing non-convergent
-training \cite{doya_bifurcations_nodate}. Moreover, due to the nature of
-vanishing gradients, a converging network is slow and expensive to train, and
-will oftentimes lead to insufficient local minima (TODO: change vanishing
-gradients to something better, and rewrite this to fit citation)
-\cite{bengio_learning_1994}. Next: LSM and ESN introduction, RC introduction.
+training \cite{doya_bifurcations_nodate}. Moreover, the gradient of the state of
+a dynamical system increases exponentially with respect to the initial state
+over time, making the network slow and expensive to train, and will oftentimes
+lead to insufficient local minima \cite{bengio_learning_1994}. To circumvent
+this complexity in learning algorithms that adapt the internal connections in
+RNNs, three similar methods have been proposed.
 
-Readout is memoryless.
+Liquid State Machines (LSMs) \cite{maass_real-time_2002}, Echo State Networks
+(ESNs) \cite{jaeger_echo_2001} and Backpropagation Decorrelation (BPDC)
+\cite{steil_backpropagation-decorrelation:_2004} independently present
+supervised learning methods that don't adapt the internal weights of the
+RNN. Instead, the output is generated using a simple, memoryless classifier or
+regressor, making the function of the RNN resemble that of kernel methods, which
+increases separability. Additionally, by projecting into a high-dimensional
+space, the temporal information of time series input may be incorporated in the
+readout. This methodology has been unified into the research subfield of
+Reservoir Computing (RC) \cite{schrauwen_overview_2007}, of which the focus is
+on separating the randomly generated reservoir from the trained readout layer.
+
+Interestingly, there is no need for the reservoir to be an artificial neural
+network -- any high-dimensional, driven system exhibiting complex dynamic
+behavior can be used \cite{schrauwen_overview_2007}. A multitude of substrates
+have shown promise as reservoirs: dynamical systems models such as Cellular
+Automata \cite{nichele_deep_2017} and the more general Random Boolean Network
+\cite{snyder_computational_2013}, electronic reservoirs using memristor circuits
+\cite{kulkarni_memristor-based_2012}, photonic reservoirs
+\cite{vandoorne_experimental_2014}, and more biologically oriented reservoirs
+such as gene regulation networks \cite{jones_is_2007} or a cat primary visual
+cortex \cite{scholkopf_temporal_2007}. Consult \cite{tanaka_recent_2018} for an
+overview of recent advances in RC.
+
+% (TODO): more concrete examples for each type?
+
+Lastly, write about the applications -- why is the research not useless? Cite
+quo vadis here?
 
 RC may have left being RNN training method, to way of using any substrate
 computation.
@@ -23,10 +52,11 @@ Tanaka for full list.
 Readout typically linear feed forward, can be written as y = wx etc. Ridge
 regression and other methods.
 
-Evaluation of ESN performance on NARMA10 has been done in: An experimental unification of reservoir computing methods, Minimum Complexity Echo State Networks, Adaptive Nonlinear System Identification with Echo State Networks
-
 ''Natural computational systems must have specific topologies, and the uniform
 random connectivity is not appropriate.'' Topology discussion, Manevitz et. al.
+
+From a conceptual perspective we can define a range of RNN training methods that gradually bridge the
+gap between the classical BP and reservoir methods:.. from Reservoir Computing Approaches to Recurrent Neural Network Training, good intro to the transition into ESN.
 
 %%% Local Variables:
 %%% mode: latex
