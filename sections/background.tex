@@ -1,19 +1,94 @@
-This is the background. This should primarily be on Echo State Networks in practice.
+\subsection{Echo State Networks}
+
+Jaeger proposed the \textit{Echo State Network} \cite{jaeger_echo_2001} as an
+alternative approach to RNNs in which only the weights of the output units are
+modified. In RNNs, the activation state $\mathbf{u}(t)$ is determined as a
+function of the sequence of inputs that is fed to the network $\mathbf{u}(t),
+\mathbf{u}(t-1), \ldots$ making its activation an ``echo'' of the input history.
+% (TODO): only in some cases does it have the "echo" state property^.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=2.5in]{img/esn.png}
+  \caption{
+    Basic architecture of ESN reservoir systems. The reservoir acts as a
+high-dimensional kernel, transforming the temporal input sequence into a spatial
+representation. The readout is trained with supervision, providing a least
+squares optimum.
+  }
+  \label{esn}
+\end{figure}
+% (TODO): Figure lacks labels for weights and such; what's what^?
+
+In this paper, we consider discrete-time RNNs with $N$ internal network nodes, a
+single input, and a single output node. Fig. \ref{esn} illustrates the basic
+architecture of such ESN reservoirs. The reservoir state is updated according to
+
+\begin{equation}
+  \mathbf{x}(t + 1) =
+    \tanh(\mathbf{W}^{res}\mathbf{x}(t)
+        + \mathbf{W}^{in}\mathbf{u}(t))
+  \label{xt}
+\end{equation}
+
+using $\tanh$ as the nonlinear transfer function of internal reservoir
+nodes. The output of the reservoir is given by
+
+\begin{equation}
+  \mathbf{y}(t + 1) =
+    \mathbf{W}^{out}\mathbf{x}(t).
+  \label{yt}
+\end{equation}
+
+The linear readout layer is trained to minimize the squared output error $E =
+\Vert \mathbf{y}(t) - \mathbf{\hat{y}}(t) \Vert$ where $\mathbf{\hat{y}}(t)$ is
+the target output, which amounts to solving a system of linear equations
+
+\begin{equation}
+  \mathbf{\hat{Y}} = \mathbf{W}^{out}\mathbf{X}.
+  \label{hatreg}
+\end{equation}
+
+Well-known methods of solving (\ref{hatreg}) include ridge regression, often
+called Tikhonov regularization
+
+\begin{equation}
+  \mathbf{W}^{out} = \mathbf{\hat{Y}}\mathbf{X}^{T}
+                    (\mathbf{X}\mathbf{X}^{T} + \lambda_{r}\mathbf{I})^{-1},
+  \label{tikhonov}
+\end{equation}
+
+where $\lambda_{r}$ is a regularization coefficient, and Moore-Penrose
+pseudo-inversion
+
+\begin{equation}
+  \mathbf{W}^{out} = \mathbf{\hat{Y}}\mathbf{X}^{+}.
+  \label{pseudo}
+\end{equation}
+
+% (TODO): Write about how Wres and Win are created etc. What _we_ do can be
+% discussed in Method. Cite good explanatory articles on this.
+
+% (TODO): Change this to matrix notation: Y filled with y and X filled with
+% x. Must be done multiple places.
+
+\subsection{NARMA}
+
+NARMA.
 
 % END
 
 % 1. How ESNs work. Why ESNs are chosen to approximate physical systems; what can
 % it tell us about such physical limitations? Cite practical guide to ESNs by Luko
-% and Adaptive Nonlinear System Identification.
+% and Adaptive Nonlinear System Identification. Ridge regression, pseudo inverse,
+% how it's done.
 
 % 2. Time series, specifically NARMA and NARMA10. Also write about practical
 % applications of RC range. Why are ESNs not useless? Some example applications in
-% Verstraeten's thesis and Reservoir Computing Trends by Jaeger. Also relate this
-% to Dambre paper on the fundamental information processing capabilities, it's a
-% fundamental question.
-
-% 3. Ridge regression, pseudo inverse, how it's done. Should perhaps be part of
-% ESN background.
+% Verstraeten's thesis and Reservoir Computing Trends by Jaeger. Achieves great
+% performance in temporal processing tasks. Also relate this to Dambre paper on
+% the fundamental information processing capabilities, it's a fundamental
+% question.
 
 % Evaluation of ESN performance on NARMA10 has been done in: An experimental
 % unification of reservoir computing methods, Minimum Complexity Echo State
