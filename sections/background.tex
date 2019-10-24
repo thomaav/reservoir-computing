@@ -1,7 +1,7 @@
 \subsection{Echo State Networks}
 
 Jaeger proposed the \textit{Echo State Network} \cite{jaeger_echo_2001} as an
-alternative approach to RNNs in which only the weights of the output units are
+alternative approach to RNNs, in which only the weights of the output units are
 modified. In RNNs, the activation state $\mathbf{u}(t)$ is determined as a
 function of the sequence of inputs that is fed to the network $\mathbf{u}(t),
 \mathbf{u}(t-1), \ldots$ making its activation an ``echo'' of the input history.
@@ -27,12 +27,12 @@ architecture of such ESN reservoirs. The reservoir state is updated according to
 \begin{equation}
   \mathbf{x}(t + 1) =
     \tanh(\mathbf{W}^{res}\mathbf{x}(t)
-        + \mathbf{W}^{in}\mathbf{u}(t))
+        + \mathbf{W}^{in}\mathbf{u}(t)),
   \label{xt}
 \end{equation}
 
-\noindent using $\tanh$ as the nonlinear transfer function of internal reservoir
-nodes. The output of the reservoir is given by
+\noindent using $\tanh$ as the nonlinear transfer function for internal
+reservoir nodes. The output of the reservoir is given by
 
 \begin{equation}
   \mathbf{y}(t + 1) =
@@ -40,9 +40,9 @@ nodes. The output of the reservoir is given by
   \label{yt}
 \end{equation}
 
-The linear readout layer is trained to minimize the squared output error $E =
-\Vert \mathbf{y}(t) - \mathbf{\hat{y}}(t) \Vert$ where $\mathbf{\hat{y}}(t)$ is
-the target output, which amounts to solving a system of linear equations
+The linear readout layer is thus trained to minimize the squared output error $E
+= \Vert \mathbf{y}(t) - \mathbf{\hat{y}}(t) \Vert$ where $\mathbf{\hat{y}}(t)$
+is the target output, which amounts to solving a system of linear equations
 
 \begin{equation}
   \mathbf{\hat{Y}} = \mathbf{W}^{out}\mathbf{X}.
@@ -66,15 +66,33 @@ pseudo-inversion
   \label{pseudo}
 \end{equation}
 
+As with virtually every machine learning technique, the application of ESNs
+requires some experience. Although a conceptually simple idea, generating
+adequate reservoir networks is influenced by multiple global
+parameters. Recommendations to achieve sufficient performance are presented in
+\cite{montavon_practical_2012, jaeger_tutorial_nodate}, suggesting parameters
+such as the scaling of the input weight matrix, the spectral radius of the
+reservoir connection matrix, the leaking rate of reservoir nodes, and the model
+size parameters of high importance. However, in practice the evaluation of a
+reservoir is an endeavor often conducted by training the output and measuring
+the error, sometimes requiring extensive parameter sweeps.
+
+% (TODO): Talk more about specific parameters^?
+
 % (TODO): Write about how Wres and Win are created etc. What _we_ do can be
 % discussed in Method. Cite good explanatory articles on this.
 
 % (TODO): Change this to matrix notation: Y filled with y and X filled with
 % x. Must be done multiple places.
 
+\subsection{Assessing the quality of a reservoir}
+
+This is not quite easy. CHARC? Why we chose NARMA.
+
 \subsection{NARMA}
 
-NARMA.
+NARMA, introduced in \cite{atiya_new_2000}, is .. . The dynamics have been
+researched in \cite{kubota_dynamical_2019}.
 
 % END
 
@@ -89,11 +107,7 @@ NARMA.
 % performance in temporal processing tasks. Also relate this to Dambre paper on
 % the fundamental information processing capabilities, it's a fundamental
 % question.
-
-% Evaluation of ESN performance on NARMA10 has been done in: An experimental
-% unification of reservoir computing methods, Minimum Complexity Echo State
-% Networks, Adaptive Nonlinear System Identification with Echo State Networks.
-
+,
 % Introduce the problem statements individually for each limitation. ''Natural
 % computational systems must have specific topologies, and the uniform random
 % connectivity is not appropriate.'' Topology discussion, Manevitz et. al.
