@@ -8,6 +8,29 @@ from metric import *
 from dataset import NARMA
 
 
+def evaluate_esn_grid_search_1d(dataset, params, runs_per_iteration=1):
+    if len(params.keys()) != 1:
+        class InvalidParameterDictException(Exception):
+            pass
+        raise InvalidParameterDictException('1d grid search requires exactly 1 parameter lists')
+
+    output = []
+    param_grid = ParameterGrid(params)
+    p1 = sorted(params.keys())[0]
+
+    for params in param_grid:
+        print(params)
+        nrmses = []
+
+        for i in range(runs_per_iteration):
+            esn = ESN(hidden_nodes=params[p1])
+            nrmses.append(evaluate_esn(dataset, esn))
+
+        output.append(np.mean(nrmses))
+
+    return output
+
+
 def evaluate_esn_grid_search_2d(dataset, params, eval_func, runs_per_iteration=1):
     if len(params.keys()) != 2:
         class InvalidParameterDictException(Exception):
@@ -146,6 +169,24 @@ def input_noise(dataset):
     pass
 
 
+def performance_sweep(dataset):
+    hidden_nodes = [50, 100, 150, 200]
+    params = { 'hidden_nodes': hidden_nodes }
+    nrmses = evaluate_esn_grid_search_1d(dataset, params, runs_per_iteration=10)
+
+    plt.plot(hidden_nodes, nrmses, color='black', linestyle='dashed', marker='.')
+
+    plt.ylabel('NARMA10 - NRMSE')
+    plt.xlabel('Reservoir size')
+    plt.xticks(np.arange(min(hidden_nodes), max(hidden_nodes) + 1, 50))
+
+    maxlim = np.max(nrmses) + 0.05
+    minlim = np.min(nrmses) - 0.05
+    plt.ylim(minlim, maxlim)
+
+    plt.show()
+
+
 def run_single_esn(dataset):
     esn = ESN(
         hidden_nodes=200,
@@ -167,6 +208,7 @@ def main():
     parser.add_argument('--output_sparsity', action='store_true')
     parser.add_argument('--partial', action='store_true')
     parser.add_argument('--input_noise', action='store_true')
+    parser.add_argument('--performance', action='store_true')
     parser.add_argument('--single_esn', action='store_true')
     args = parser.parse_args()
 
@@ -180,6 +222,8 @@ def main():
         grid_search_partial_visibility(dataset)
     elif args.input_noise:
         input_noise(dataset)
+    elif args.performance:
+        performance_sweep(dataset)
     elif args.single_esn:
         run_single_esn(dataset)
 
