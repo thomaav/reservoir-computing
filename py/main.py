@@ -174,6 +174,10 @@ def performance_sweep(dataset):
     params = { 'hidden_nodes': hidden_nodes }
     nrmses = evaluate_esn_grid_search_1d(dataset, params, runs_per_iteration=10)
 
+    plt.rc('xtick', labelsize=14)
+    plt.rc('ytick', labelsize=14)
+    plt.rc('axes', labelsize=16)
+
     plt.plot(hidden_nodes, nrmses, color='black', linestyle='dashed', marker='.')
 
     plt.ylabel('NARMA10 - NRMSE')
