@@ -16,13 +16,13 @@ def nmse(y_predicted, y):
     return float(torch.mean(error) / var)
 
 
-def evaluate_esn(dataset, esn):
+def evaluate_esn(dataset, esn, washout=200):
     u_train, y_train, u_test, y_test = dataset
     esn(u_train, y_train)
 
     y_predicted = esn(u_test)
-    _nmse = nmse(y_predicted, y_test[200:])
-    _nrmse = nrmse(y_predicted, y_test[200:])
+    _nmse = nmse(y_predicted, y_test[washout:])
+    _nrmse = nrmse(y_predicted, y_test[washout:])
 
     return _nrmse
 
