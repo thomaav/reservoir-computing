@@ -191,6 +191,31 @@ def performance_sweep(dataset):
     plt.show()
 
 
+def visualize(dataset, washout=200):
+    u_train, y_train, u_test, y_test = dataset
+
+    esn = ESN(hidden_nodes = 200)
+    esn(u_train, y_train)
+    y_predicted = esn(u_test)
+
+    target = y_test[washout:]
+    predicted = y_predicted
+
+    plt.rc('legend', fontsize=14)
+    plt.rc('xtick', labelsize=14)
+    plt.rc('ytick', labelsize=14)
+    plt.rc('axes', labelsize=16)
+
+    plt.plot(target, 'black', label='Target output')
+    plt.plot(predicted, 'green', linestyle='dashed', label='Predicted output')
+    plt.legend()
+
+    plt.ylabel('Reservoir output')
+    plt.xlabel('Time')
+
+    plt.show()
+
+
 def run_single_esn(dataset):
     esn = ESN(
         hidden_nodes=200,
@@ -213,6 +238,7 @@ def main():
     parser.add_argument('--partial', action='store_true')
     parser.add_argument('--input_noise', action='store_true')
     parser.add_argument('--performance', action='store_true')
+    parser.add_argument('--visualize', action='store_true')
     parser.add_argument('--single_esn', action='store_true')
     args = parser.parse_args()
 
@@ -228,6 +254,8 @@ def main():
         input_noise(dataset)
     elif args.performance:
         performance_sweep(dataset)
+    elif args.visualize:
+        visualize(dataset)
     elif args.single_esn:
         run_single_esn(dataset)
 
