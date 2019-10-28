@@ -1,15 +1,15 @@
 Evaluation of ESN performance on the NARMA system is a thoroughly explored area
 in the field of RC \cite{verstraeten_experimental_2007, rodan_minimum_2011,
 jaeger_adaptive_nodate}. Similar performance to previous work has been achieved
-(Fig. \ref{performance}) lending credibility to further approaches in this
-paper.
+(Fig. \ref{visualization}, \ref{performance}) as a baseline to lend credibility
+to further approaches in this paper.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=2.5in]{img/narma_visualization.png}
   \caption{
-    Visualization of reservoir output. (TODO): Re-do this screenshot so it's
-possible to see anything at all.
+    Visualization of reservoir output when fed the NARMA10 task. Input is an
+i.i.d. stream generated uniformly in the range [0, 0.5].
   }
   \label{visualization}
 \end{figure}
@@ -18,13 +18,17 @@ possible to see anything at all.
   \centering
   \includegraphics[width=2.5in]{img/general_performance.png}
   \caption{
-    ESN performance. Performed with input scaling of 1, spectral radius 0.9,
-input sparsity of 1.0, no leaky nodes. 10 random reservoirs were sampled for
-each reservoir size.
+    Reservoir size versus ESN performance for the NARMA10 task. The NRMSE is
+averaged over 10 simulation runs.
   }
   \label{performance}
 \end{figure}
-% (TODO): Fix caption to suck less for both of these^.
+
+All further reservoirs were constructed with the parameters from this baseline:
+$\mathbf{W}^{res}$ and $\mathbf{W}^{in}$ were both generated as random matrices
+with i.i.d. entries in the interval [-0.5, 0.5]. Both matrices are fully
+connected, and the reservoir weight matrix were rescaled to a spectral radius of
+0.9.
 
 \subsection{Noise}
 

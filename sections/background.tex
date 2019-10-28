@@ -2,7 +2,7 @@
 
 Jaeger proposed the \textit{Echo State Network} \cite{jaeger_echo_2001} as an
 alternative approach to RNNs, in which only the weights of the output units are
-modified. In RNNs, the activation state $\mathbf{u}(t)$ is determined as a
+modified. In RNNs, the activation state $\mathbf{x}(t)$ is determined as a
 function of the sequence of inputs that is fed to the network $\mathbf{u}(t),
 \mathbf{u}(t-1), \ldots$ making its activation an ``echo'' of the input history.
 % (TODO): only in some cases does it have the "echo" state property^.
@@ -40,9 +40,15 @@ reservoir nodes. The output of the reservoir is given by
   \label{yt}
 \end{equation}
 
-The linear readout layer is thus trained to minimize the squared output error $E
-= \Vert \mathbf{y}(t) - \mathbf{\hat{y}}(t) \Vert$ where $\mathbf{\hat{y}}(t)$
-is the target output, which amounts to solving a system of linear equations
+To train an ESN model of size N in offline mode, it is run to completion on a
+training set. The reservoir states are represented by an Nth order column vector
+$\mathbf{X}$, and the one-dimensional output by a first order column vector
+$\mathbf{Y}$. The linear readout layer is then trained to minimize the squared
+output error $E = \norm{\mathbf{Y} - \mathbf{\hat{Y}}}$ where
+$\mathbf{\hat{Y}}$ is the target output, which amounts to solving a system of
+linear equations
+
+% (TODO): We use the NRMSE. Add this^.
 
 \begin{equation}
   \mathbf{\hat{Y}} = \mathbf{W}^{out}\mathbf{X}.
@@ -58,13 +64,36 @@ called Tikhonov regularization
   \label{tikhonov}
 \end{equation}
 
-\noindent where $\lambda_{r}$ is a regularization coefficient, and Moore-Penrose
-pseudo-inversion
+\noindent where $\lambda_{r}$ is a regularization coefficient, and the
+Moore-Penrose pseudo-inverse
 
 \begin{equation}
   \mathbf{W}^{out} = \mathbf{\hat{Y}}\mathbf{X}^{+}.
   \label{pseudo}
 \end{equation}
+
+When the network is adapted to $\mathbf{W}^{out}$, the ESN is fully trained,
+thus illustrating the apparent simplicity and low algorithmic complexity of the
+method. Gauging the performance of a trained network is done by running a test
+set. We use the normalized root mean square error (NRMSE) for this evaluation,
+given a predicted signal $\mathbf{y}(t)$ and a target signal
+$\mathbf{\hat{y}}(t)$
+
+\begin{equation}
+  E(\mathbf{y}, \mathbf{\hat{y}}) = \sqrt{\frac{
+      \mean{\norm{\mathbf{y}(t) - \mathbf{\hat{y}}(t)}^{2}}
+    }{
+      \mean{\norm{\mathbf{\hat{y}}(t) - \mean{\mathbf{\hat{y}}(t)}}^{2}}
+    }
+  }
+  .
+  \label{nrmse}
+\end{equation}
+% (TODO): The formality of these error calculations, some call it RNMSE some
+% NRMSE. I use from Reservoir Computing Approaches to Recurrent Neural Network
+% Training by Jaeger.
+
+\subsection{Reservoir generation}
 
 As with virtually every machine learning technique, the application of ESNs
 requires some experience. Although a conceptually simple idea, generating
@@ -94,6 +123,9 @@ This is not quite easy. CHARC? Why we chose NARMA.
 NARMA, introduced in \cite{atiya_new_2000}, is .. . The dynamics have been
 researched in \cite{kubota_dynamical_2019}.
 
+% (TODO): How many time steps? Minimum complexity cites this. Should we scale
+% input?
+
 % END
 
 % 1. How ESNs work. Why ESNs are chosen to approximate physical systems; what can
@@ -107,7 +139,7 @@ researched in \cite{kubota_dynamical_2019}.
 % performance in temporal processing tasks. Also relate this to Dambre paper on
 % the fundamental information processing capabilities, it's a fundamental
 % question.
-,
+
 % Introduce the problem statements individually for each limitation. ''Natural
 % computational systems must have specific topologies, and the uniform random
 % connectivity is not appropriate.'' Topology discussion, Manevitz et. al.
