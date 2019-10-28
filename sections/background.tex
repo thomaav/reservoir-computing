@@ -48,8 +48,6 @@ output error $E = \norm{\mathbf{Y} - \mathbf{\hat{Y}}}$ where
 $\mathbf{\hat{Y}}$ is the target output, which amounts to solving a system of
 linear equations
 
-% (TODO): We use the NRMSE. Add this^.
-
 \begin{equation}
   \mathbf{\hat{Y}} = \mathbf{W}^{out}\mathbf{X}.
   \label{hatreg}
@@ -89,8 +87,8 @@ $\mathbf{\hat{y}}(t)$
   .
   \label{nrmse}
 \end{equation}
-% (TODO): The formality of these error calculations, some call it RNMSE some
-% NRMSE. I use from Reservoir Computing Approaches to Recurrent Neural Network
+
+% I use NRMSE from Reservoir Computing Approaches to Recurrent Neural Network
 % Training by Jaeger.
 
 \subsection{Reservoir generation}
@@ -110,9 +108,6 @@ the error, sometimes requiring extensive parameter sweeps.
 
 % (TODO): Write about how Wres and Win are created etc. What _we_ do can be
 % discussed in Method. Cite good explanatory articles on this.
-
-% (TODO): Change this to matrix notation: Y filled with y and X filled with
-% x. Must be done multiple places.
 
 \subsection{Assessing the quality of a reservoir}
 
