@@ -1,24 +1,26 @@
 Training Recurrent Neural Networks is an inherently difficult task. Gradient
-descent methods that use loss information become increasingly inefficient on
-problems with long-range temporal dependencies, making the backpropagation
-algorithm used with feed-forward structures less attractive. Specifically, a
-continuous search in the parameter space of recurrent networks may cause
-bifurcations points in the dynamics of the system, causing non-convergent
-training \cite{doya_bifurcations_nodate}. Moreover, the gradient of the state of
-a dynamical system increases exponentially with respect to the initial state
-over time, making the network slow and expensive to train, and will oftentimes
-lead to insufficient local minima \cite{bengio_learning_1994}. To circumvent
-this complexity in learning algorithms that adapt the internal connections in
-RNNs, three similar methods have been proposed.
+descent methods that incorporate loss information become increasingly
+inefficient on problems with long-range temporal dependencies, making the
+backpropagation algorithm used with feed-forward structures less
+attractive. Specifically, a continuous search in the parameter space of
+recurrent networks may cause bifurcations points in the dynamics of the system,
+causing non-convergent training \cite{doya_bifurcations_nodate}. Moreover, the
+gradient of the state of a dynamical system increases exponentially with respect
+to the initial state over time, making the network slow and expensive to train,
+and will oftentimes lead to insufficient local minima
+\cite{bengio_learning_1994}. To circumvent this complexity in learning
+algorithms that adapt the internal connections in RNNs, three similar methods
+have been proposed.
 
 Liquid State Machines (LSMs) \cite{maass_real-time_2002}, Echo State Networks
 (ESNs) \cite{jaeger_echo_2001} and Backpropagation Decorrelation (BPDC)
 \cite{steil_backpropagation-decorrelation:_2004} independently present
 supervised learning methods that don't adapt the internal weights of the
 RNN. Instead, the output is generated using a simple, memoryless classifier or
-regressor, making the function of the RNN resemble that of kernel methods, which
-increases separability. Additionally, by projecting into a high-dimensional
-space, the temporal information of time series input may be incorporated in the
+regressor, making the function of the RNN resemble that of a kernel in kernel
+method algorithms, which seek features and general relations in datasets to
+increase separability. Thus, by projecting into a high-dimensional space, the
+temporal information of time series input may be incorporated in the
 instantaneous readout. This methodology has been unified into the research
 subfield of Reservoir Computing (RC) \cite{schrauwen_overview_2007}, of which
 the focus is on separating the randomly generated reservoir from the trained

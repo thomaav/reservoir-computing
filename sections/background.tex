@@ -109,6 +109,8 @@ the error, sometimes requiring extensive parameter sweeps.
 % (TODO): Write about how Wres and Win are created etc. What _we_ do can be
 % discussed in Method. Cite good explanatory articles on this.
 
+% (TODO): Write about how this relates to physical reservoirs.
+
 \subsection{Assessing the quality of a reservoir}
 
 This is not quite easy. CHARC? Why we chose NARMA, since it's fairly simple.
@@ -121,7 +123,7 @@ This is not quite easy. CHARC? Why we chose NARMA, since it's fairly simple.
 Nonlinear autoregressive moving average (NARMA) \cite{atiya_new_2000} is a class
 of time series models widely used to benchmark the performance of recurrent
 neural networks. We use the NARMA10 task to evaluate the emulation performance
-of an ESN, which is a temporal task with a time-lag of ten time steps given by
+of an ESN, which is a temporal task with a time-lag of ten time steps, given by
 
 % (TODO): Cite any NARMA users? Many listed in Kubota 2019^.
 
@@ -133,13 +135,13 @@ of an ESN, which is a temporal task with a time-lag of ten time steps given by
   \label{narma}
 \end{equation}
 
-\noindent with the default constant parameters set to $\alpha = 0.3$, $\beta =
-0.05$, $\gamma = 1.5$ and $\delta = 0.1$. The input $u_{t}$ is an i.i.d. stream
-drawn from the interval [0, 0.5]. The task presents a challenge of both memory
-and nonlinearity, uncovered to be a universal trade-off in in dynamical systems
-\cite{dambre_information_2012, verstraeten_memory_2010}, making it a well-suited
-task. The dynamical anatomy of the NARMA10 task was further investigated in
-\cite{kubota_dynamical_2019}.
+\noindent with the default constant parameters $\alpha = 0.3$, $\beta = 0.05$,
+$\gamma = 1.5$ and $\delta = 0.1$. The input $u_{t}$ is an i.i.d. stream drawn
+from the interval [0, 0.5]. The task presents a challenge of both memory and
+nonlinearity, uncovered to be a universal trade-off in in dynamical systems
+\cite{dambre_information_2012, verstraeten_memory_2010}, therefore making it a
+well-suited task. The dynamical anatomy of the NARMA10 task was further
+investigated in \cite{kubota_dynamical_2019}.
 
 % (TODO): How many time steps? Minimum complexity cites this. Should we scale
 % input?
