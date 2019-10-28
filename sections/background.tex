@@ -116,12 +116,35 @@ the error, sometimes requiring extensive parameter sweeps.
 
 \subsection{Assessing the quality of a reservoir}
 
-This is not quite easy. CHARC? Why we chose NARMA.
+This is not quite easy. CHARC? Why we chose NARMA, since it's fairly simple.
+
+% (TODO): See part V. of Comparative Study of Reservoir Computing for Temporal
+% Signal Processing.
 
 \subsection{NARMA}
 
-NARMA, introduced in \cite{atiya_new_2000}, is .. . The dynamics have been
-researched in \cite{kubota_dynamical_2019}.
+Nonlinear autoregressive moving average (NARMA) \cite{atiya_new_2000} is a class
+of time series models widely used to benchmark the performance of recurrent
+neural networks. We use the NARMA10 task to evaluate the emulation performance
+of an ESN, which is a temporal task with a time-lag of ten time steps given by
+
+% (TODO): Cite any NARMA users? Many listed in Kubota 2019^.
+
+\begin{equation}
+  y_{t+1} = \alpha y_{t} +
+  \beta y_{t} \sum_{i=0}^{9}y_{t-i} +
+  \gamma u_{t}u_{t-9} +
+  \delta,
+  \label{narma}
+\end{equation}
+
+\noindent with the default constant parameters set to $\alpha = 0.3$, $\beta =
+0.05$, $\gamma = 1.5$ and $\delta = 0.1$. The input $u_{t}$ is an i.i.d. stream
+drawn from the interval [0, 0.5]. The task presents a challenge of both memory
+and nonlinearity, uncovered to be a universal trade-off in in dynamical systems
+\cite{dambre_information_2012, verstraeten_memory_2010}, making it a well-suited
+task. The dynamical anatomy of the NARMA10 task was further investigated in
+\cite{kubota_dynamical_2019}.
 
 % (TODO): How many time steps? Minimum complexity cites this. Should we scale
 % input?
@@ -133,7 +156,7 @@ researched in \cite{kubota_dynamical_2019}.
 % and Adaptive Nonlinear System Identification. Ridge regression, pseudo inverse,
 % how it's done.
 
-% 2. Time series, specifically NARMA and NARMA10. Also write about practical
+% 2. Time series, specifically NARMA and NARMA 10. Also write about practical
 % applications of RC range. Why are ESNs not useless? Some example applications in
 % Verstraeten's thesis and Reservoir Computing Trends by Jaeger. Achieves great
 % performance in temporal processing tasks. Also relate this to Dambre paper on
