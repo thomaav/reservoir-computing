@@ -207,8 +207,9 @@ def visualize(dataset, washout=200):
     plt.rc('axes', labelsize=16)
 
     plt.plot(target, 'black', label='Target output')
-    plt.plot(predicted, 'green', linestyle='dashed', label='Predicted output')
-    plt.legend()
+    plt.plot(predicted, 'red', label='Predicted output', alpha=0.5)
+    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left',
+               ncol=2, mode="expand", borderaxespad=0., fancybox=False)
 
     plt.ylabel('Reservoir output')
     plt.xlabel('Time')
