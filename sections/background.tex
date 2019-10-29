@@ -91,6 +91,8 @@ $\mathbf{\hat{y}}(t)$
 % I use NRMSE from Reservoir Computing Approaches to Recurrent Neural Network
 % Training by Jaeger.
 
+\subsection{Applications}
+
 \subsection{Reservoir generation}
 
 As with virtually every machine learning technique, the application of ESNs
@@ -113,10 +115,23 @@ the error, sometimes requiring extensive parameter sweeps.
 
 \subsection{Assessing the quality of a reservoir}
 
-This is not quite easy. CHARC? Why we chose NARMA, since it's fairly simple.
+In the RC methodology, computation and memory retainment are intertwined, in
+stark contrast to traditional architectures which use separate memory storage
+units. Attributing task-solving performance to either memory capacity or
+computation is therefore quite difficult. A major challenge is finding suitable
+performance metrics that are substrate-independent, especially given the wide
+variety of architectures of which the parameter spaces may differ completely.
 
-% (TODO): See part V. of Comparative Study of Reservoir Computing for Temporal
-% Signal Processing.
+Attempts have been made to unify quality metrics for reservoir substrates. In a
+recent study \cite{dale_substrate-independent_2019}, a framework is presented to
+characterize reservoir computers independently of substrate realization. CHARC
+(CHAracterisation of Reservoir Computers) forms a behaviour space using three
+common property measures in the RC literature: kernel rank, generalization rank
+and linear short-term memory capacity. The kernel property measures \cite{legenstein_edge_2007}
+
+Why we chose NARMA.
+
+% (TODO): Finish this^.
 
 \subsection{NARMA}
 
