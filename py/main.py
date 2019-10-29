@@ -132,8 +132,12 @@ def grid_search_input_sparsity_input_scaling(dataset):
 
 
 def grid_search_partial_visibility(dataset):
-    hidden_nodes = np.arange(30, 200, 10)
-    output_sparsity = np.arange(0.0, 1.1, 0.1)
+    max_nodes = 400
+    min_nodes = 30
+    mid_nodes = (max_nodes + min_nodes) // 2
+
+    hidden_nodes = np.arange(min_nodes, max_nodes, 10)
+    output_sparsity = np.arange(0.0, 1.05, 0.05)
     params = {
         'hidden_nodes': hidden_nodes,
         'w_out_sparsity': output_sparsity
@@ -153,7 +157,7 @@ def grid_search_partial_visibility(dataset):
     y_width = ax.get_ylim()[0]
 
     plt.xticks([0.0, 0.5*x_width, x_width], [0.0, 0.5, 1.0])
-    plt.yticks([0.0, 0.5*y_width, y_width], [200, 115, 30])
+    plt.yticks([0.0, 0.5*y_width, y_width], [max_nodes, mid_nodes, min_nodes])
 
     ax.xaxis.set_ticks_position('none')
     ax.yaxis.set_ticks_position('none')
