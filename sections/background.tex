@@ -93,6 +93,8 @@ $\mathbf{\hat{y}}(t)$
 
 \subsection{Applications}
 
+Applications.
+
 \subsection{Reservoir generation}
 
 As with virtually every machine learning technique, the application of ESNs
@@ -124,14 +126,22 @@ variety of architectures of which the parameter spaces may differ completely.
 
 Attempts have been made to unify quality metrics for reservoir substrates. In a
 recent study \cite{dale_substrate-independent_2019}, a framework is presented to
-characterize reservoir computers independently of substrate realization. CHARC
-(CHAracterisation of Reservoir Computers) forms a behaviour space using three
-common property measures in the RC literature: kernel rank, generalization rank
-and linear short-term memory capacity. The kernel property measures \cite{legenstein_edge_2007}
+characterize reservoir computers independently of substrate realization. This
+framework, CHARC (CHAracterisation of Reservoir Computers), forms a behaviour
+space using three common property measures in the RC literature: kernel rank,
+generalization rank and linear short-term memory capacity.
 
-Why we chose NARMA.
+The kernel-quality property \cite{legenstein_edge_2007} measures the reservoir's
+ability to separate different input streams by leading to different output.
+Generalization capability measures ability to generalize similar inputs
+\cite{legenstein_edge_2007}. Linear short-term memory \cite{jaeger_short_2002}
+is required to solve temporal problems, and is a quantitative measure of the
+echo state property.
 
-% (TODO): Finish this^.
+However, as we use ESNs, which are quite common in the literature, we have
+chosen the NARMA10 time series to be the main evaluation criteria for network
+performance. Its wide use enables comparisons to previous work, which makes it a
+good candidate for evaluating memory capacity and computational power.
 
 \subsection{NARMA}
 
