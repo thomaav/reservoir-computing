@@ -4,7 +4,7 @@ jaeger_adaptive_nodate}. Similar performance to previous work has been achieved
 (Fig. \ref{visualization}, \ref{performance}) as a baseline to lend credibility
 to further approaches in this paper.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=2.5in]{img/narma_visualization.png}
   \caption{
@@ -14,7 +14,7 @@ i.i.d. stream generated uniformly in the interval [0, 0.5].
   \label{visualization}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=2.5in]{img/general_performance.png}
   \caption{
@@ -52,20 +52,28 @@ radius of 0.9.
   \end{subfigure}
   \caption{
     These figures show the influence of reservoirs that are only partially
-visible on the performance for the NARMA10 task. The density measures the
-fraction of elements in the input and output matrices containing non-zero
-elements.
+visible on the performance for the NARMA10 task. Experiments for the rightmost
+plot were conducted using a reservoir size of 200 hidden nodes. The density is a
+measurement for the fraction of elements in the input and output matrices
+containing non-zero elements.
   }
   \label{performance}
 \end{figure*}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=2.5in]{img/input_scaling_distrib.png}
+  \caption{
+    Effect of input scaling on three input weight distributions.
+  }
+  \label{performance}
+\end{figure}
+
 % (TODO): What about other weight distributions?
 
+% (TODO): Is w_density also interesting for physical reservoirs?
+
 \subsection{Topology}
-
-
-% Thoughts
-% * Remember to add NRMSE to heatmap plots.
 
 %%% Local Variables:
 %%% mode: latex

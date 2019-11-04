@@ -1,3 +1,4 @@
+import enum
 import numpy as np
 import torch
 import torch.nn as nn
@@ -5,9 +6,16 @@ import torch.nn as nn
 from util import spectral_radius as _spectral_radius
 
 
+class Distribution(enum.Enum):
+    gaussian = 1
+    uniform = 2
+    fixed = 3
+
+
 class ESN(nn.Module):
     def __init__(self, hidden_nodes, spectral_radius=0.9, washout=200,
-                 w_in_density=1.0, w_out_density=1.0, input_scaling=1.0):
+                 w_in_density=1.0, w_out_density=1.0, input_scaling=1.0,
+                 w_in_distrib=Distribution.uniform):
         super(ESN, self).__init__()
 
         self.hidden_nodes = hidden_nodes
@@ -17,6 +25,7 @@ class ESN(nn.Module):
         self.w_in_density = w_in_density
         self.washout = washout
         self.input_scaling = input_scaling
+        self.w_in_distrib = w_in_distrib
 
         # We can't just mask w_out with the density, as the masked out nodes
         # must be hidden during training as well.
@@ -28,9 +37,17 @@ class ESN(nn.Module):
         w_res = torch.rand(self.hidden_nodes, self.hidden_nodes) - 0.5
         w_res[torch.rand(self.hidden_nodes, self.hidden_nodes) > self.w_res_density] = 0.0
         w_res *= self.spectral_radius / _spectral_radius(w_res)
-        w_in = (torch.rand(self.hidden_nodes) - 0.5)
+
+        if self.w_in_distrib == Distribution.gaussian:
+            w_in = torch.empty(self.hidden_nodes).normal_(mean=0.0, std=1.0)
+        elif self.w_in_distrib == Distribution.uniform:
+            w_in = torch.rand(self.hidden_nodes) - 0.5
+        elif self.w_in_distrib == Distribution.fixed:
+            w_in = torch.ones(self.hidden_nodes)
+
         w_in[torch.rand(self.hidden_nodes) > self.w_in_density] = 0.0
         w_in *= self.input_scaling
+
         w_out = torch.ones(self.hidden_nodes)
 
         self.register_buffer('w_res', w_res)

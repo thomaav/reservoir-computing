@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 import seaborn as sns
 
+from ESN import Distribution
 from gridsearch import evaluate_esn_1d, evaluate_esn_2d
 from metric import *
 
@@ -102,18 +103,18 @@ def grid_search_output_density(dataset):
 
 
 def grid_search_partial_visibility(dataset):
-    nrmses = pickle.load(open('tmp/' + '11-04-2019 13:35:38', 'rb'))
+    # nrmses = pickle.load(open('tmp/partial_visibility', 'rb'))
 
-    # input_density = np.arange(0.0, 1.025, 0.025)
-    # output_density = np.arange(0.0, 1.025, 0.025)
-    # params = {
-    #     'w_in_density': input_density,
-    #     'w_out_density': output_density
-    # }
+    input_density = np.arange(0.0, 1.025, 0.025)
+    output_density = np.arange(0.0, 1.025, 0.025)
+    params = {
+        'w_in_density': input_density,
+        'w_out_density': output_density
+    }
 
-    # nrmses = evaluate_esn_2d(dataset, params, eval_partial_visibility,
-    #                          runs_per_iteration=10)
-    # pickle.dump(nrmses, open('tmp/' + get_time(), 'wb'))
+    nrmses = evaluate_esn_2d(dataset, params, eval_partial_visibility,
+                             runs_per_iteration=10)
+    pickle.dump(nrmses, open('tmp/' + get_time(), 'wb'))
 
     set_font_sizes()
 
@@ -135,6 +136,51 @@ def grid_search_partial_visibility(dataset):
     plt.xlabel('Output density')
     plt.ylabel('Input density')
     ax.collections[0].colorbar.set_label('NRMSE')
+
+    plt.margins(0.0)
+    plt.savefig('plots/' + get_time())
+    plt.show()
+
+
+def grid_search_input_scaling_input_distrib(dataset):
+    # NB: The keys will always be sorted for reproducibility, so keep them
+    # sorted here.
+    distrib = [Distribution.gaussian, Distribution.uniform, Distribution.fixed]
+    scaling = np.arange(0.1, 1.1, 0.1)
+    params = {
+        'input_scaling': scaling,
+        'w_in_density': distrib,
+    }
+
+    nrmses = evaluate_esn_2d(dataset, params,
+                             eval_input_distrib,
+                             runs_per_iteration=10)
+
+    # We need to transpose, since we want the input scaling to be the x-axis,
+    # but it is before w_in_density alphabetically.
+    nrmses = np.array(nrmses).T
+
+    labels = ['gaussian', 'uniform', 'fixed']
+    set_font_sizes()
+
+    linestyles = ['dotted', 'dashed', 'solid']
+    for i, _nrmses in enumerate(nrmses):
+        plt.plot(scaling, np.squeeze(_nrmses), color='black',
+                 marker='.', linestyle=linestyles[i], label=labels[i])
+
+    maxlim = np.max(nrmses) + 0.05
+    minlim = np.min(nrmses) - 0.05
+    plt.ylim(minlim, maxlim)
+
+    plt.ylabel('NRMSE')
+    plt.xlabel('Input scaling')
+    plt.legend(fancybox=False, loc='upper left', bbox_to_anchor=(0.0, 1.0))
+    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=1.0,
+               linewidth=0.2)
+
+    maxlim = np.max(nrmses) + 0.15
+    minlim = np.min(nrmses) - 0.05
+    plt.ylim(minlim, maxlim)
 
     plt.margins(0.0)
     plt.savefig('plots/' + get_time())

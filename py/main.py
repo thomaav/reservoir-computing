@@ -6,16 +6,17 @@ import torch
 from metric import evaluate_esn
 from dataset import NARMA
 from plot import *
+from ESN import Distribution
 
 
 def run_single_esn(dataset):
     esn = ESN(
         hidden_nodes=200,
         input_scaling=1.0,
-        w_out_density=0.9
+        w_in_distrib=Distribution.fixed
     )
 
-    print('NRMSE:', evaluate_esn(dataset, esn))
+    print('NRMSE:', evaluate_esn(dataset, esn, plot=True))
 
 
 def main():
@@ -29,6 +30,7 @@ def main():
     parser.add_argument('--input_density_scaling', action='store_true')
     parser.add_argument('--output_density', action='store_true')
     parser.add_argument('--partial_visibility', action='store_true')
+    parser.add_argument('--distribution', action='store_true')
     parser.add_argument('--input_noise', action='store_true')
     parser.add_argument('--performance', action='store_true')
     parser.add_argument('--visualize', action='store_true')
@@ -43,6 +45,8 @@ def main():
         grid_search_output_density(dataset)
     elif args.partial_visibility:
         grid_search_partial_visibility(dataset)
+    elif args.distribution:
+        grid_search_input_scaling_input_distrib(dataset)
     elif args.input_noise:
         input_noise(dataset)
     elif args.performance:

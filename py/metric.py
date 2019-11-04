@@ -16,13 +16,27 @@ def nmse(y_predicted, y):
     return float(torch.mean(error) / var)
 
 
-def evaluate_esn(dataset, esn, washout=200):
+def evaluate_esn(dataset, esn, washout=200, plot=False):
     u_train, y_train, u_test, y_test = dataset
     esn(u_train, y_train)
 
     y_predicted = esn(u_test)
     _nmse = nmse(y_predicted, y_test[washout:])
     _nrmse = nrmse(y_predicted, y_test[washout:])
+
+    if plot:
+        target = y_test[washout:]
+        predicted = y_predicted
+
+        plt.plot(target, 'black', label='Target output')
+        plt.plot(predicted, 'red', label='Predicted output', alpha=0.5)
+        plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left',
+                   ncol=2, mode="expand", borderaxespad=0., fancybox=False)
+
+        plt.ylabel('Reservoir output')
+        plt.xlabel('Time')
+
+        plt.show()
 
     return _nrmse
 
@@ -39,6 +53,11 @@ def evaluate_esn_output_density(dataset, hidden_nodes, w_out_density):
 
 def eval_partial_visibility(dataset, w_in_density, w_out_density):
     esn = ESN(hidden_nodes=100, w_in_density=w_in_density, w_out_density=w_out_density)
+    return evaluate_esn(dataset, esn)
+
+
+def eval_input_distrib(dataset, input_scaling, w_in_distrib):
+    esn = ESN(hidden_nodes=200, input_scaling=input_scaling, w_in_distrib=w_in_distrib)
     return evaluate_esn(dataset, esn)
 
 
