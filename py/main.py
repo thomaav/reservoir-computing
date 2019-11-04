@@ -3,7 +3,7 @@ import numpy as np
 import seaborn as sns
 import torch
 
-from metric import *
+from metric import evaluate_esn
 from dataset import NARMA
 from plot import *
 

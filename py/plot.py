@@ -1,16 +1,30 @@
+from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
 from gridsearch import evaluate_esn_1d, evaluate_esn_2d
+from metric import *
+
+
+def get_time():
+    return datetime.now().strftime("%m-%d-%Y %H:%M:%S")
+
+
+def set_label_sizes():
+    plt.rc('legend', fontsize=14)
+    plt.rc('xtick', labelsize=14)
+    plt.rc('ytick', labelsize=14)
+    plt.rc('axes', labelsize=16)
 
 
 def grid_search_input_sparsity(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
-    sparsity = np.arange(0.0, 1.1, 0.1)
+    hidden_nodes = [50, 100, 200]
+    sparsity = np.arange(0.1, 1.1, 0.1)
     params = {
-        'hidden_nodes': [200],
+        'hidden_nodes': hidden_nodes,
         'w_in_sparsity': sparsity,
     }
 
@@ -18,10 +32,30 @@ def grid_search_input_sparsity(dataset):
                              evaluate_esn_input_sparsity,
                              runs_per_iteration=10)
 
-    plt.plot(sparsity, np.squeeze(nrmses), color='black', marker='.')
-    plt.ylabel('NARMA10 - NRMSE')
+    labels = ['50 nodes', '100 nodes', '200 nodes']
+    set_label_sizes()
+
+    linestyles = ['dotted', 'dashed', 'solid']
+    for i, _nrmses in enumerate(nrmses):
+        plt.plot(sparsity, np.squeeze(_nrmses), color='black',
+                 marker='.', linestyle=linestyles[i], label=labels[i])
+
+    maxlim = np.max(nrmses) + 0.05
+    minlim = np.min(nrmses) - 0.05
+    plt.ylim(minlim, maxlim)
+
+    plt.ylabel('NRMSE')
     plt.xlabel('Input sparsity')
-    plt.ylim(0.0, 1.0)
+    plt.legend(fancybox=False, loc='upper left', bbox_to_anchor=(0.0, 1.0))
+    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=1.0,
+               linewidth=0.2)
+
+    maxlim = np.max(nrmses) + 0.15
+    minlim = np.min(nrmses) - 0.05
+    plt.ylim(minlim, maxlim)
+
+    plt.margins(0.0)
+    plt.savefig('plots/' + get_time())
     plt.show()
 
 
