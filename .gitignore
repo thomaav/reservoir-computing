@@ -14,3 +14,4 @@ _region_.tex
 todo.org
 __pycache__
 plots/
+tmp/

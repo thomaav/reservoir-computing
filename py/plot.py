@@ -1,6 +1,7 @@
 from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
+import pickle
 import seaborn as sns
 
 from gridsearch import evaluate_esn_1d, evaluate_esn_2d
@@ -18,18 +19,18 @@ def set_font_sizes():
     plt.rc('axes', labelsize=16)
 
 
-def grid_search_input_sparsity(dataset):
+def grid_search_input_density(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
     hidden_nodes = [50, 100, 200]
-    sparsity = np.arange(0.1, 1.1, 0.1)
+    density = np.arange(0.1, 1.1, 0.1)
     params = {
         'hidden_nodes': hidden_nodes,
-        'w_in_sparsity': sparsity,
+        'w_in_density': density,
     }
 
     nrmses = evaluate_esn_2d(dataset, params,
-                             evaluate_esn_input_sparsity,
+                             evaluate_esn_input_density,
                              runs_per_iteration=10)
 
     labels = ['50 nodes', '100 nodes', '200 nodes']
@@ -37,7 +38,7 @@ def grid_search_input_sparsity(dataset):
 
     linestyles = ['dotted', 'dashed', 'solid']
     for i, _nrmses in enumerate(nrmses):
-        plt.plot(sparsity, np.squeeze(_nrmses), color='black',
+        plt.plot(density, np.squeeze(_nrmses), color='black',
                  marker='.', linestyle=linestyles[i], label=labels[i])
 
     maxlim = np.max(nrmses) + 0.05
@@ -45,7 +46,7 @@ def grid_search_input_sparsity(dataset):
     plt.ylim(minlim, maxlim)
 
     plt.ylabel('NRMSE')
-    plt.xlabel('Input sparsity')
+    plt.xlabel('Input density')
     plt.legend(fancybox=False, loc='upper left', bbox_to_anchor=(0.0, 1.0))
     plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=1.0,
                linewidth=0.2)
@@ -59,18 +60,18 @@ def grid_search_input_sparsity(dataset):
     plt.show()
 
 
-def grid_search_output_sparsity(dataset):
+def grid_search_output_density(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
     hidden_nodes = [50, 100, 200]
-    sparsity = np.arange(0.1, 1.1, 0.1)
+    density = np.arange(0.1, 1.1, 0.1)
     params = {
         'hidden_nodes': hidden_nodes,
-        'w_out_sparsity': sparsity,
+        'w_out_density': density,
     }
 
     nrmses = evaluate_esn_2d(dataset, params,
-                             evaluate_esn_output_sparsity,
+                             evaluate_esn_output_density,
                              runs_per_iteration=10)
 
     labels = ['50 nodes', '100 nodes', '200 nodes']
@@ -78,7 +79,7 @@ def grid_search_output_sparsity(dataset):
 
     linestyles = ['dotted', 'dashed', 'solid']
     for i, _nrmses in enumerate(nrmses):
-        plt.plot(sparsity, np.squeeze(_nrmses), color='black',
+        plt.plot(density, np.squeeze(_nrmses), color='black',
                  marker='.', linestyle=linestyles[i], label=labels[i])
 
     maxlim = np.max(nrmses) + 0.05
@@ -86,7 +87,7 @@ def grid_search_output_sparsity(dataset):
     plt.ylim(minlim, maxlim)
 
     plt.ylabel('NRMSE')
-    plt.xlabel('Output sparsity')
+    plt.xlabel('Output density')
     plt.legend(fancybox=False, loc='upper right', bbox_to_anchor=(1.0, 1.0))
     plt.hlines(y = np.arange(0.0, 2.05, 0.05), xmin=0.0, xmax=1.0,
                linewidth=0.2)
@@ -101,19 +102,20 @@ def grid_search_output_sparsity(dataset):
 
 
 def grid_search_partial_visibility(dataset):
-    input_sparsity = np.arange(0.0, 1.05, 0.05)
-    output_sparsity = np.arange(0.0, 1.05, 0.05)
+    input_density = np.arange(0.0, 1.025, 0.025)
+    output_density = np.arange(0.0, 1.025, 0.025)
     params = {
-        'w_in_sparsity': input_sparsity,
-        'w_out_sparsity': output_sparsity
+        'w_in_density': input_density,
+        'w_out_density': output_density
     }
 
     nrmses = evaluate_esn_2d(dataset, params, eval_partial_visibility,
                              runs_per_iteration=10)
+    pickle.dump(nrmses, open('tmp/' + get_time(), 'wb'))
 
     set_font_sizes()
 
-    sns.heatmap(list(reversed(nrmses)), vmin=0.0, vmax=1.0, square=True)
+    sns.heatmap(list(reversed(nrmses)), vmin=0.2, vmax=0.5, square=True)
     ax = plt.axes()
 
     # Fix half cells at the top and bottom. This is a current bug in Matplotlib.
@@ -123,28 +125,28 @@ def grid_search_partial_visibility(dataset):
     y_width = ax.get_ylim()[0]
 
     plt.xticks([0.0, 0.5*x_width, x_width], [0.0, 0.5, 1.0])
-    plt.yticks([0.0, 0.5*y_width, y_width], [1.0, 0.5, 0.0])
+    plt.yticks([0.0, 0.5*y_width, y_width], [1.0, 0.5, ''])
 
     ax.xaxis.set_ticks_position('none')
     ax.yaxis.set_ticks_position('none')
 
-    plt.xlabel('Output sparsity')
-    plt.ylabel('Input sparsity')
+    plt.xlabel('Output density')
+    plt.ylabel('Input density')
     ax.collections[0].colorbar.set_label('NRMSE')
 
     plt.show()
 
 
-def grid_search_input_sparsity_input_scaling(dataset):
+def grid_search_input_density_input_scaling(dataset):
     input_scaling = np.arange(0.0, 2.1, 0.1)
-    input_sparsity = np.arange(0.0, 1.05, 0.05)
+    input_density = np.arange(0.0, 1.05, 0.05)
     params = {
         'input_scaling': input_scaling,
-        'w_in_sparsity': input_sparsity,
+        'w_in_density': input_density,
     }
 
     nrmses = evaluate_esn_2d(dataset, params,
-                             evaluate_esn_input_sparsity_scaling,
+                             evaluate_esn_input_density_scaling,
                              runs_per_iteration=10)
 
     sns.heatmap(list(reversed(nrmses)), vmin=0.0, vmax=1.0, square=True)
@@ -162,7 +164,7 @@ def grid_search_input_sparsity_input_scaling(dataset):
     ax.xaxis.set_ticks_position('none')
     ax.yaxis.set_ticks_position('none')
 
-    plt.xlabel('Input sparsity')
+    plt.xlabel('Input density')
     plt.ylabel('Input scaling')
     ax.collections[0].colorbar.set_label('NRMSE')
 

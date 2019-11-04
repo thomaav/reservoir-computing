@@ -12,7 +12,7 @@ def run_single_esn(dataset):
     esn = ESN(
         hidden_nodes=200,
         input_scaling=1.0,
-        w_out_sparsity=0.9
+        w_out_density=0.9
     )
 
     print('NRMSE:', evaluate_esn(dataset, esn))
@@ -25,9 +25,9 @@ def main():
 
     import argparse
     parser = argparse.ArgumentParser(description='tms RC')
-    parser.add_argument('--input_sparsity', action='store_true')
-    parser.add_argument('--input_sparsity_scaling', action='store_true')
-    parser.add_argument('--output_sparsity', action='store_true')
+    parser.add_argument('--input_density', action='store_true')
+    parser.add_argument('--input_density_scaling', action='store_true')
+    parser.add_argument('--output_density', action='store_true')
     parser.add_argument('--partial_visibility', action='store_true')
     parser.add_argument('--input_noise', action='store_true')
     parser.add_argument('--performance', action='store_true')
@@ -35,12 +35,12 @@ def main():
     parser.add_argument('--single_esn', action='store_true')
     args = parser.parse_args()
 
-    if args.input_sparsity:
-        grid_search_input_sparsity(dataset)
-    if args.input_sparsity_scaling:
-        grid_search_input_sparsity_input_scaling(dataset)
-    elif args.output_sparsity:
-        grid_search_output_sparsity(dataset)
+    if args.input_density:
+        grid_search_input_density(dataset)
+    if args.input_density_scaling:
+        grid_search_input_density_input_scaling(dataset)
+    elif args.output_density:
+        grid_search_output_density(dataset)
     elif args.partial_visibility:
         grid_search_partial_visibility(dataset)
     elif args.input_noise:

@@ -27,23 +27,23 @@ def evaluate_esn(dataset, esn, washout=200):
     return _nrmse
 
 
-def evaluate_esn_input_sparsity(dataset, hidden_nodes, w_in_sparsity):
-    esn = ESN(hidden_nodes=hidden_nodes, w_in_sparsity=w_in_sparsity)
+def evaluate_esn_input_density(dataset, hidden_nodes, w_in_density):
+    esn = ESN(hidden_nodes=hidden_nodes, w_in_density=w_in_density)
     return evaluate_esn(dataset, esn)
 
 
-def evaluate_esn_output_sparsity(dataset, hidden_nodes, w_out_sparsity):
-    esn = ESN(hidden_nodes=hidden_nodes, w_out_sparsity=w_out_sparsity)
+def evaluate_esn_output_density(dataset, hidden_nodes, w_out_density):
+    esn = ESN(hidden_nodes=hidden_nodes, w_out_density=w_out_density)
     return evaluate_esn(dataset, esn)
 
 
-def eval_partial_visibility(dataset, w_in_sparsity, w_out_sparsity):
-    esn = ESN(hidden_nodes=100, w_in_sparsity=w_in_sparsity, w_out_sparsity=w_out_sparsity)
+def eval_partial_visibility(dataset, w_in_density, w_out_density):
+    esn = ESN(hidden_nodes=100, w_in_density=w_in_density, w_out_density=w_out_density)
     return evaluate_esn(dataset, esn)
 
 
-def evaluate_esn_input_sparsity_scaling(dataset, input_scaling, w_in_sparsity):
-    esn = ESN(hidden_nodes=200, input_scaling=input_scaling, w_in_sparsity=w_in_sparsity)
+def evaluate_esn_input_density_scaling(dataset, input_scaling, w_in_density):
+    esn = ESN(hidden_nodes=200, input_scaling=input_scaling, w_in_density=w_in_density)
     return evaluate_esn(dataset, esn)
 
 
