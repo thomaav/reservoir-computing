@@ -30,6 +30,8 @@ with i.i.d. entries in the interval [-0.5, 0.5]. Both matrices are fully
 connected, and the reservoir weight matrix was rescaled to have a spectral
 radius of 0.9.
 
+% (TODO): w_res density was also set to 0.2.
+
 \subsection{Noise}
 
 \subsection{Measurement equipment accuracy}
@@ -73,6 +75,15 @@ containing non-zero elements.
 % or similar.
 
 \subsection{Topology}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=2.5in]{img/reservoir_density_distrib.png}
+  \caption{
+    Reservoir density versus for three weight distributions.
+  }
+  \label{performance}
+\end{figure}
 
 % (TODO): Is w_density also interesting for physical reservoirs?
 

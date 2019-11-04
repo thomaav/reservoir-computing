@@ -13,10 +13,9 @@ def run_single_esn(dataset):
     esn = ESN(
         hidden_nodes=200,
         input_scaling=1.0,
-        w_in_distrib=Distribution.fixed
     )
 
-    print('NRMSE:', evaluate_esn(dataset, esn, plot=True))
+    print('NRMSE:', evaluate_esn(dataset, esn))
 
 
 def main():
@@ -30,7 +29,8 @@ def main():
     parser.add_argument('--input_density_scaling', action='store_true')
     parser.add_argument('--output_density', action='store_true')
     parser.add_argument('--partial_visibility', action='store_true')
-    parser.add_argument('--distribution', action='store_true')
+    parser.add_argument('--w_in_distribution', action='store_true')
+    parser.add_argument('--w_res_density', action='store_true')
     parser.add_argument('--input_noise', action='store_true')
     parser.add_argument('--performance', action='store_true')
     parser.add_argument('--visualize', action='store_true')
@@ -45,8 +45,10 @@ def main():
         grid_search_output_density(dataset)
     elif args.partial_visibility:
         grid_search_partial_visibility(dataset)
-    elif args.distribution:
+    elif args.w_in_distribution:
         grid_search_input_scaling_input_distrib(dataset)
+    elif args.w_res_density:
+        grid_search_w_res_density_w_res_distrib(dataset)
     elif args.input_noise:
         input_noise(dataset)
     elif args.performance:

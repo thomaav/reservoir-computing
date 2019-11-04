@@ -149,7 +149,7 @@ def grid_search_input_scaling_input_distrib(dataset):
     scaling = np.arange(0.1, 1.1, 0.1)
     params = {
         'input_scaling': scaling,
-        'w_in_density': distrib,
+        'w_in_distrib': distrib,
     }
 
     nrmses = evaluate_esn_2d(dataset, params,
@@ -174,6 +174,51 @@ def grid_search_input_scaling_input_distrib(dataset):
 
     plt.ylabel('NRMSE')
     plt.xlabel('Input scaling')
+    plt.legend(fancybox=False, loc='upper left', bbox_to_anchor=(0.0, 1.0))
+    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=1.0,
+               linewidth=0.2)
+
+    maxlim = np.max(nrmses) + 0.15
+    minlim = np.min(nrmses) - 0.05
+    plt.ylim(minlim, maxlim)
+
+    plt.margins(0.0)
+    plt.savefig('plots/' + get_time())
+    plt.show()
+
+
+def grid_search_w_res_density_w_res_distrib(dataset):
+    # NB: The keys will always be sorted for reproducibility, so keep them
+    # sorted here.
+    density = np.arange(0.1, 1.1, 0.1)
+    distrib = [Distribution.gaussian, Distribution.uniform, Distribution.fixed]
+    params = {
+        'w_res_density': density,
+        'w_res_distrib': distrib,
+    }
+
+    nrmses = evaluate_esn_2d(dataset, params,
+                             eval_res_distrib,
+                             runs_per_iteration=10)
+
+    # We need to transpose, since we want the input scaling to be the x-axis,
+    # but it is before w_in_density alphabetically.
+    nrmses = np.array(nrmses).T
+
+    labels = ['gaussian', 'uniform', 'fixed']
+    set_font_sizes()
+
+    linestyles = ['dotted', 'dashed', 'solid']
+    for i, _nrmses in enumerate(nrmses):
+        plt.plot(density, np.squeeze(_nrmses), color='black',
+                 marker='.', linestyle=linestyles[i], label=labels[i])
+
+    maxlim = np.max(nrmses) + 0.05
+    minlim = np.min(nrmses) - 0.05
+    plt.ylim(minlim, maxlim)
+
+    plt.ylabel('NRMSE')
+    plt.xlabel('Reservoir density')
     plt.legend(fancybox=False, loc='upper left', bbox_to_anchor=(0.0, 1.0))
     plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=1.0,
                linewidth=0.2)

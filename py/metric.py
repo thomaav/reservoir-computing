@@ -61,6 +61,11 @@ def eval_input_distrib(dataset, input_scaling, w_in_distrib):
     return evaluate_esn(dataset, esn)
 
 
+def eval_res_distrib(dataset, w_res_density, w_res_distrib):
+    esn = ESN(hidden_nodes=200, w_res_density=w_res_density, w_res_distrib=w_res_distrib)
+    return evaluate_esn(dataset, esn)
+
+
 def evaluate_esn_input_density_scaling(dataset, input_scaling, w_in_density):
     esn = ESN(hidden_nodes=200, input_scaling=input_scaling, w_in_density=w_in_density)
     return evaluate_esn(dataset, esn)
