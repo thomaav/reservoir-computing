@@ -68,6 +68,9 @@ class ESN(nn.Module):
             x = self.f(u_t + x_t)
             X[t] = x[self.w_out_mask]
 
+        # Record the last time series, as it may be used for further analysis.
+        self.X = X
+
         X = X[self.washout:]
         y = y[self.washout:] if y is not None else y
 
