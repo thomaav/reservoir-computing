@@ -230,9 +230,7 @@ def performance_sweep(dataset):
     params = { 'hidden_nodes': hidden_nodes }
     nrmses = evaluate_esn_1d(dataset, params, runs_per_iteration=10)
 
-    plt.rc('xtick', labelsize=14)
-    plt.rc('ytick', labelsize=14)
-    plt.rc('axes', labelsize=16)
+    set_font_sizes()
 
     plt.plot(hidden_nodes, nrmses, color='black', linestyle='dashed', marker='.')
 
@@ -243,7 +241,10 @@ def performance_sweep(dataset):
     maxlim = np.max(nrmses) + 0.05
     minlim = np.min(nrmses) - 0.05
     plt.ylim(minlim, maxlim)
+    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=50, xmax=200, linewidth=0.2)
 
+    plt.margins(0.0)
+    plt.savefig('plots/' + get_time())
     plt.show()
 
 
@@ -270,4 +271,5 @@ def visualize(dataset, washout=200):
     plt.ylabel('Reservoir output')
     plt.xlabel('Time')
 
+    plt.savefig('plots/' + get_time())
     plt.show()
