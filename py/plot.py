@@ -102,20 +102,22 @@ def grid_search_output_density(dataset):
 
 
 def grid_search_partial_visibility(dataset):
-    input_density = np.arange(0.0, 1.025, 0.025)
-    output_density = np.arange(0.0, 1.025, 0.025)
-    params = {
-        'w_in_density': input_density,
-        'w_out_density': output_density
-    }
+    nrmses = pickle.load(open('tmp/' + '11-04-2019 13:35:38', 'rb'))
 
-    nrmses = evaluate_esn_2d(dataset, params, eval_partial_visibility,
-                             runs_per_iteration=10)
-    pickle.dump(nrmses, open('tmp/' + get_time(), 'wb'))
+    # input_density = np.arange(0.0, 1.025, 0.025)
+    # output_density = np.arange(0.0, 1.025, 0.025)
+    # params = {
+    #     'w_in_density': input_density,
+    #     'w_out_density': output_density
+    # }
+
+    # nrmses = evaluate_esn_2d(dataset, params, eval_partial_visibility,
+    #                          runs_per_iteration=10)
+    # pickle.dump(nrmses, open('tmp/' + get_time(), 'wb'))
 
     set_font_sizes()
 
-    sns.heatmap(list(reversed(nrmses)), vmin=0.2, vmax=0.5, square=True)
+    sns.heatmap(list(reversed(nrmses)), vmin=0.2, vmax=0.6, square=True)
     ax = plt.axes()
 
     # Fix half cells at the top and bottom. This is a current bug in Matplotlib.
@@ -134,6 +136,8 @@ def grid_search_partial_visibility(dataset):
     plt.ylabel('Input density')
     ax.collections[0].colorbar.set_label('NRMSE')
 
+    plt.margins(0.0)
+    plt.savefig('plots/' + get_time())
     plt.show()
 
 
