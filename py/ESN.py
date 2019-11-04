@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import torch.nn as nn
 
@@ -19,9 +20,10 @@ class ESN(nn.Module):
 
         # We can't just mask w_out with the sparsity, as the masked out nodes
         # must be hidden during training as well.
-        self.w_out_sparsity = w_out_sparsity
-        self.w_out_mask = torch.ones(self.hidden_nodes)
-        self.w_out_mask[torch.rand(self.hidden_nodes) > self.w_out_sparsity] = 0.0
+        mask_size = int(self.hidden_nodes*w_out_sparsity)
+        self.w_out_mask = np.random.choice(self.hidden_nodes, mask_size, replace=False)
+        self.w_out_mask = torch.from_numpy(self.w_out_mask)
+        self.output_dim = self.w_out_mask.shape[0]
 
         w_res = torch.rand(self.hidden_nodes, self.hidden_nodes) - 0.5
         w_res[torch.rand(self.hidden_nodes, self.hidden_nodes) > self.w_res_sparsity] = 0.0
@@ -38,14 +40,14 @@ class ESN(nn.Module):
 
     def forward(self, u, y=None):
         timeseries_len = u.size()[0]
-        X = torch.zeros(timeseries_len, self.hidden_nodes)
+        X = torch.zeros(timeseries_len, self.output_dim)
         x = torch.zeros(self.hidden_nodes)
 
         for t in range(timeseries_len):
             u_t = self.w_in * u[t]
             x_t = self.w_res.mv(x)
             x = self.f(u_t + x_t)
-            X[t] = x * self.w_out_mask
+            X[t] = x[self.w_out_mask]
 
         X = X[self.washout:]
         y = y[self.washout:] if y is not None else y

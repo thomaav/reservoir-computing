@@ -11,7 +11,7 @@ def get_time():
     return datetime.now().strftime("%m-%d-%Y %H:%M:%S")
 
 
-def set_label_sizes():
+def set_font_sizes():
     plt.rc('legend', fontsize=14)
     plt.rc('xtick', labelsize=14)
     plt.rc('ytick', labelsize=14)
@@ -33,7 +33,7 @@ def grid_search_input_sparsity(dataset):
                              runs_per_iteration=10)
 
     labels = ['50 nodes', '100 nodes', '200 nodes']
-    set_label_sizes()
+    set_font_sizes()
 
     linestyles = ['dotted', 'dashed', 'solid']
     for i, _nrmses in enumerate(nrmses):
@@ -114,7 +114,7 @@ def grid_search_input_sparsity_input_scaling(dataset):
 
 
 def grid_search_partial_visibility(dataset):
-    max_nodes = 400
+    max_nodes = 200
     min_nodes = 30
     mid_nodes = (max_nodes + min_nodes) // 2
 
@@ -128,6 +128,8 @@ def grid_search_partial_visibility(dataset):
     nrmses = evaluate_esn_2d(dataset, params,
                              evaluate_esn_output_sparsity,
                              runs_per_iteration=10)
+
+    set_font_sizes()
 
     sns.heatmap(list(reversed(nrmses)), vmin=0.0, vmax=1.0, square=True)
     ax = plt.axes()

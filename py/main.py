@@ -11,7 +11,8 @@ from plot import *
 def run_single_esn(dataset):
     esn = ESN(
         hidden_nodes=200,
-        input_scaling=2.0,
+        input_scaling=1.0,
+        w_out_sparsity=0.9
     )
 
     print('NRMSE:', evaluate_esn(dataset, esn))
