@@ -62,20 +62,76 @@ def grid_search_input_sparsity(dataset):
 def grid_search_output_sparsity(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
-    output_sparsity = np.arange(0.0, 1.1, 0.1)
+    hidden_nodes = [50, 100, 200]
+    sparsity = np.arange(0.1, 1.1, 0.1)
     params = {
-        'hidden_nodes': [200],
-        'w_out_sparsity': output_sparsity,
+        'hidden_nodes': hidden_nodes,
+        'w_out_sparsity': sparsity,
     }
 
     nrmses = evaluate_esn_2d(dataset, params,
                              evaluate_esn_output_sparsity,
                              runs_per_iteration=10)
 
-    plt.plot(sparsity, np.squeeze(nrmses), color='black', marker='.')
-    plt.ylabel('NARMA10 - NRMSE')
+    labels = ['50 nodes', '100 nodes', '200 nodes']
+    set_font_sizes()
+
+    linestyles = ['dotted', 'dashed', 'solid']
+    for i, _nrmses in enumerate(nrmses):
+        plt.plot(sparsity, np.squeeze(_nrmses), color='black',
+                 marker='.', linestyle=linestyles[i], label=labels[i])
+
+    maxlim = np.max(nrmses) + 0.05
+    minlim = np.min(nrmses) - 0.05
+    plt.ylim(minlim, maxlim)
+
+    plt.ylabel('NRMSE')
     plt.xlabel('Output sparsity')
-    plt.ylim(0.0, 1.0)
+    plt.legend(fancybox=False, loc='upper right', bbox_to_anchor=(1.0, 1.0))
+    plt.hlines(y = np.arange(0.0, 2.05, 0.05), xmin=0.0, xmax=1.0,
+               linewidth=0.2)
+
+    maxlim = np.max(nrmses) + 0.15
+    minlim = np.min(nrmses) - 0.05
+    plt.ylim(minlim, maxlim)
+
+    plt.margins(0.0)
+    plt.savefig('plots/' + get_time())
+    plt.show()
+
+
+def grid_search_partial_visibility(dataset):
+    input_sparsity = np.arange(0.0, 1.05, 0.05)
+    output_sparsity = np.arange(0.0, 1.05, 0.05)
+    params = {
+        'w_in_sparsity': input_sparsity,
+        'w_out_sparsity': output_sparsity
+    }
+
+    nrmses = evaluate_esn_2d(dataset, params, eval_partial_visibility,
+                             runs_per_iteration=10)
+
+    set_font_sizes()
+
+    sns.heatmap(list(reversed(nrmses)), vmin=0.0, vmax=1.0, square=True)
+    ax = plt.axes()
+
+    # Fix half cells at the top and bottom. This is a current bug in Matplotlib.
+    ax.set_ylim(ax.get_ylim()[0]+0.5, 0.0)
+
+    x_width = ax.get_xlim()[1]
+    y_width = ax.get_ylim()[0]
+
+    plt.xticks([0.0, 0.5*x_width, x_width], [0.0, 0.5, 1.0])
+    plt.yticks([0.0, 0.5*y_width, y_width], [1.0, 0.5, 0.0])
+
+    ax.xaxis.set_ticks_position('none')
+    ax.yaxis.set_ticks_position('none')
+
+    plt.xlabel('Output sparsity')
+    plt.ylabel('Input sparsity')
+    ax.collections[0].colorbar.set_label('NRMSE')
+
     plt.show()
 
 
@@ -108,46 +164,6 @@ def grid_search_input_sparsity_input_scaling(dataset):
 
     plt.xlabel('Input sparsity')
     plt.ylabel('Input scaling')
-    ax.collections[0].colorbar.set_label('NRMSE')
-
-    plt.show()
-
-
-def grid_search_partial_visibility(dataset):
-    max_nodes = 200
-    min_nodes = 30
-    mid_nodes = (max_nodes + min_nodes) // 2
-
-    hidden_nodes = np.arange(min_nodes, max_nodes, 10)
-    output_sparsity = np.arange(0.0, 1.05, 0.05)
-    params = {
-        'hidden_nodes': hidden_nodes,
-        'w_out_sparsity': output_sparsity
-    }
-
-    nrmses = evaluate_esn_2d(dataset, params,
-                             evaluate_esn_output_sparsity,
-                             runs_per_iteration=10)
-
-    set_font_sizes()
-
-    sns.heatmap(list(reversed(nrmses)), vmin=0.0, vmax=1.0, square=True)
-    ax = plt.axes()
-
-    # Fix half cells at the top and bottom. This is a current bug in Matplotlib.
-    ax.set_ylim(ax.get_ylim()[0]+0.5, 0.0)
-
-    x_width = ax.get_xlim()[1]
-    y_width = ax.get_ylim()[0]
-
-    plt.xticks([0.0, 0.5*x_width, x_width], [0.0, 0.5, 1.0])
-    plt.yticks([0.0, 0.5*y_width, y_width], [max_nodes, mid_nodes, min_nodes])
-
-    ax.xaxis.set_ticks_position('none')
-    ax.yaxis.set_ticks_position('none')
-
-    plt.xlabel('Output sparsity')
-    plt.ylabel('Reservoir size')
     ax.collections[0].colorbar.set_label('NRMSE')
 
     plt.show()

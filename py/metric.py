@@ -32,13 +32,18 @@ def evaluate_esn_input_sparsity(dataset, hidden_nodes, w_in_sparsity):
     return evaluate_esn(dataset, esn)
 
 
-def evaluate_esn_input_sparsity_scaling(dataset, input_scaling, w_in_sparsity):
-    esn = ESN(hidden_nodes=200, input_scaling=input_scaling, w_in_sparsity=w_in_sparsity)
+def evaluate_esn_output_sparsity(dataset, hidden_nodes, w_out_sparsity):
+    esn = ESN(hidden_nodes=hidden_nodes, w_out_sparsity=w_out_sparsity)
     return evaluate_esn(dataset, esn)
 
 
-def evaluate_esn_output_sparsity(dataset, hidden_nodes, w_out_sparsity):
-    esn = ESN(hidden_nodes=hidden_nodes, w_out_sparsity=w_out_sparsity)
+def eval_partial_visibility(dataset, w_in_sparsity, w_out_sparsity):
+    esn = ESN(hidden_nodes=100, w_in_sparsity=w_in_sparsity, w_out_sparsity=w_out_sparsity)
+    return evaluate_esn(dataset, esn)
+
+
+def evaluate_esn_input_sparsity_scaling(dataset, input_scaling, w_in_sparsity):
+    esn = ESN(hidden_nodes=200, input_scaling=input_scaling, w_in_sparsity=w_in_sparsity)
     return evaluate_esn(dataset, esn)
 
 

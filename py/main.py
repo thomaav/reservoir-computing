@@ -28,7 +28,7 @@ def main():
     parser.add_argument('--input_sparsity', action='store_true')
     parser.add_argument('--input_sparsity_scaling', action='store_true')
     parser.add_argument('--output_sparsity', action='store_true')
-    parser.add_argument('--partial', action='store_true')
+    parser.add_argument('--partial_visibility', action='store_true')
     parser.add_argument('--input_noise', action='store_true')
     parser.add_argument('--performance', action='store_true')
     parser.add_argument('--visualize', action='store_true')
@@ -41,7 +41,7 @@ def main():
         grid_search_input_sparsity_input_scaling(dataset)
     elif args.output_sparsity:
         grid_search_output_sparsity(dataset)
-    elif args.partial:
+    elif args.partial_visibility:
         grid_search_partial_visibility(dataset)
     elif args.input_noise:
         input_noise(dataset)
