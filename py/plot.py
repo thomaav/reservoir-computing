@@ -1,4 +1,5 @@
 from datetime import datetime
+from functools import wraps
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle
@@ -7,6 +8,16 @@ import seaborn as sns
 from ESN import Distribution
 from gridsearch import evaluate_esn_1d, evaluate_esn_2d
 from metric import *
+
+
+def show(fn):
+    @wraps(fn)
+    def wrapped(*args, **kwargs):
+        fn(*args, **kwargs)
+        plt.margins(0.0)
+        plt.savefig('plots/' + get_time())
+        plt.show()
+    return wrapped
 
 
 def get_time():
@@ -20,6 +31,7 @@ def set_font_sizes():
     plt.rc('axes', labelsize=16)
 
 
+@show
 def plot_input_density(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
@@ -56,11 +68,8 @@ def plot_input_density(dataset):
     minlim = np.min(nrmses) - 0.05
     plt.ylim(minlim, maxlim)
 
-    plt.margins(0.0)
-    plt.savefig('plots/' + get_time())
-    plt.show()
 
-
+@show
 def plot_output_density(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
@@ -97,11 +106,8 @@ def plot_output_density(dataset):
     minlim = np.min(nrmses) - 0.05
     plt.ylim(minlim, maxlim)
 
-    plt.margins(0.0)
-    plt.savefig('plots/' + get_time())
-    plt.show()
 
-
+@show
 def plot_partial_visibility(dataset):
     # nrmses = pickle.load(open('tmp/partial_visibility', 'rb'))
 
@@ -137,11 +143,8 @@ def plot_partial_visibility(dataset):
     plt.ylabel('Input density')
     ax.collections[0].colorbar.set_label('NRMSE')
 
-    plt.margins(0.0)
-    plt.savefig('plots/' + get_time())
-    plt.show()
 
-
+@show
 def plot_input_scaling_input_distrib(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
@@ -182,11 +185,8 @@ def plot_input_scaling_input_distrib(dataset):
     minlim = np.min(nrmses) - 0.05
     plt.ylim(minlim, maxlim)
 
-    plt.margins(0.0)
-    plt.savefig('plots/' + get_time())
-    plt.show()
 
-
+@show
 def plot_w_res_density_w_res_distrib(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
@@ -227,15 +227,13 @@ def plot_w_res_density_w_res_distrib(dataset):
     minlim = np.min(nrmses) - 0.05
     plt.ylim(minlim, maxlim)
 
-    plt.margins(0.0)
-    plt.savefig('plots/' + get_time())
-    plt.show()
 
-
-def input_noise(dataset):
+@show
+def plot_input_noise(dataset):
     pass
 
 
+@show
 def performance_sweep(dataset):
     hidden_nodes = [50, 100, 150, 200]
     params = { 'hidden_nodes': hidden_nodes }
@@ -254,11 +252,8 @@ def performance_sweep(dataset):
     plt.ylim(minlim, maxlim)
     plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=50, xmax=200, linewidth=0.2)
 
-    plt.margins(0.0)
-    plt.savefig('plots/' + get_time())
-    plt.show()
 
-
+@show
 def visualize(dataset, washout=200):
     u_train, y_train, u_test, y_test = dataset
 
@@ -281,6 +276,3 @@ def visualize(dataset, washout=200):
 
     plt.ylabel('Reservoir output')
     plt.xlabel('Time')
-
-    plt.savefig('plots/' + get_time())
-    plt.show()
