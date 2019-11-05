@@ -10,6 +10,16 @@ from gridsearch import evaluate_esn_1d, evaluate_esn_2d
 from metric import *
 
 
+def default_font_size(fn):
+    def wrapped(*args, **kwargs):
+        plt.rc('legend', fontsize=14)
+        plt.rc('xtick', labelsize=14)
+        plt.rc('ytick', labelsize=14)
+        plt.rc('axes', labelsize=16)
+        fn(*args, **kwargs)
+    return wrapped
+
+
 def show(fn):
     @wraps(fn)
     def wrapped(*args, **kwargs):
@@ -24,13 +34,7 @@ def get_time():
     return datetime.now().strftime("%m-%d-%Y %H:%M:%S")
 
 
-def set_font_sizes():
-    plt.rc('legend', fontsize=14)
-    plt.rc('xtick', labelsize=14)
-    plt.rc('ytick', labelsize=14)
-    plt.rc('axes', labelsize=16)
-
-
+@default_font_size
 @show
 def plot_input_density(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
@@ -45,8 +49,6 @@ def plot_input_density(dataset):
     nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
 
     labels = ['50 nodes', '100 nodes', '200 nodes']
-    set_font_sizes()
-
     linestyles = ['dotted', 'dashed', 'solid']
     for i, _nrmses in enumerate(nrmses):
         plt.plot(density, np.squeeze(_nrmses), color='black',
@@ -67,6 +69,7 @@ def plot_input_density(dataset):
     plt.ylim(minlim, maxlim)
 
 
+@default_font_size
 @show
 def plot_output_density(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
@@ -81,8 +84,6 @@ def plot_output_density(dataset):
     nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
 
     labels = ['50 nodes', '100 nodes', '200 nodes']
-    set_font_sizes()
-
     linestyles = ['dotted', 'dashed', 'solid']
     for i, _nrmses in enumerate(nrmses):
         plt.plot(density, np.squeeze(_nrmses), color='black',
@@ -103,6 +104,7 @@ def plot_output_density(dataset):
     plt.ylim(minlim, maxlim)
 
 
+@default_font_size
 @show
 def plot_partial_visibility(dataset):
     # nrmses = pickle.load(open('tmp/partial_visibility', 'rb'))
@@ -116,8 +118,6 @@ def plot_partial_visibility(dataset):
 
     nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
     pickle.dump(nrmses, open('tmp/' + get_time(), 'wb'))
-
-    set_font_sizes()
 
     sns.heatmap(list(reversed(nrmses)), vmin=0.2, vmax=0.6, square=True)
     ax = plt.axes()
@@ -139,6 +139,7 @@ def plot_partial_visibility(dataset):
     ax.collections[0].colorbar.set_label('NRMSE')
 
 
+@default_font_size
 @show
 def plot_input_scaling_input_distrib(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
@@ -157,8 +158,6 @@ def plot_input_scaling_input_distrib(dataset):
     nrmses = np.array(nrmses).T
 
     labels = ['gaussian', 'uniform', 'fixed']
-    set_font_sizes()
-
     linestyles = ['dotted', 'dashed', 'solid']
     for i, _nrmses in enumerate(nrmses):
         plt.plot(scaling, np.squeeze(_nrmses), color='black',
@@ -179,6 +178,7 @@ def plot_input_scaling_input_distrib(dataset):
     plt.ylim(minlim, maxlim)
 
 
+@default_font_size
 @show
 def plot_w_res_density_w_res_distrib(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
@@ -197,8 +197,6 @@ def plot_w_res_density_w_res_distrib(dataset):
     nrmses = np.array(nrmses).T
 
     labels = ['gaussian', 'uniform', 'fixed']
-    set_font_sizes()
-
     linestyles = ['dotted', 'dashed', 'solid']
     for i, _nrmses in enumerate(nrmses):
         plt.plot(density, np.squeeze(_nrmses), color='black',
@@ -221,16 +219,19 @@ def plot_w_res_density_w_res_distrib(dataset):
 
 @show
 def plot_input_noise(dataset):
-    pass
+    params = { 'awgn_test_std': np.arange(0.00, 0.502, 0.02) }
+    nrmses = evaluate_esn_1d(dataset, params, runs_per_iteration=10)
+
+    # We need the SNR of u/v.
+    u_train, _, u_test, _ = dataset
 
 
+@default_font_size
 @show
 def performance_sweep(dataset):
     hidden_nodes = [50, 100, 150, 200]
     params = { 'hidden_nodes': hidden_nodes }
     nrmses = evaluate_esn_1d(dataset, params, runs_per_iteration=10)
-
-    set_font_sizes()
 
     plt.plot(hidden_nodes, nrmses, color='black', linestyle='dashed', marker='.')
 
