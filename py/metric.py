@@ -43,7 +43,7 @@ def evaluate_esn(dataset, esn, washout=200, plot=False):
 
 def eval_esn_with_params(dataset, params={}):
     esn = ESN(**params)
-    return evaluate_esn(dataset, esn)
+    return evaluate_esn(dataset, esn), esn
 
 
 def evaluate_prediction(y_predicted, y):

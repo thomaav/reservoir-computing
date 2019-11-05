@@ -8,6 +8,7 @@ import seaborn as sns
 from ESN import Distribution
 from gridsearch import evaluate_esn_1d, evaluate_esn_2d
 from metric import *
+from util import snr
 
 
 def default_font_size(fn):
@@ -227,8 +228,8 @@ def plot_w_res_density_w_res_distrib(dataset):
 @default_font_size
 @show
 def plot_input_noise(dataset):
-    # Logspace from 0.001 to 0.17, as 0.17 is an SNR of ~0.0 with NARMA10.
-    noise_std = np.logspace(-3.0, -0.769, 50)
+    # Logspace from 0.001 to 0.14, as 0.14 is an SNR of ~0.0 with NARMA10.
+    noise_std = np.logspace(-2.8239, -0.841, 50)
     params = { 'awgn_test_std': noise_std }
     test_snrs = []
     nrmses = evaluate_esn_1d(dataset, params, runs_per_iteration=10, test_snrs=test_snrs)
@@ -243,6 +244,43 @@ def plot_input_noise(dataset):
     minlim = np.min(nrmses) - 0.05
     plt.ylim(minlim, maxlim)
     plt.hlines(y = np.arange(0.0, 2.0, 0.05), xmin=-5.0, xmax=max(test_snrs), linewidth=0.2)
+
+
+@default_font_size
+@show
+def plot_input_noise_trained(dataset):
+    # Logspace from 0.001 to 0.14, as 0.14 is an SNR of ~0.0 with NARMA10.
+    test_noise_std = np.logspace(-2.8239, -0.841, 30)
+    train_noise_std = np.logspace(-2.8239, -0.841, 30)
+    params = {
+        'awgn_test_std': test_noise_std,
+        'awgn_train_std': train_noise_std,
+    }
+
+    u_train, y_train, u_test, y_test = dataset
+    print(snr(u_train.var(), min(train_noise_std)**2))
+
+    nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
+    nrmses = np.array(nrmses).T
+
+    sns.heatmap(list(reversed(nrmses)), vmin=0.0, vmax=1.0, square=True)
+    ax = plt.axes()
+
+    # Fix half cells at the top and bottom. This is a current bug in Matplotlib.
+    ax.set_ylim(ax.get_ylim()[0]+0.5, 0.0)
+
+    x_width = ax.get_xlim()[1]
+    y_width = ax.get_ylim()[0]
+
+    plt.xticks([0.0, 0.5*x_width, x_width], [0, 20, 40])
+    plt.yticks([0.0, 0.5*y_width, y_width], [40, 20, 0])
+
+    ax.xaxis.set_ticks_position('none')
+    ax.yaxis.set_ticks_position('none')
+
+    plt.xlabel('Test signal to noise ratio')
+    plt.ylabel('Train signal to noise ratio')
+    ax.collections[0].colorbar.set_label('NRMSE')
 
 
 @default_font_size

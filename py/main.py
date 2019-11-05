@@ -15,7 +15,8 @@ def run_single_esn(dataset):
         'awgn_test_std': 0.01,
     }
 
-    print('NRMSE:', eval_esn_with_params(dataset, params=params))
+    nrmse, esn = eval_esn_with_params(dataset, params=params)
+    print('NRMSE:', nrmse)
 
 
 def main():
@@ -31,6 +32,7 @@ def main():
     parser.add_argument('--w_in_distribution', action='store_true')
     parser.add_argument('--w_res_density', action='store_true')
     parser.add_argument('--input_noise', action='store_true')
+    parser.add_argument('--input_noise_trained', action='store_true')
     parser.add_argument('--performance', action='store_true')
     parser.add_argument('--visualize', action='store_true')
     parser.add_argument('--single_esn', action='store_true')
@@ -48,6 +50,8 @@ def main():
         plot_w_res_density_w_res_distrib(dataset)
     elif args.input_noise:
         plot_input_noise(dataset)
+    elif args.input_noise_trained:
+        plot_input_noise_trained(dataset)
     elif args.performance:
         performance_sweep(dataset)
     elif args.visualize:
