@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.model_selection import ParameterGrid
 
 from ESN import ESN
-from metric import evaluate_esn
+from metric import evaluate_esn, eval_esn_with_params
 
 
 def evaluate_esn_1d(dataset, params, runs_per_iteration=1):
@@ -20,7 +20,7 @@ def evaluate_esn_1d(dataset, params, runs_per_iteration=1):
         nrmses = []
 
         for i in range(runs_per_iteration):
-            esn = ESN(hidden_nodes=params[p1])
+            esn = ESN(**params)
             nrmses.append(evaluate_esn(dataset, esn))
 
         output.append(np.mean(nrmses))
@@ -28,7 +28,7 @@ def evaluate_esn_1d(dataset, params, runs_per_iteration=1):
     return output
 
 
-def evaluate_esn_2d(dataset, params, eval_func, runs_per_iteration=1):
+def evaluate_esn_2d(dataset, params, runs_per_iteration=1):
     if len(params.keys()) != 2:
         class InvalidParameterDictException(Exception):
             pass
@@ -47,7 +47,7 @@ def evaluate_esn_2d(dataset, params, eval_func, runs_per_iteration=1):
 
         nrmses = []
         for i in range(runs_per_iteration):
-            nrmse = eval_func(dataset, params[p1], params[p2])
+            nrmse = eval_esn_with_params(dataset, params)
             nrmses.append(nrmse)
         output[p1_i].append(np.mean(nrmses))
 

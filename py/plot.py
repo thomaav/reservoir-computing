@@ -42,9 +42,7 @@ def plot_input_density(dataset):
         'w_in_density': density,
     }
 
-    nrmses = evaluate_esn_2d(dataset, params,
-                             evaluate_esn_input_density,
-                             runs_per_iteration=10)
+    nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
 
     labels = ['50 nodes', '100 nodes', '200 nodes']
     set_font_sizes()
@@ -80,9 +78,7 @@ def plot_output_density(dataset):
         'w_out_density': density,
     }
 
-    nrmses = evaluate_esn_2d(dataset, params,
-                             evaluate_esn_output_density,
-                             runs_per_iteration=10)
+    nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
 
     labels = ['50 nodes', '100 nodes', '200 nodes']
     set_font_sizes()
@@ -118,8 +114,7 @@ def plot_partial_visibility(dataset):
         'w_out_density': output_density
     }
 
-    nrmses = evaluate_esn_2d(dataset, params, eval_partial_visibility,
-                             runs_per_iteration=10)
+    nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
     pickle.dump(nrmses, open('tmp/' + get_time(), 'wb'))
 
     set_font_sizes()
@@ -155,9 +150,7 @@ def plot_input_scaling_input_distrib(dataset):
         'w_in_distrib': distrib,
     }
 
-    nrmses = evaluate_esn_2d(dataset, params,
-                             eval_input_distrib,
-                             runs_per_iteration=10)
+    nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
 
     # We need to transpose, since we want the input scaling to be the x-axis,
     # but it is before w_in_density alphabetically.
@@ -197,9 +190,7 @@ def plot_w_res_density_w_res_distrib(dataset):
         'w_res_distrib': distrib,
     }
 
-    nrmses = evaluate_esn_2d(dataset, params,
-                             eval_res_distrib,
-                             runs_per_iteration=10)
+    nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
 
     # We need to transpose, since we want the input scaling to be the x-axis,
     # but it is before w_in_density alphabetically.

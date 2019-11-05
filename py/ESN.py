@@ -13,7 +13,7 @@ class Distribution(enum.Enum):
 
 
 class ESN(nn.Module):
-    def __init__(self, hidden_nodes, spectral_radius=0.9, washout=200,
+    def __init__(self, hidden_nodes=200, spectral_radius=0.9, washout=200,
                  w_in_density=1.0, w_out_density=1.0, w_res_density=1.0,
                  input_scaling=1.0, w_in_distrib=Distribution.uniform,
                  w_res_distrib=Distribution.uniform, awngn_train_std=0.0,

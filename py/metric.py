@@ -41,33 +41,8 @@ def evaluate_esn(dataset, esn, washout=200, plot=False):
     return _nrmse
 
 
-def evaluate_esn_input_density(dataset, hidden_nodes, w_in_density):
-    esn = ESN(hidden_nodes=hidden_nodes, w_in_density=w_in_density)
-    return evaluate_esn(dataset, esn)
-
-
-def evaluate_esn_output_density(dataset, hidden_nodes, w_out_density):
-    esn = ESN(hidden_nodes=hidden_nodes, w_out_density=w_out_density)
-    return evaluate_esn(dataset, esn)
-
-
-def eval_partial_visibility(dataset, w_in_density, w_out_density):
-    esn = ESN(hidden_nodes=100, w_in_density=w_in_density, w_out_density=w_out_density)
-    return evaluate_esn(dataset, esn)
-
-
-def eval_input_distrib(dataset, input_scaling, w_in_distrib):
-    esn = ESN(hidden_nodes=200, input_scaling=input_scaling, w_in_distrib=w_in_distrib)
-    return evaluate_esn(dataset, esn)
-
-
-def eval_res_distrib(dataset, w_res_density, w_res_distrib):
-    esn = ESN(hidden_nodes=200, w_res_density=w_res_density, w_res_distrib=w_res_distrib)
-    return evaluate_esn(dataset, esn)
-
-
-def evaluate_esn_input_density_scaling(dataset, input_scaling, w_in_density):
-    esn = ESN(hidden_nodes=200, input_scaling=input_scaling, w_in_density=w_in_density)
+def eval_esn_with_params(dataset, params={}):
+    esn = ESN(**params)
     return evaluate_esn(dataset, esn)
 
 

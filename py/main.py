@@ -3,20 +3,19 @@ import numpy as np
 import seaborn as sns
 import torch
 
-from metric import evaluate_esn
+from metric import eval_esn_with_params
 from dataset import NARMA
 from plot import *
 from ESN import Distribution
 
 
 def run_single_esn(dataset):
-    esn = ESN(
-        hidden_nodes=200,
-        input_scaling=1.0,
-        w_res_distrib=Distribution.gaussian
-    )
+    params = {
+        'input_scaling': 1.0,
+        'awgn_test_std': 0.01,
+    }
 
-    print('NRMSE:', evaluate_esn(dataset, esn))
+    print('NRMSE:', eval_esn_with_params(dataset, params=params))
 
 
 def main():
@@ -48,7 +47,7 @@ def main():
     elif args.w_res_density:
         plot_w_res_density_w_res_distrib(dataset)
     elif args.input_noise:
-        input_noise(dataset)
+        plot_input_noise(dataset)
     elif args.performance:
         performance_sweep(dataset)
     elif args.visualize:
