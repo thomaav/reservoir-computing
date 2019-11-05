@@ -27,7 +27,6 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description='tms RC')
     parser.add_argument('--input_density', action='store_true')
-    parser.add_argument('--input_density_scaling', action='store_true')
     parser.add_argument('--output_density', action='store_true')
     parser.add_argument('--partial_visibility', action='store_true')
     parser.add_argument('--w_in_distribution', action='store_true')
@@ -39,17 +38,15 @@ def main():
     args = parser.parse_args()
 
     if args.input_density:
-        grid_search_input_density(dataset)
-    if args.input_density_scaling:
-        grid_search_input_density_input_scaling(dataset)
+        plot_input_density(dataset)
     elif args.output_density:
-        grid_search_output_density(dataset)
+        plot_output_density(dataset)
     elif args.partial_visibility:
-        grid_search_partial_visibility(dataset)
+        plot_partial_visibility(dataset)
     elif args.w_in_distribution:
-        grid_search_input_scaling_input_distrib(dataset)
+        plot_input_scaling_input_distrib(dataset)
     elif args.w_res_density:
-        grid_search_w_res_density_w_res_distrib(dataset)
+        plot_w_res_density_w_res_distrib(dataset)
     elif args.input_noise:
         input_noise(dataset)
     elif args.performance:

@@ -20,7 +20,7 @@ def set_font_sizes():
     plt.rc('axes', labelsize=16)
 
 
-def grid_search_input_density(dataset):
+def plot_input_density(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
     hidden_nodes = [50, 100, 200]
@@ -61,7 +61,7 @@ def grid_search_input_density(dataset):
     plt.show()
 
 
-def grid_search_output_density(dataset):
+def plot_output_density(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
     hidden_nodes = [50, 100, 200]
@@ -102,7 +102,7 @@ def grid_search_output_density(dataset):
     plt.show()
 
 
-def grid_search_partial_visibility(dataset):
+def plot_partial_visibility(dataset):
     # nrmses = pickle.load(open('tmp/partial_visibility', 'rb'))
 
     input_density = np.arange(0.0, 1.025, 0.025)
@@ -142,7 +142,7 @@ def grid_search_partial_visibility(dataset):
     plt.show()
 
 
-def grid_search_input_scaling_input_distrib(dataset):
+def plot_input_scaling_input_distrib(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
     distrib = [Distribution.gaussian, Distribution.uniform, Distribution.fixed]
@@ -187,7 +187,7 @@ def grid_search_input_scaling_input_distrib(dataset):
     plt.show()
 
 
-def grid_search_w_res_density_w_res_distrib(dataset):
+def plot_w_res_density_w_res_distrib(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
     density = np.arange(0.1, 1.1, 0.1)
@@ -229,40 +229,6 @@ def grid_search_w_res_density_w_res_distrib(dataset):
 
     plt.margins(0.0)
     plt.savefig('plots/' + get_time())
-    plt.show()
-
-
-def grid_search_input_density_input_scaling(dataset):
-    input_scaling = np.arange(0.0, 2.1, 0.1)
-    input_density = np.arange(0.0, 1.05, 0.05)
-    params = {
-        'input_scaling': input_scaling,
-        'w_in_density': input_density,
-    }
-
-    nrmses = evaluate_esn_2d(dataset, params,
-                             evaluate_esn_input_density_scaling,
-                             runs_per_iteration=10)
-
-    sns.heatmap(list(reversed(nrmses)), vmin=0.0, vmax=1.0, square=True)
-    ax = plt.axes()
-
-    # Fix half cells at the top and bottom. This is a current bug in Matplotlib.
-    ax.set_ylim(ax.get_ylim()[0]+0.5, 0.0)
-
-    x_width = ax.get_xlim()[1]
-    y_width = ax.get_ylim()[0]
-
-    plt.xticks([0.0, 0.5*x_width, x_width], [0.0, 0.5, 1.0])
-    plt.yticks([0.0, 0.5*y_width, y_width], [2, 1, ''])
-
-    ax.xaxis.set_ticks_position('none')
-    ax.yaxis.set_ticks_position('none')
-
-    plt.xlabel('Input density')
-    plt.ylabel('Input scaling')
-    ax.collections[0].colorbar.set_label('NRMSE')
-
     plt.show()
 
 
