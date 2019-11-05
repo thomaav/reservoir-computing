@@ -191,7 +191,7 @@ def grid_search_w_res_density_w_res_distrib(dataset):
     # NB: The keys will always be sorted for reproducibility, so keep them
     # sorted here.
     density = np.arange(0.1, 1.1, 0.1)
-    distrib = [Distribution.gaussian, Distribution.uniform, Distribution.fixed]
+    distrib = [Distribution.gaussian, Distribution.uniform]
     params = {
         'w_res_density': density,
         'w_res_distrib': distrib,

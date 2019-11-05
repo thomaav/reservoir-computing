@@ -16,7 +16,8 @@ class ESN(nn.Module):
     def __init__(self, hidden_nodes, spectral_radius=0.9, washout=200,
                  w_in_density=1.0, w_out_density=1.0, w_res_density=1.0,
                  input_scaling=1.0, w_in_distrib=Distribution.uniform,
-                 w_res_distrib=Distribution.uniform):
+                 w_res_distrib=Distribution.uniform, awngn_train_std=0.0,
+                 awgn_test_std=0.0):
         super(ESN, self).__init__()
 
         self.hidden_nodes = hidden_nodes
@@ -28,6 +29,7 @@ class ESN(nn.Module):
         self.washout = washout
         self.input_scaling = input_scaling
         self.w_in_distrib = w_in_distrib
+        self.w_res_distrib = w_res_distrib
 
         # We can't just mask w_out with the density, as the masked out nodes
         # must be hidden during training as well.
@@ -36,7 +38,13 @@ class ESN(nn.Module):
         self.w_out_mask = torch.from_numpy(self.w_out_mask)
         self.output_dim = self.w_out_mask.shape[0]
 
-        w_res = torch.rand(self.hidden_nodes, self.hidden_nodes) - 0.5
+        if self.w_res_distrib == Distribution.gaussian:
+            w_res = torch.empty(self.hidden_nodes, hidden_nodes).normal_(mean=0.0, std=1.0)
+        elif self.w_res_distrib == Distribution.uniform:
+            w_res = torch.rand(self.hidden_nodes, self.hidden_nodes) - 0.5
+        elif self.w_res_distrib == Distribution.fixed:
+            w_res = torch.ones(self.hidden_nodes, self.hidden_nodes)
+
         w_res[torch.rand(self.hidden_nodes, self.hidden_nodes) > self.w_res_density] = 0.0
         w_res *= self.spectral_radius / _spectral_radius(w_res)
 
