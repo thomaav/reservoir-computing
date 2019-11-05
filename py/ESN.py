@@ -16,7 +16,7 @@ class ESN(nn.Module):
     def __init__(self, hidden_nodes=200, spectral_radius=0.9, washout=200,
                  w_in_density=1.0, w_out_density=1.0, w_res_density=1.0,
                  input_scaling=1.0, w_in_distrib=Distribution.uniform,
-                 w_res_distrib=Distribution.uniform, awngn_train_std=0.0,
+                 w_res_distrib=Distribution.uniform, awgn_train_std=0.0,
                  awgn_test_std=0.0):
         super(ESN, self).__init__()
 
@@ -30,6 +30,8 @@ class ESN(nn.Module):
         self.input_scaling = input_scaling
         self.w_in_distrib = w_in_distrib
         self.w_res_distrib = w_res_distrib
+        self.awgn_train_std = awgn_train_std
+        self.awgn_test_std = awgn_test_std
 
         # We can't just mask w_out with the density, as the masked out nodes
         # must be hidden during training as well.
@@ -69,15 +71,27 @@ class ESN(nn.Module):
         timeseries_len = u.size()[0]
         X = torch.zeros(timeseries_len, self.output_dim)
         x = torch.zeros(self.hidden_nodes)
+        v = torch.zeros(timeseries_len)
 
         for t in range(timeseries_len):
-            u_t = self.w_in * u[t]
+            # Add AWGN to the input signal.
+            v_t = torch.zeros(1)
+            if y is not None and self.awgn_train_std > 0.0:
+                v_t = v_t.normal_(mean=0.0, std=self.awgn_train_std)
+            elif y is None and self.awgn_test_std > 0.0:
+                v_t = v_t.normal_(mean=0.0, std=self.awgn_test_std)
+            v[t] = v_t
+
+            # Calculate the next state of each node as an integration of
+            # incoming connections.
+            u_t = self.w_in * (u[t] + v_t)
             x_t = self.w_res.mv(x)
             x = self.f(u_t + x_t)
             X[t] = x[self.w_out_mask]
 
-        # Record the last time series, as it may be used for further analysis.
+        # Record the previous time series passed through the reservoir.
         self.X = X
+        self.v = v
 
         X = X[self.washout:]
         y = y[self.washout:] if y is not None else y

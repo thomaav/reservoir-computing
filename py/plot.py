@@ -30,6 +30,13 @@ def show(fn):
     return wrapped
 
 
+def default_plot_settings(output, xmin, xmax):
+    maxlim = np.max(output) + 0.05
+    minlim = np.min(output) - 0.05
+    plt.ylim(minlim, maxlim)
+    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=xmin, xmax=xmax, linewidth=0.2)
+
+
 def get_time():
     return datetime.now().strftime("%m-%d-%Y %H:%M:%S")
 
@@ -217,13 +224,25 @@ def plot_w_res_density_w_res_distrib(dataset):
     plt.ylim(minlim, maxlim)
 
 
+@default_font_size
 @show
 def plot_input_noise(dataset):
-    params = { 'awgn_test_std': np.arange(0.00, 0.502, 0.02) }
-    nrmses = evaluate_esn_1d(dataset, params, runs_per_iteration=10)
+    # Logspace from 0.001 to 0.17, as 0.17 is an SNR of ~0.0 with NARMA10.
+    noise_std = np.logspace(-3.0, -0.769, 50)
+    params = { 'awgn_test_std': noise_std }
+    test_snrs = []
+    nrmses = evaluate_esn_1d(dataset, params, runs_per_iteration=10, test_snrs=test_snrs)
 
-    # We need the SNR of u/v.
-    u_train, _, u_test, _ = dataset
+    plt.plot(test_snrs, nrmses, color='black', linestyle='dashed', marker='.')
+
+    plt.ylabel('NARMA10 - NRMSE')
+    plt.xlabel('Input signal to noise ratio')
+    plt.xticks(np.arange(0, max(test_snrs) + 1, 5))
+
+    maxlim = np.max(nrmses) + 0.05
+    minlim = np.min(nrmses) - 0.05
+    plt.ylim(minlim, maxlim)
+    plt.hlines(y = np.arange(0.0, 2.0, 0.05), xmin=-5.0, xmax=max(test_snrs), linewidth=0.2)
 
 
 @default_font_size
@@ -239,10 +258,7 @@ def performance_sweep(dataset):
     plt.xlabel('Reservoir size')
     plt.xticks(np.arange(min(hidden_nodes), max(hidden_nodes) + 1, 50))
 
-    maxlim = np.max(nrmses) + 0.05
-    minlim = np.min(nrmses) - 0.05
-    plt.ylim(minlim, maxlim)
-    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=50, xmax=200, linewidth=0.2)
+    default_plot_settings(nrmses, 50, 200)
 
 
 @show
