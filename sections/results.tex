@@ -56,6 +56,21 @@ Key point: as long as we train with noise, we become more robust.
 
 \subsection{Measurement equipment accuracy}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=2.5in]{img/adc_quantization.png}
+  \caption{
+    Input noise signal to noise ratio for test/train.
+  }
+  \label{performance}
+\end{figure}
+
+% Sensor anomalies, noise, amplifier gain and offset, ADC quantization (resolution
+% error). The input analog voltage range is partitioned into a discrete number of
+% values that the converter can measure, which is the ADCs resolution. How many
+% steps would one have for a 12-bit ADC -- this should have very little meaningful
+% impact on ESN performance?
+
 \subsection{Partially visible state}
 
 \begin{figure}[htbp]

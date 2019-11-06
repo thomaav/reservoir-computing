@@ -17,7 +17,7 @@ class ESN(nn.Module):
                  w_in_density=1.0, w_out_density=1.0, w_res_density=1.0,
                  input_scaling=1.0, w_in_distrib=Distribution.uniform,
                  w_res_distrib=Distribution.uniform, awgn_train_std=0.0,
-                 awgn_test_std=0.0):
+                 awgn_test_std=0.0, adc_quantization=None):
         super(ESN, self).__init__()
 
         self.hidden_nodes = hidden_nodes
@@ -32,6 +32,7 @@ class ESN(nn.Module):
         self.w_res_distrib = w_res_distrib
         self.awgn_train_std = awgn_train_std
         self.awgn_test_std = awgn_test_std
+        self.adc_quantization = adc_quantization
 
         # We can't just mask w_out with the density, as the masked out nodes
         # must be hidden during training as well.
@@ -88,6 +89,10 @@ class ESN(nn.Module):
             x_t = self.w_res.mv(x)
             x = self.f(u_t + x_t)
             X[t] = x[self.w_out_mask]
+
+            if self.adc_quantization is not None:
+                q = 1/self.adc_quantization
+                X[t] = q * torch.round(X[t]/q)
 
         # Record the previous time series passed through the reservoir.
         self.X = X

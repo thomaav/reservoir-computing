@@ -210,10 +210,6 @@ def plot_w_res_density_w_res_distrib(dataset):
         plt.plot(density, np.squeeze(_nrmses), color='black',
                  marker='.', linestyle=linestyles[i], label=labels[i])
 
-    maxlim = np.max(nrmses) + 0.05
-    minlim = np.min(nrmses) - 0.05
-    plt.ylim(minlim, maxlim)
-
     plt.ylabel('NRMSE')
     plt.xlabel('Reservoir density')
     plt.legend(fancybox=False, loc='upper left', bbox_to_anchor=(0.0, 1.0))
@@ -272,8 +268,8 @@ def plot_input_noise_trained(dataset):
     x_width = ax.get_xlim()[1]
     y_width = ax.get_ylim()[0]
 
-    plt.xticks([0.0, 0.5*x_width, x_width], [0, 20, 40])
-    plt.yticks([0.0, 0.5*y_width, y_width], [40, 20, 0])
+    plt.xticks([0.0, 0.5*x_width, x_width], [40, 20, 0])
+    plt.yticks([0.0, 0.5*y_width, y_width], [0, 20, 40])
 
     ax.xaxis.set_ticks_position('none')
     ax.yaxis.set_ticks_position('none')
@@ -281,6 +277,42 @@ def plot_input_noise_trained(dataset):
     plt.xlabel('Test signal to noise ratio')
     plt.ylabel('Train signal to noise ratio')
     ax.collections[0].colorbar.set_label('NRMSE')
+
+
+@default_font_size
+@show
+def plot_adc_quantization(dataset):
+    quantizations = np.linspace(10, 10000, 100)
+    hidden_nodes = [50, 100, 200, 400]
+    params = {
+        'adc_quantization': quantizations,
+        'hidden_nodes': hidden_nodes,
+    }
+
+    # nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
+    # nrmses = np.array(nrmses).T
+    # pickle.dump(nrmses, open('tmp/' + get_time(), 'wb'))
+
+    nrmses = pickle.load(open('tmp/quantization', 'rb'))
+
+    labels = ['50 nodes', '100 nodes', '200 nodes', '400 nodes']
+    linestyles = ['dotted', 'dashed', 'solid', 'dashdot']
+    for i, _nrmses in enumerate(nrmses):
+        plt.plot(quantizations, np.squeeze(_nrmses), color='black',
+                 marker='.', linestyle=linestyles[i], label=labels[i])
+
+    maxlim = 1.0
+    minlim = 0.0
+    plt.ylim(minlim, maxlim)
+
+    maxlim = 3000
+    minlim = 0.0
+    plt.xlim(minlim, maxlim)
+
+    plt.ylabel('NRMSE')
+    plt.xlabel('Quantization bins')
+    plt.legend(fancybox=False, loc='upper right', bbox_to_anchor=(1.0, 1.0))
+    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=3000, linewidth=0.2)
 
 
 @default_font_size

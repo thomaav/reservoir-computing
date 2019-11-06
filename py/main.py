@@ -12,7 +12,7 @@ from ESN import Distribution
 def run_single_esn(dataset):
     params = {
         'input_scaling': 1.0,
-        'awgn_test_std': 0.01,
+        'adc_quantization': 10000,
     }
 
     nrmse, esn = eval_esn_with_params(dataset, params=params)
@@ -33,6 +33,7 @@ def main():
     parser.add_argument('--w_res_density', action='store_true')
     parser.add_argument('--input_noise', action='store_true')
     parser.add_argument('--input_noise_trained', action='store_true')
+    parser.add_argument('--adc_quantization', action='store_true')
     parser.add_argument('--performance', action='store_true')
     parser.add_argument('--visualize', action='store_true')
     parser.add_argument('--single_esn', action='store_true')
@@ -52,6 +53,8 @@ def main():
         plot_input_noise(dataset)
     elif args.input_noise_trained:
         plot_input_noise_trained(dataset)
+    elif args.adc_quantization:
+        plot_adc_quantization(dataset)
     elif args.performance:
         performance_sweep(dataset)
     elif args.visualize:
