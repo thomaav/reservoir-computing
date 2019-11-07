@@ -4,7 +4,7 @@ jaeger_adaptive_nodate}. Similar performance to previous work has been achieved
 (Fig. \ref{visualization}, \ref{performance}) as a baseline to lend credibility
 to further approaches in this paper.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=2.5in]{img/narma_visualization.png}
   \caption{
@@ -14,7 +14,7 @@ i.i.d. stream generated uniformly in the interval [0, 0.5].
   \label{visualization}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=2.5in]{img/general_performance.png}
   \caption{
@@ -42,8 +42,10 @@ Key point: as long as we train with noise, we become more robust.
   \caption{
     Input noise SNR versus NRMSE.
   }
-  \label{performance}
+  \label{input_noise_snr}
 \end{figure}
+
+Some text.
 
 \begin{figure}[H]
   \centering
@@ -51,10 +53,14 @@ Key point: as long as we train with noise, we become more robust.
   \caption{
     Input noise signal to noise ratio for test/train.
   }
-  \label{performance}
+  \label{input_noise_heatmap}
 \end{figure}
 
+More text.
+
 \subsection{Measurement equipment accuracy}
+
+Text.
 
 \begin{figure}[H]
   \centering
@@ -62,8 +68,10 @@ Key point: as long as we train with noise, we become more robust.
   \caption{
     ADC quantization.
   }
-  \label{performance}
+  \label{adc_quantization}
 \end{figure}
+
+Text.
 
 % Sensor anomalies, noise, amplifier gain and offset, ADC quantization (resolution
 % error). The input analog voltage range is partitioned into a discrete number of
@@ -73,13 +81,13 @@ Key point: as long as we train with noise, we become more robust.
 
 \subsection{Partially visible state}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=2.5in]{img/input_scaling_distrib.png}
   \caption{
     Effect of input scaling on three input weight distributions.
   }
-  \label{performance}
+  \label{input_scaling_distrib}
 \end{figure}
 
 \begin{figure*}[htbp]
@@ -103,7 +111,7 @@ plot were conducted using a reservoir size of 200 hidden nodes. The density is a
 measurement for the fraction of elements in the input and output matrices
 containing non-zero elements.
   }
-  \label{performance}
+  \label{partial_visibility}
 \end{figure*}
 
 % (TODO): Tie this together with topology, if it has a feed-forward-like structure
@@ -119,7 +127,7 @@ containing non-zero elements.
 work for internal nodes, unless special topology is employed, e.g. ring
 (elaborate). This shows that sparse internal weight matrices work fine.
   }
-  \label{performance}
+  \label{reservoir_density_distrib}
 \end{figure}
 
 % (TODO): Is w_density also interesting for physical reservoirs?
