@@ -32,6 +32,10 @@ radius of 0.9.
 
 % (TODO): w_res density was also set to 0.2.
 
+% (TODO): The code base is available at <link>.
+
+% (TODO): All experiments are conducted with 10 reservoirs per point.
+
 \subsection{Noise}
 
 Key point: as long as we train with noise, we become more robust.
@@ -60,24 +64,56 @@ More text.
 
 \subsection{Measurement equipment accuracy}
 
-Text.
+When conducting experiments using physical reservoirs, one will inevitably have
+to interact with substrates from software. Whether it be transforming digital
+representations of reservoir perturbations to analog signals that cause the
+excitation, or the reverse mapping of the analog state of the reservoir into a
+digital representation, the accuracy of equipment used for such conversions may
+be of critical importance.
+
+Here we investigate the impact of the quantization done by ADC systems. Sensor
+anomalies, noise and amplification gain may all impact performance, but as found
+in the previous subsection, reservoirs prove to be quite robust to the presence
+of such noise patterns. We therefore focus 
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=2.5in]{img/adc_quantization.png}
   \caption{
-    ADC quantization.
+    Performance effect of ADC quantization on four reservoirs of different
+sizes. $\tanh$ is used as activation function for the experiment, dividing its
+range of (1-, 1) into $n$ discrete output bins.
   }
   \label{adc_quantization}
 \end{figure}
 
-Text.
+To emulate the behavior of an ADC, we extend our ESN model to allow for
+quantization of reservoir output before it is passed to the readout layer. This
+quantization effectively divides the range of the nonlinear activation function
+of each hidden node into a discrete set of fixed output bins.
 
-% Sensor anomalies, noise, amplifier gain and offset, ADC quantization (resolution
-% error). The input analog voltage range is partitioned into a discrete number of
-% values that the converter can measure, which is the ADCs resolution. How many
-% steps would one have for a 12-bit ADC -- this should have very little meaningful
-% impact on ESN performance?
+Fig. \ref{adc_quantization} shows how quantization affects reservoir
+performance. We plot the error of four different reservoir sizes: 50, 100, 200
+and 400 hidden nodes.
+
+We see a performance degradation from 3000 to 1000 discernible states, something
+that is more pressing for the bigger reservoirs. As the amount of discrete
+states move beneath 1000, the performance quickly deteriorates, but perhaps not
+to the extent that one would expect from dividing the output range of the
+reservoir into only 10 bins.
+
+% (TODO): a reservoir of size 400 is as good as one of 50 without quantization at
+% just n quantization bins; an interesting result that shows that even with very
+% few bins, it is still possible to do the NARMA10 task.
+
+% (TODO): what is a standard quantization for a 12-bit ADC for example? Of course
+% depends on voltages and such, but make some assumptions that really drive home
+% the fact that it doesn't matter at all.
+
+% (TODO): Perhaps widen the plot to include up to 4000?
+
+% (TODO): Remember that the main point is connections to physical reservoir
+% computing, not ESNs in particular (which may also be interesting, however..).
 
 \subsection{Partially visible state}
 

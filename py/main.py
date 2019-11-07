@@ -11,8 +11,8 @@ from ESN import Distribution
 
 def run_single_esn(dataset):
     params = {
-        'input_scaling': 1.0,
-        'adc_quantization': 10000,
+        'hidden_nodes': 400,
+        'adc_quantization': 3,
     }
 
     nrmse, esn = eval_esn_with_params(dataset, params=params)
