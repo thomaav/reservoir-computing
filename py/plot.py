@@ -305,14 +305,14 @@ def plot_adc_quantization(dataset):
     minlim = 0.0
     plt.ylim(minlim, maxlim)
 
-    maxlim = 3000
+    maxlim = 5000
     minlim = 0.0
     plt.xlim(minlim, maxlim)
 
     plt.ylabel('NRMSE')
     plt.xlabel('Quantization bins for tanh activation')
     plt.legend(fancybox=False, loc='upper right', bbox_to_anchor=(1.0, 1.0))
-    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=3000, linewidth=0.2)
+    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=5000, linewidth=0.2)
 
 
 @default_font_size

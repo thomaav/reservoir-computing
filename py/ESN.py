@@ -93,7 +93,6 @@ class ESN(nn.Module):
             if self.adc_quantization is not None:
                 q = 1/self.adc_quantization
                 X[t] = q * torch.round(X[t]/q)
-                print(X[t])
 
         # Record the previous time series passed through the reservoir.
         self.X = X

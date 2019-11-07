@@ -32,6 +32,8 @@ radius of 0.9.
 
 % (TODO): w_res density was also set to 0.2.
 
+% (TODO): Sizes we use for NARMA training and testing.
+
 % (TODO): The code base is available at <link>.
 
 % (TODO): All experiments are conducted with 10 reservoirs per point.
@@ -68,13 +70,13 @@ When conducting experiments using physical reservoirs, one will inevitably have
 to interact with substrates from software. Whether it be transforming digital
 representations of reservoir perturbations to analog signals that cause the
 excitation, or the reverse mapping of the analog state of the reservoir into a
-digital representation, the accuracy of equipment used for such conversions may
-be of critical importance.
+digital representation, the accuracy of equipment used for such conversions is
+of crucial importance.
 
-Here we investigate the impact of the quantization done by ADC systems. Sensor
-anomalies, noise and amplification gain may all impact performance, but as found
-in the previous subsection, reservoirs prove to be quite robust to the presence
-of such noise patterns. We therefore focus 
+Sensor anomalies, noise, and amplification gain may all impact performance, but
+as found in the previous subsection, reservoirs prove to be quite robust to the
+presence of such noise patterns. Here we thus focus our investigation on the
+quantization done in ADC systems.
 
 \begin{figure}[H]
   \centering
@@ -97,23 +99,29 @@ performance. We plot the error of four different reservoir sizes: 50, 100, 200
 and 400 hidden nodes.
 
 We see a performance degradation from 3000 to 1000 discernible states, something
-that is more pressing for the bigger reservoirs. As the amount of discrete
-states move beneath 1000, the performance quickly deteriorates, but perhaps not
-to the extent that one would expect from dividing the output range of the
-reservoir into only 10 bins.
+of which is more pressing for the bigger reservoirs. As discrete output states
+move beneath 1000, the performance quickly deteriorates. However, even with just
+10 discrete outputs, reservoirs are still able to replicate the input sequence
+to some degree. Furthermore, reservoirs with 400 hidden nodes and just 100
+discrete output bins consistently provide the same performance as that of a
+reservoir with 50 hidden nodes and no output quantization.
 
-% (TODO): a reservoir of size 400 is as good as one of 50 without quantization at
-% just n quantization bins; an interesting result that shows that even with very
-% few bins, it is still possible to do the NARMA10 task.
+A 12-bit ADC has $2^{12}$, or 4096 output codes, which in accordance with our
+experiments would impose no noticeable increase in the prediction error. 16-bit
+ADCs, outputting $2^{16}$, or 65536 discrete states, would influence our ESN
+simulations even less.
 
-% (TODO): what is a standard quantization for a 12-bit ADC for example? Of course
-% depends on voltages and such, but make some assumptions that really drive home
-% the fact that it doesn't matter at all.
+These results demonstrate that the reservoir methodology provides an inherent
+resilience to output quantization. When designing physical RC systems, this may
+be applied in preliminary analysis of the output resolution and representation,
+whether it be voltage in electrode arrays or the magnetic polarization of
+permalloy nanomagnets.
 
-% (TODO): Perhaps widen the plot to include up to 4000?
+% (TODO): I don't really like the conclusion here -- could I conclude with
+% something more _concrete_, almost like tricks of the trade?
 
-% (TODO): Remember that the main point is connections to physical reservoir
-% computing, not ESNs in particular (which may also be interesting, however..).
+% (TODO): Would higher order NARMAs show different degradations, as they require
+% more memory and computation?
 
 \subsection{Partially visible state}
 
