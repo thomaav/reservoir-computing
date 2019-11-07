@@ -94,22 +94,23 @@ $\mathbf{\hat{y}}(t)$
 \subsection{Applications}
 
 Applications of RC lie primarily in the domain of time-series prediction and
-classification. The paradigm have been successfully applied to predict myriads
-of time-series, where banchmark tasks range from from the simple H\'enon Map
+classification. The paradigm has been successfully applied to predict myriads of
+time-series, where banchmark tasks range from from the simple H\'enon Map
 \cite{goudarzi_comparative_2014}, to time-series requiring more computation and
-memory, such as the mildly chaotic Mackey-Glass time-series and higher order
-NARMA tasks \cite{alippi_quantification_2009}, and the Santa Fe chaotic
-timeseries \cite{rodan_minimum_2011}. Real world approaches include equalizing a
-wireless communication channel \cite{jaeger_harnessing_2004}, short-term traffic
-forecasting \cite{an_short-term_2011}, short-term power load forecasting
-\cite{song_hourly_2011}, and short-term stock price forecasting
-\cite{lin_short-term_2009}.
+memory, such as the mildly chaotic Mackey-Glass time-series
+\cite{alippi_quantification_2009}, and the Santa Fe chaotic timeseries
+\cite{rodan_minimum_2011}. Real world approaches include equalizing a wireless
+communication channel \cite{jaeger_harnessing_2004}, and short-term traffic,
+electric load, and stock price forecasting \cite{an_short-term_2011,
+song_hourly_2011, lin_short-term_2009}.
 
-% (TODO): Further about classification and some other exotic things like
-% reinforcement learning and language modeling.
-
-% (TODO): Minimum Complexity Echo State Network paper has examples on the first
-% page.
+Use of reservoir systems for pattern classification tends to involve sequential
+input such as speech \cite{verstraeten_reservoir-based_2006}, but has also seen
+static pattern recognition tasks like detecting invasive plant species
+\cite{wootton_optimizing_2017}. More exotic applications of RC include robot
+control \cite{aislan_antonelo_learning_2015}, reinforcement learning
+\cite{bush_modeling_2005}, and learning grammatical structure
+\cite{tong_learning_2007}.
 
 \subsection{Reservoir generation}
 
@@ -186,20 +187,6 @@ investigated in \cite{kubota_dynamical_2019}.
 
 % (TODO): How many time steps? Minimum complexity cites this. Should we scale
 % input?
-
-% END
-
-% 1. How ESNs work. Why ESNs are chosen to approximate physical systems; what can
-% it tell us about such physical limitations? Cite practical guide to ESNs by Luko
-% and Adaptive Nonlinear System Identification. Ridge regression, pseudo inverse,
-% how it's done.
-
-% 2. Time series, specifically NARMA and NARMA 10. Also write about practical
-% applications of RC range. Why are ESNs not useless? Some example applications in
-% Verstraeten's thesis and Reservoir Computing Trends by Jaeger. Achieves great
-% performance in temporal processing tasks. Also relate this to Dambre paper on
-% the fundamental information processing capabilities, it's a fundamental
-% question.
 
 % Introduce the problem statements individually for each limitation. ''Natural
 % computational systems must have specific topologies, and the uniform random
