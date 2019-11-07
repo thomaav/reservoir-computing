@@ -298,7 +298,7 @@ def plot_adc_quantization(dataset):
     labels = ['50 nodes', '100 nodes', '200 nodes', '400 nodes']
     linestyles = ['dotted', 'dashed', 'solid', 'dashdot']
     for i, _nrmses in enumerate(nrmses):
-        plt.plot(quantizations, np.squeeze(_nrmses), color='black',
+        plt.plot(quantizations*2, np.squeeze(_nrmses), color='black',
                  marker='.', linestyle=linestyles[i], label=labels[i])
 
     maxlim = 1.0
@@ -310,7 +310,7 @@ def plot_adc_quantization(dataset):
     plt.xlim(minlim, maxlim)
 
     plt.ylabel('NRMSE')
-    plt.xlabel('Quantization bins')
+    plt.xlabel('Quantization bins for tanh activation')
     plt.legend(fancybox=False, loc='upper right', bbox_to_anchor=(1.0, 1.0))
     plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=3000, linewidth=0.2)
 
