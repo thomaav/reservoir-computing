@@ -69,16 +69,12 @@ A comparison can be drawn to commonly recommended SNRs in the IEEE 802.11
 standard for Wi-Fi communications, ranging from 15db to 25dB. Below this
 threshold, wireless communication will quickly become unusable.
 
-
-
 % (TODO): Find some more info about noise from Verstraeten paper^. To compare with
-% this paragraph.
+% this paragraph. 2.2.2.2 in the phd has info on this. NOISEX.
 
 % (TODO): Key point: as long as we train with noise, we become more
 % robust. However, this is only in the case where the performance _really_ breaks
 % down.
-
-% (TODO): Write a little about AWGN.
 
 \begin{figure}[H]
   \centering
@@ -92,8 +88,6 @@ in \cite{dambre_information_2012}.
   \label{input_noise_snr}
 \end{figure}
 
-Some text.
-
 \begin{figure}[H]
   \centering
   \includegraphics[width=2.5in]{img/input_noise_heatmap.png}
@@ -103,7 +97,12 @@ Some text.
   \label{input_noise_heatmap}
 \end{figure}
 
-More text.
+% (TODO): Also elaborate on the noise trick in tricks of the trade by Jaeger,
+% $x_{wobble}$. This is for training, though. A curiosity for regularization.
+
+% (TODO): When trained, relatively robust to input and state noise, inherited from
+% conventional neural networks. From Verstraeten's phd. But one usually uses ridge
+% regression instead for regularization.
 
 \subsection{Measurement equipment accuracy}
 
@@ -154,10 +153,11 @@ A 12-bit ADC has $2^{12}$, or 4096 output codes, which in accordance with our
 experiments would impose no noticeable increase in the prediction error. 16-bit
 ADCs, outputting $2^{16}$, or 65536 discrete states, would influence our ESN
 simulations even less. In \cite{soriano_delay-based_2015}, a major factor
-limiting performance of a delay-based RC implementation was quantization noise,
-where low error rates were achieved with 8 bits or more in the ADC. This result
-is also seen in our ESN implementation, where NRMSE starts leveling out around 8
-bits of accuracy, or 256 discrete states.
+limiting performance of a nonlinear analog electric circuit implementation was
+quantization noise. Low error rates on the Mackey-Glass task were achieved with
+8 bits or more in the ADC. This result is also seen in our ESN implementation,
+where NRMSE starts leveling out around 8 bits of accuracy, or 256 discrete
+states.
 
 These results demonstrate that the reservoir methodology provides an inherent
 resilience to output quantization. When designing physical RC systems, this may
