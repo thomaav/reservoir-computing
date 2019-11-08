@@ -12,6 +12,7 @@ from ESN import Distribution
 def run_single_esn(dataset):
     params = {
         'hidden_nodes': 200,
+        'awgn_test_std': 0.0144,
     }
 
     nrmse, esn = eval_esn_with_params(dataset, params=params)

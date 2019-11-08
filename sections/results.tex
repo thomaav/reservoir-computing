@@ -41,17 +41,53 @@ radius of 0.9.
 \subsection{Noise}
 
 Physical, real world systems are affected by noise. By extension, designers of
-reservoirs that use material substrates must be aware of the effects the present
-noise patterns may have on computational power.
+reservoirs that use material substrates must be aware of the effects the noise
+that is present may have on computational power.
 
-% (TODO): Key point: as long as we train with noise, we become more robust.
+Additive white Gaussian noise (AWGN) is a common noise model that mimics the
+noise patterns of many random processes in nature. The noise is additive,
+meaning the AWGN output is the sum of the input $u_{i}$ and the noise values
+$v_{i}$. $v_{i}$ is i.i.d and drawn from a Gaussian distribution with zero-mean,
+and a variance $\sigma^{2}$.
 
+Here we model noise by extending the ESN model to take the sum of two individual
+inputs, $u$ and $v$, which represent the signal and the noise. The goal of the
+reservoir remains a computation on the signal $u$, a task now hindered by the
+unwanted noise.
+
+We first vary the signal to noise ratio of noise when running the test dataset
+without imposing any noise during training. In this case we see the inherent
+robustness of the reservoirs to undesired noise that is previously unseen. The
+results are shown in Fig. \ref{input_noise_snr}, illustrating a performance
+degradation when the ratio of signal power to noise power drops below 20, which
+corresponds to AWGN with standard deviation $\sigma \approx 0.0144$. Similar
+performance degradation was seen in \cite{dambre_information_2012}, where the
+same SNR measure was used to evaluate the reconstruction capacity from the state
+of a dynamical system.
+
+A comparison can be drawn to commonly recommended SNRs in the IEEE 802.11
+standard for Wi-Fi communications, ranging from 15db to 25dB. Below this
+threshold, wireless communication will quickly become unusable.
+
+
+
+% (TODO): Find some more info about noise from Verstraeten paper^. To compare with
+% this paragraph.
+
+% (TODO): Key point: as long as we train with noise, we become more
+% robust. However, this is only in the case where the performance _really_ breaks
+% down.
+
+% (TODO): Write a little about AWGN.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=2.5in]{img/input_noise_snr.png}
   \caption{
-    Input noise SNR versus NRMSE.
+    Noise causing a decrease in performance of a reservoir with 200 hidden nodes
+on the NARMA10 task. Input signal to noise ratio is measured in dB, and is
+calculated as $SNR = 10\log_{10}(\frac{var(u)}{var(v)})$, the measure also used
+in \cite{dambre_information_2012}.
   }
   \label{input_noise_snr}
 \end{figure}
@@ -117,7 +153,11 @@ reservoir with 50 hidden nodes and no output quantization.
 A 12-bit ADC has $2^{12}$, or 4096 output codes, which in accordance with our
 experiments would impose no noticeable increase in the prediction error. 16-bit
 ADCs, outputting $2^{16}$, or 65536 discrete states, would influence our ESN
-simulations even less.
+simulations even less. In \cite{soriano_delay-based_2015}, a major factor
+limiting performance of a delay-based RC implementation was quantization noise,
+where low error rates were achieved with 8 bits or more in the ADC. This result
+is also seen in our ESN implementation, where NRMSE starts leveling out around 8
+bits of accuracy, or 256 discrete states.
 
 These results demonstrate that the reservoir methodology provides an inherent
 resilience to output quantization. When designing physical RC systems, this may
@@ -168,6 +208,9 @@ containing non-zero elements.
 
 % (TODO): Tie this together with topology, if it has a feed-forward-like structure
 % or similar.
+
+% (TODO): Elaborate on global input, works the most. In fact all the way down to
+% 0.18 NRMSE, which is excellent.
 
 \subsection{Topology}
 
