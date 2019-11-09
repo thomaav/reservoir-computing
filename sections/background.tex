@@ -40,13 +40,13 @@ reservoir nodes. The output of the reservoir is given by
   \label{yt}
 \end{equation}
 
-To train an ESN model of size N in offline mode, it is run to completion on a
-training set. The reservoir states are represented by an Nth order column vector
-$\mathbf{X}$, and the one-dimensional output by a first order column vector
-$\mathbf{Y}$. The linear readout layer is then trained to minimize the squared
-output error $E = \norm{\mathbf{Y} - \mathbf{\hat{Y}}}$ where
-$\mathbf{\hat{Y}}$ is the target output, which amounts to solving a system of
-linear equations
+To train an ESN model of size N in a supervised and offline mode, it is run to
+completion on a training set. The reservoir states are represented by an Nth
+order column vector $\mathbf{X}$, and the one-dimensional output by a first
+order column vector $\mathbf{Y}$. The linear readout layer is then trained to
+minimize the squared output error $E = \norm{\mathbf{Y} - \mathbf{\hat{Y}}}$
+where $\mathbf{\hat{Y}}$ is the target output, which amounts to solving a system
+of linear equations
 
 \begin{equation}
   \mathbf{\hat{Y}} = \mathbf{W}^{out}\mathbf{X}.
@@ -54,21 +54,7 @@ linear equations
 \end{equation}
 
 Well-known methods of solving (\ref{hatreg}) include ridge regression, often
-called Tikhonov regularization
-
-\begin{equation}
-  \mathbf{W}^{out} = \mathbf{\hat{Y}}\mathbf{X}^{T}
-                    (\mathbf{X}\mathbf{X}^{T} + \lambda_{r}\mathbf{I})^{-1},
-  \label{tikhonov}
-\end{equation}
-
-\noindent where $\lambda_{r}$ is a regularization coefficient, and the
-Moore-Penrose pseudo-inverse
-
-\begin{equation}
-  \mathbf{W}^{out} = \mathbf{\hat{Y}}\mathbf{X}^{+}.
-  \label{pseudo}
-\end{equation}
+called Tikhonov regularization, and the Moore-Penrose pseudo-inverse.
 
 When the network is adapted to $\mathbf{W}^{out}$, the ESN is fully trained,
 thus illustrating the apparent simplicity and low algorithmic complexity of the
@@ -141,31 +127,21 @@ computation is therefore quite difficult. A major challenge is finding suitable
 performance metrics that are substrate-independent, especially given the wide
 variety of architectures of which the parameter spaces may differ completely.
 
-Attempts have been made to unify quality metrics for reservoir substrates. In a
-recent study \cite{dale_substrate-independent_2019}, a framework is presented to
-characterize reservoir computers independently of substrate realization. This
-framework, CHARC (CHAracterisation of Reservoir Computers), forms a behaviour
-space using three common property measures in the RC literature: kernel rank,
-generalization rank and linear short-term memory capacity.
-
-The kernel-quality property \cite{legenstein_edge_2007} measures the reservoir's
-ability to separate different input streams by leading to different output.
-Generalization capability measures ability to generalize similar inputs
-\cite{legenstein_edge_2007}. Linear short-term memory \cite{jaeger_short_2002}
-is required to solve temporal problems, and is a quantitative measure of the
-echo state property.
-
-However, as we use ESNs, which are quite common in the literature, we have
-chosen the NARMA10 time series to be the main evaluation criteria for network
-performance. Its wide use enables comparisons to previous work, which makes it a
-good candidate for evaluating memory capacity and computational power.
+Attempts have been made to unify quality metrics for reservoir substrates,
+e.g. the ability to separate different inputs \cite{legenstein_edge_2007}, the
+ability to generalize \cite{legenstein_edge_2007}, and linear short-term memory
+\cite{jaeger_short_2002}. However, as we use extensively researched ESNs, we
+have chosen the NARMA10 time series to be the main evaluation criteria for
+network performance. Its wide use enables comparisons to previous work, which
+makes it a good candidate for evaluating memory capacity and computational power
+with a single metric.
 
 \subsection{NARMA}
 
 Nonlinear autoregressive moving average (NARMA) \cite{atiya_new_2000} is a class
-of time series models widely used to benchmark the performance of recurrent
-neural networks. We use the NARMA10 task to evaluate the emulation performance
-of an ESN, which is a temporal task with a time-lag of ten time steps, given by
+of time series models widely used to benchmark the performance of RC models. We
+use the NARMA10 task to evaluate the emulation performance of an ESN, which is a
+temporal task with a time-lag of ten time steps, given b
 
 % (TODO): Cite any NARMA users? Many listed in Kubota 2019^.
 
@@ -180,10 +156,10 @@ of an ESN, which is a temporal task with a time-lag of ten time steps, given by
 \noindent with the default constant parameters $\alpha = 0.3$, $\beta = 0.05$,
 $\gamma = 1.5$ and $\delta = 0.1$. The input $u_{t}$ is an i.i.d. stream drawn
 from the interval [0, 0.5]. The task presents a challenge of both memory and
-nonlinearity, uncovered to be a universal trade-off in in dynamical systems
-\cite{dambre_information_2012, verstraeten_memory_2010}, therefore making it a
-well-suited task. The dynamical anatomy of the NARMA10 task was further
-investigated in \cite{kubota_dynamical_2019}.
+nonlinearity, uncovered to be a universal trade-off in in dynamical systems used
+in reservoir settings \cite{dambre_information_2012, verstraeten_memory_2010},
+therefore making it a well-suited task. The dynamical anatomy of the NARMA10
+task was further investigated in \cite{kubota_dynamical_2019}.
 
 % (TODO): How many time steps? Minimum complexity cites this. Should we scale
 % input?
