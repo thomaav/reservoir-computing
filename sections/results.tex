@@ -44,6 +44,15 @@ Physical, real world systems are affected by noise. By extension, designers of
 reservoirs that use material substrates must be aware of the effects the noise
 that is present may have on computational power.
 
+It is well known in the field of traditional artificial neural networks that an
+addition of noise to input data can lead to generalization improvements similar
+to that of Tikhonov Regularization \cite{bishop_training_1995}. This has been
+verified to hold for the RC paradigm \cite{kurkova_stable_2008}, citing that the
+more pragmatic approach is simply using ridge regression, as dynamic noise
+injection is a non-deterministic approach. In this section, we look at adding
+noise purely to the test set, investigating the reservoir robustness to noisy
+environments.
+
 Additive white Gaussian noise (AWGN) is a common noise model that mimics the
 noise patterns of many random processes in nature. The noise is additive,
 meaning the AWGN output is the sum of the input $u_{i}$ and the noise values
@@ -55,26 +64,31 @@ inputs, $u$ and $v$, which represent the signal and the noise. The goal of the
 reservoir remains a computation on the signal $u$, a task now hindered by the
 unwanted noise.
 
-We first vary the signal to noise ratio of noise when running the test dataset
-without imposing any noise during training. In this case we see the inherent
-robustness of the reservoirs to undesired noise that is previously unseen. The
-results are shown in Fig. \ref{input_noise_snr}, illustrating a performance
-degradation when the ratio of signal power to noise power drops below 20, which
-corresponds to AWGN with standard deviation $\sigma \approx 0.0144$. Similar
-performance degradation was seen in \cite{dambre_information_2012}, where the
-same SNR measure was used to evaluate the reconstruction capacity from the state
-of a dynamical system.
+We vary the signal to noise ratio of the injected noise when running the test
+dataset without imposing any noise during training. In this case we will see the
+inherent robustness of the reservoirs to undesired noise that is previously
+unseen. The results are shown in Fig. \ref{input_noise_snr}, illustrating a
+performance degradation when the ratio of signal power to noise power drops
+below 20, which corresponds to AWGN with standard deviation $\sigma \approx
+0.0144$. The reservoir performance drops drastically when reaching around 10
+dB. Similar performance degradation was seen in \cite{dambre_information_2012},
+where the same SNR measure was used to evaluate the signal reconstruction
+capacity from the state of a dynamical system.
 
 A comparison can be drawn to commonly recommended SNRs in the IEEE 802.11
 standard for Wi-Fi communications, ranging from 15db to 25dB. Below this
-threshold, wireless communication will quickly become unusable.
+threshold, wireless communication will quickly become unusable. In
+\cite{verstraeten_isolated_2005}, the experiments with LSM reservoirs containing
+1232 leaky integrate integrate-and-fire neurons were performed, adding noise
+from the NOISEX database to word recognition tasks. Across noise three types of
+noise, speech babble, white-noise, and car interior noise, the error rate
+consistently stayed above 80\% with an SNR of 10dB.
 
-% (TODO): Find some more info about noise from Verstraeten paper^. To compare with
-% this paragraph. 2.2.2.2 in the phd has info on this. NOISEX.
-
-% (TODO): Key point: as long as we train with noise, we become more
-% robust. However, this is only in the case where the performance _really_ breaks
-% down.
+In summary, our results indicate a robustness to the presence of noise in the
+input stream. This is a promising result when considering physical substrates as
+reservoir mediums, providing lower bounds on the ratio of signal power to noise
+power that is necessary in simulated reservoir settings. This knowledge is
+crucial for successful applications of physical RC systems.
 
 \begin{figure}[H]
   \centering
@@ -87,22 +101,6 @@ in \cite{dambre_information_2012}.
   }
   \label{input_noise_snr}
 \end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=2.5in]{img/input_noise_heatmap.png}
-  \caption{
-    Input noise signal to noise ratio for test/train.
-  }
-  \label{input_noise_heatmap}
-\end{figure}
-
-% (TODO): Also elaborate on the noise trick in tricks of the trade by Jaeger,
-% $x_{wobble}$. This is for training, though. A curiosity for regularization.
-
-% (TODO): When trained, relatively robust to input and state noise, inherited from
-% conventional neural networks. From Verstraeten's phd. But one usually uses ridge
-% regression instead for regularization.
 
 \subsection{Measurement equipment accuracy}
 
