@@ -49,9 +49,9 @@ addition of noise to input data can lead to generalization improvements similar
 to that of Tikhonov Regularization \cite{bishop_training_1995}. This has been
 verified to hold for the RC paradigm \cite{kurkova_stable_2008}, citing that the
 more pragmatic approach is simply using ridge regression, as dynamic noise
-injection is a non-deterministic approach. In this section, we look at adding
-noise purely to the test set, investigating the reservoir robustness to noisy
-environments.
+injection is a non-deterministic approach. In this section, we investigate the
+impact of adding noise to just the test set, and hence exploring reservoir
+robustness to noisy environments.
 
 Additive white Gaussian noise (AWGN) is a common noise model that mimics the
 noise patterns of many random processes in nature. The noise is additive,
@@ -59,38 +59,22 @@ meaning the AWGN output is the sum of the input $u_{i}$ and the noise values
 $v_{i}$. $v_{i}$ is i.i.d and drawn from a Gaussian distribution with zero-mean,
 and a variance $\sigma^{2}$.
 
-Here we model noise by extending the ESN model to take the sum of two individual
+We model AWGN noise by extending the ESN model to take the sum of two individual
 inputs, $u$ and $v$, which represent the signal and the noise. The goal of the
 reservoir remains a computation on the signal $u$, a task now hindered by the
 unwanted noise.
 
 We vary the signal to noise ratio of the injected noise when running the test
-dataset without imposing any noise during training. In this case we will see the
-inherent robustness of the reservoirs to undesired noise that is previously
-unseen. The results are shown in Fig. \ref{input_noise_snr}, illustrating a
-performance degradation when the ratio of signal power to noise power drops
-below 20, which corresponds to AWGN with standard deviation $\sigma \approx
-0.0144$. The reservoir performance drops drastically when reaching around 10
-dB. Similar performance degradation was seen in \cite{dambre_information_2012},
-where the same SNR measure was used to evaluate the signal reconstruction
-capacity from the state of a dynamical system.
+dataset. Thus we will see the inherent robustness of the reservoirs to undesired
+noise that is previously unseen. The results are shown in
+Fig. \ref{input_noise_snr}, illustrating a slight performance degradation when
+the ratio of signal power to noise power drops below 20 dB. The reservoir
+performance drops more drastically when reaching 10 dB. Similar performance
+degradation was seen in \cite{dambre_information_2012}, where the same SNR
+measure was used to evaluate the signal reconstruction capacity from the state
+of a dynamical system.
 
-A comparison can be drawn to commonly recommended SNRs in the IEEE 802.11
-standard for Wi-Fi communications, ranging from 15db to 25dB. Below this
-threshold, wireless communication will quickly become unusable. In
-\cite{verstraeten_isolated_2005}, the experiments with LSM reservoirs containing
-1232 leaky integrate integrate-and-fire neurons were performed, adding noise
-from the NOISEX database to word recognition tasks. Across noise three types of
-noise, speech babble, white-noise, and car interior noise, the error rate
-consistently stayed above 80\% with an SNR of 10dB.
-
-In summary, our results indicate a robustness to the presence of noise in the
-input stream. This is a promising result when considering physical substrates as
-reservoir mediums, providing lower bounds on the ratio of signal power to noise
-power that is necessary in simulated reservoir settings. This knowledge is
-crucial for successful applications of physical RC systems.
-
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=2.5in]{img/input_noise_snr.png}
   \caption{
@@ -101,6 +85,20 @@ in \cite{dambre_information_2012}.
   }
   \label{input_noise_snr}
 \end{figure}
+
+A comparison can be drawn to commonly recommended SNRs in the IEEE 802.11
+standard for Wi-Fi communications, ranging from 15db to 25dB. Below this
+threshold, wireless communication will quickly become unusable. Additionally, in
+\cite{verstraeten_isolated_2005}, experiments with LSM reservoirs containing
+1232 leaky integrate integrate-and-fire neurons were performed, adding noise
+from the NOISEX database to word recognition tasks. Across noise three types of
+noise: speech babble, white-noise, and car interior noise, the error rate
+consistently stayed above 80\% with an SNR of 10dB.
+
+In summary, our results indicate a robustness to the presence of noise in the
+input stream. This is a promising result when considering physical substrates as
+reservoir mediums, providing lower bounds on the ratio of signal power to noise
+power that is necessary.
 
 \subsection{Measurement equipment accuracy}
 
