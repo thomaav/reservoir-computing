@@ -128,6 +128,8 @@ range of (1-, 1) into $n$ discrete output bins.
   \label{adc_quantization}
 \end{figure}
 
+% (TODO): Change this to bits of quantization? As if it's an actual ADC.
+
 To emulate the behavior of an ADC, we extend our ESN model to allow for
 quantization of reservoir output before it is passed to the readout layer. This
 quantization effectively divides the range of the nonlinear activation function
@@ -169,6 +171,27 @@ permalloy nanomagnets.
 
 \subsection{Partially visible state}
 
+% Part one: Fig. 7, effect of partially visible state.
+
+Consider a physical reservoir system using microelectrode arrays (MEAs) as its
+computational substrate, a common approach when using biological, \textit{in
+vitro} components \cite{cite_some_stuff}. The goal of such MEAs is to serve as
+an interface that connects biological neuronal activity to electronic circuitry,
+and it does so by having an organization of microelectrodes on a two-dimensional
+grid. Obtaining neural signals is done only through the electrode interface by
+means of a two-way transduction from voltage drop in the biological environment
+to a an electric current and vice versa.
+
+When seeding MEAs with solutions containing neuronal cultures, one is by no
+means guaranteed a neural network that fits the MEA layout well. In fact, with
+common grid layouts ranging from 64 to 256 electrodes, each electrode will
+examine its surrounding area, not individual cells.
+
+% (TODO): Explanation for lower input density: we drive the reservoir less, more
+% driving forces makes the reservoir forget past inputs.
+
+% Part two: Fig. 6, effect of global distribution of input.
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=2.5in]{img/input_scaling_distrib.png}
@@ -201,6 +224,8 @@ containing non-zero elements.
   }
   \label{partial_visibility}
 \end{figure*}
+
+% (TODO): Label the figures a, b and c.
 
 % (TODO): Tie this together with topology, if it has a feed-forward-like structure
 % or similar.
