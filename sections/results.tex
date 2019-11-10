@@ -24,19 +24,17 @@ averaged over 10 simulation runs.
   \label{performance}
 \end{figure}
 
-All further reservoirs were constructed with the parameters from this baseline:
-$\mathbf{W}^{res}$ and $\mathbf{W}^{in}$ were both generated as random matrices
-with i.i.d. entries in the interval [-0.5, 0.5]. Both matrices are fully
-connected, and the reservoir weight matrix was rescaled to have a spectral
-radius of 0.9.
-
-% (TODO): w_res density was also set to 0.2.
-
-% (TODO): Sizes we use for NARMA training and testing.
-
-% (TODO): The code base is available at <link>.
-
-% (TODO): All experiments are conducted with 10 reservoirs per point.
+All further reservoirs were constructed with the parameters from this baseline,
+unless otherwise specified: the default reservoir size used was 200 hidden
+nodes. $\mathbf{W}^{res}$ and $\mathbf{W}^{in}$ were both generated as random
+matrices with i.i.d. entries in the interval [-0.5, 0.5]. Both matrices are
+fully connected, and the reservoir weight matrix was rescaled such that
+$\rho(\mathbf{W}_{res}) = 0.9$. The first 200 states of each run are discarded
+to provide a \textit{washout} of the initial reservoir state. For all
+experiments, the generated input was split into a training and test set, with
+$L_{train} = 2000$ and $L_{test} = 3000$. All reported performances are the mean
+across ten randomizations of each model representative. The Python software
+library implementation is available online\footnote{Some GitHub repository.}.
 
 \subsection{Noise}
 
@@ -173,12 +171,12 @@ permalloy nanomagnets.
 
 Consider a physical reservoir system using microelectrode arrays (MEAs) as its
 computational substrate, a common approach when using biological, \textit{in
-vitro} components \cite{cite_some_stuff}. The goal of such MEAs is to serve as
-an interface that connects biological neuronal activity to electronic circuitry,
-and it does so by having an organization of microelectrodes on a two-dimensional
-grid. Obtaining neural signals is done only through the electrode interface by
-means of a two-way transduction from voltage drop in the biological environment
-to a an electric current and vice versa.
+vitro} components \cite{aaser_towards_2017}. The goal of such MEAs is to serve
+as an interface that connects biological neuronal activity to electronic
+circuitry, and it does so by having an organization of microelectrodes on a
+two-dimensional grid. Obtaining neural signals is done only through the
+electrode interface by means of a two-way transduction from voltage drop in the
+biological environment to a an electric current and vice versa.
 
 When seeding MEAs with solutions containing neuronal cultures, one is by no
 means guaranteed a neural network that fits the MEA layout. In fact, with common
@@ -194,8 +192,6 @@ achieved. Input and output is adjusted separately. Fig. \ref{partial_visibility}
 shows the results of our simulation runs. Additionally, we investigate the
 effect of fixing the input weight distribution completely, hence only allowing a
 constant scaling of the input stream.
-
-% (TODO): Specify that we are using a uniform distribution for this.
 
 When attaching input units to the network by weights, experience has shown that
 choosing $\mathbf{W}_{in}$ can be done freely, as long as
@@ -261,33 +257,34 @@ forced to receive the same input.
   \begin{subfigure}{.3\textwidth}
     \centering
     \includegraphics[width=\linewidth]{img/input_density_all.png}
+    \caption{}
   \end{subfigure}
   \begin{subfigure}{.3\textwidth}
     \centering
     \includegraphics[width=\linewidth]{img/output_density_all.png}
+    \caption{}
   \end{subfigure}
   \begin{subfigure}{.3\textwidth}
     \centering
     \includegraphics[width=\linewidth]{img/partial_visibility.png}
+    \caption{}
   \end{subfigure}
   \caption{
     These figures show the influence of reservoirs that are only partially
-visible on the performance for the NARMA10 task. Experiments for the rightmost
-plot were conducted using a reservoir size of 200 hidden nodes. The density is a
-measurement for the fraction of elements in the input and output matrices
-containing non-zero elements.
+visible on the performance for the NARMA10 task. The density is a measurement
+for the fraction of elements in the input and output matrices containing
+non-zero elements. The heat map was generated using a reservoir size of 200
+hidden nodes.
   }
   \label{partial_visibility}
 \end{figure*}
 
-% (TODO): Label the figures a, b and c.
-
 % (TODO): Ensure that the subfigure figure isn't pushed _into_ the references.
 
-% (TODO): Tie this together with topology, if it has a feed-forward-like structure
-% or similar.
-
 \subsection{Topology}
+
+Topology section. Probably a literature review, leading into discussions about
+future work.
 
 \begin{figure}[H]
   \centering
@@ -299,6 +296,8 @@ work for internal nodes, unless special topology is employed, e.g. ring
   }
   \label{reservoir_density_distrib}
 \end{figure}
+
+Something about internal reservoir density as an introductory exploration.
 
 % (TODO): Reason for reservoir sparsity is in the original Jaeger paper,
 % e.g. multiple creating separate networks with rich dynamics.
