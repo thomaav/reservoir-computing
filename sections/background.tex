@@ -5,6 +5,7 @@ alternative approach to RNNs, in which only the weights of the output units are
 modified. In RNNs, the activation state $\mathbf{x}(t)$ is determined as a
 function of the sequence of inputs that is fed to the network $\mathbf{u}(t),
 \mathbf{u}(t-1), \ldots$ making its activation an ``echo'' of the input history.
+
 % (TODO): only in some cases does it have the "echo" state property^.
 
 \begin{figure}[H]
@@ -18,7 +19,6 @@ squares optimum.
   }
   \label{esn}
 \end{figure}
-% (TODO): Figure lacks labels for weights and such; what's what^?
 
 In this paper, we consider discrete-time RNNs with $N$ internal network nodes, a
 single input, and a single output node. Fig. \ref{esn} illustrates the basic
@@ -111,11 +111,6 @@ size parameters of high importance. However, in practice the evaluation of a
 reservoir is an endeavor often conducted by training the output and measuring
 the error, sometimes requiring extensive parameter sweeps.
 
-% (TODO): Talk more about specific parameters^?
-
-% (TODO): Write about how Wres and Win are created etc. What _we_ do can be
-% discussed in Method. Cite good explanatory articles on this.
-
 % (TODO): Write about how this relates to physical reservoirs.
 
 \subsection{Assessing the quality of a reservoir}
@@ -161,12 +156,10 @@ in reservoir settings \cite{dambre_information_2012, verstraeten_memory_2010},
 therefore making it a well-suited task. The dynamical anatomy of the NARMA10
 task was further investigated in \cite{kubota_dynamical_2019}.
 
-% (TODO): How many time steps? Minimum complexity cites this. Should we scale
-% input?
-
-% Introduce the problem statements individually for each limitation. ''Natural
-% computational systems must have specific topologies, and the uniform random
-% connectivity is not appropriate.'' Topology discussion, Manevitz et. al.
+% (TODO): Introduce the problem statements individually for each
+% limitation. ''Natural computational systems must have specific topologies, and
+% the uniform random connectivity is not appropriate.'' Topology discussion,
+% Manevitz et. al.
 
 %%% Local Variables:
 %%% mode: latex
