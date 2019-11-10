@@ -187,11 +187,13 @@ surrounding area, not individual cells. Thus, in this section we intend to
 provide an insight into the performance effect of having reservoirs that are
 only partially observable.
 
-First we experiment with the sparsity of $\mathbf{W}_{in}$ and
+In this section we experiment with the sparsity of $\mathbf{W}_{in}$ and
 $\mathbf{W}_{out}$. In both cases, we now generate the connection matrices such
 that a wanted density, given as the fraction of connected nodes, is
 achieved. Input and output is adjusted separately. Fig. \ref{partial_visibility}
-shows the results of our simulation runs.
+shows the results of our simulation runs. Additionally, we investigate the
+effect of fixing the input weight distribution completely, hence only allowing a
+constant scaling of the input stream.
 
 % (TODO): Specify that we are using a uniform distribution for this.
 
@@ -199,7 +201,8 @@ When attaching input units to the network by weights, experience has shown that
 choosing $\mathbf{W}_{in}$ can be done freely, as long as
 $\rho(\mathbf{W}_{res}) < 1$ is satisfied \cite{jaeger_echo_2001}. Experimental
 results from adjusting the sparsity of $\mathbf{W}_{in}$ is shown in
-Fig. \ref{partial_visibility}a.
+Fig. \ref{partial_visibility}a, in which all experiments were done with a
+uniform input weight distribution in the interval [-0.5, 0.5].
 
 Across all three reservoir sizes, we see a small increase in the signal
 prediction error when increasing input connectivity from an initial density of
@@ -222,23 +225,36 @@ decrease in performance from a completely dense output matrix to a density of
 reservoirs, there is a noticeable transition from a linear to an exponential
 NRMSE growth.
 
-We may understand these results to indicate that there is a specific point in
+We may understand these results to indicate that there is a critical point in
 the output density space where there the readout layer starts seeing enough of
 the reservoir dynamics to reconstruct the input NARMA10 signal. Additionally,
 when the output density exceeds this threshold, the performance will continue to
 grow linearly with the density, achieving the best performance at full
 connectivity.
 
-% Part two: Fig. 6, effect of global distribution of input.
-
 \begin{figure}[H]
   \centering
   \includegraphics[width=2.5in]{img/input_scaling_distrib.png}
   \caption{
-    Effect of input scaling on three input weight distributions.
+    Effect of input scaling on three input weight distributions. With the fixed
+distribution every input weight is set to 1.
   }
   \label{input_scaling_distrib}
 \end{figure}
+
+In \cite{jensen_computation_2018}, artificial spin ice is explored as a
+substrate for physical RC. Here, nanomagnetic assemblies are perturbed, using an
+external magnetic field as input source. Thus, every magnet sees exactly the
+same input stream.
+
+Fig. \ref{input_scaling_distrib} explores the performance of ESNs with three
+different input weight distributions: uniform, Gaussian and fixed. Despite the
+performance disparity with increasing input scaling, the best performance of all
+three classes hover around the same NRMSE of around 0.25. This demonstration of
+scaling differently distributed inputs such that they all achieve acceptable
+performance bodes well for physical RC. In particular, we observe a promising
+result when considering RC with physical substrates in which every node is
+forced to receive the same input.
 
 \begin{figure*}[htbp]
   \centering
@@ -266,11 +282,10 @@ containing non-zero elements.
 
 % (TODO): Label the figures a, b and c.
 
+% (TODO): Ensure that the subfigure figure isn't pushed _into_ the references.
+
 % (TODO): Tie this together with topology, if it has a feed-forward-like structure
 % or similar.
-
-% (TODO): Elaborate on global input, works the most. In fact all the way down to
-% 0.18 NRMSE, which is excellent.
 
 \subsection{Topology}
 
