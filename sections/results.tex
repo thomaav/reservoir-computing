@@ -1,5 +1,5 @@
 Evaluation of ESN performance on the NARMA system is a thoroughly explored area
-in the field of RC \cite{verstraeten_experimental_2007, rodan_minimum_2011,
+in the field of RC \cite{rodan_minimum_2011, verstraeten_experimental_2007,
 jaeger_adaptive_nodate}. Similar performance to previous work has been achieved
 (Fig. \ref{visualization}, \ref{performance}) as a baseline to lend credibility
 to further approaches in this paper.
@@ -25,7 +25,7 @@ averaged over 10 simulation runs.
 \end{figure}
 
 All further reservoirs were constructed with the parameters from this baseline,
-unless otherwise specified: the default reservoir size used was 200 hidden
+unless otherwise specified. The default reservoir size used was 200 hidden
 nodes. $\mathbf{W}^{res}$ and $\mathbf{W}^{in}$ were both generated as random
 matrices with i.i.d. entries in the interval [-0.5, 0.5]. Both matrices are
 fully connected, and the reservoir weight matrix was rescaled such that
@@ -215,11 +215,11 @@ saturation. In a physical reservoir design setting, this parameter is often
 possible to adjust after-the-fact, as opposed to changing the physical hardware
 layout of the system.
 
-A general trend seen when adjusting output connectivity, is a slight, linear
-decrease in performance from a completely dense output matrix to a density of
-0.4 (Fig. \ref{partial_visibility}b). Furthermore, for the 50 and 100 node
-reservoirs, there is a noticeable transition from a linear to an exponential
-NRMSE growth.
+Next, a general trend seen when adjusting output connectivity, is a slight,
+linear decrease in performance from a completely dense output matrix to a
+density of 0.4 (Fig. \ref{partial_visibility}b). Furthermore, for the 50 and 100
+node reservoirs, there is a noticeable transition from a linear to an
+exponential NRMSE growth.
 
 We may understand these results to indicate that there is a critical point in
 the output density space where there the readout layer starts seeing enough of
