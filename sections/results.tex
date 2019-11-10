@@ -169,9 +169,7 @@ permalloy nanomagnets.
 % (TODO): Would higher order NARMAs show different degradations, as they require
 % more memory and computation?
 
-\subsection{Partially observable state}
-
-% Part one: Fig. 7, effect of partially visible state.
+\subsection{Partially observable reservoir state}
 
 Consider a physical reservoir system using microelectrode arrays (MEAs) as its
 computational substrate, a common approach when using biological, \textit{in
@@ -195,6 +193,29 @@ that a wanted density, given as the fraction of connected nodes, is
 achieved. Input and output is adjusted separately. Fig. \ref{partial_visibility}
 shows the results of our simulation runs.
 
+% (TODO): Specify that we are using a uniform distribution for this.
+
+When attaching input units to the network by weights, experience has shown that
+choosing $\mathbf{W}_{in}$ can be done freely, as long as
+$\rho(\mathbf{W}_{res}) < 1$ is satisfied \cite{jaeger_echo_2001}. Experimental
+results from adjusting the sparsity of $\mathbf{W}_{in}$ is shown in
+Fig. \ref{partial_visibility}a.
+
+Across all three reservoir sizes, we see a small increase in the signal
+prediction error when increasing input connectivity from an initial density of
+0.1. While finding the optimal reservoir perturbance clearly depends on the
+memory capacity and computational dynamics required for the task at hand, this
+benchmark task gives a clear indication of the influence of input sparsity in
+general. The relatively low sensitivity to this parameter suggests that physical
+reservoirs may achieve excellent performance even when only perturbing selected
+parts of the system. An input stream parameter found to be of greater relevance
+is input scaling, i.e. the amplitude of the input signal that the reservoir sees
+\cite{alippi_quantification_2009}. The necessary scaling depends on the
+nonlinearity needed, as inputs far from 0 drive $\tanh$ neurons towards
+saturation. In a physical reservoir design setting, this parameter is often
+possible to adjust after-the-fact, as opposed to changing the physical hardware
+layout of the system.
+
 A general trend seen when adjusting output connectivity, is a slight, linear
 decrease in performance from a completely dense output matrix to a density of
 0.4 (Fig. \ref{partial_visibility}b). Furthermore, for the 50 and 100 node
@@ -207,13 +228,6 @@ the reservoir dynamics to reconstruct the input NARMA10 signal. Additionally,
 when the output density exceeds this threshold, the performance will continue to
 grow linearly with the density, achieving the best performance at full
 connectivity.
-
-% An indication that designing reservoirs with _more_ output nodes if its
-% decidable may improve the performance one is not able to observe every single
-% node.
-
-% (TODO): Explanation for lower input density: we drive the reservoir less, more
-% driving forces makes the reservoir forget past inputs.
 
 % Part two: Fig. 6, effect of global distribution of input.
 
@@ -270,6 +284,9 @@ work for internal nodes, unless special topology is employed, e.g. ring
   }
   \label{reservoir_density_distrib}
 \end{figure}
+
+% (TODO): Reason for reservoir sparsity is in the original Jaeger paper,
+% e.g. multiple creating separate networks with rich dynamics.
 
 % (TODO): Is w_density also interesting for physical reservoirs?
 
