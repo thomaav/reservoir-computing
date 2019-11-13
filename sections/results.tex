@@ -36,7 +36,18 @@ $L_{train} = 2000$ and $L_{test} = 3000$. All reported performances are the mean
 across ten randomizations of each model representative. The Python software
 library implementation is available online\footnote{Some GitHub repository.}.
 
+% (TODO): Split this entire section into one on methodology and one on discussion,
+% such that we first introduce just the bare minimum of what has been done, and
+% then actually discuss it coherently later.
+
 \subsection{Noise}
+
+% (TODO): Write about main motivation for doing this: what if we have a model
+% e.g. in software that we are now implementing physically: how does the model
+% then respond to the noise?
+
+% (TODO): Find some more background information on previous works, both in general
+% and with ESN in particular. What is the contribution of this work at all?
 
 Physical, real world systems are affected by noise. By extension, designers of
 reservoirs that use material substrates must be aware of the effects the noise
@@ -227,6 +238,9 @@ the reservoir dynamics to reconstruct the input NARMA10 signal. Additionally,
 when the output density exceeds this threshold, the performance will continue to
 grow linearly with the density, achieving the best performance at full
 connectivity.
+
+% (TODO): Also plot output connectivity as amount of output nodes. Perhaps we see
+% that the size of the underlying reservoir does not matter at all?
 
 \begin{figure}[H]
   \centering
