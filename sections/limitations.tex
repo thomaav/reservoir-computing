@@ -14,8 +14,26 @@ the reservoir. The noise is either added to all reservoir nodes, or to an output
 pragmatic approach is thus simply using ridge regression, as to avoid the
 nondeterminism present with dynamic noise injection.
 
-In the noise section we will investigate the impact of adding noise to just the
-input signal, and hence exploring reservoir robustness to noisy environments.
+Previous work has shown that combining the traditional ESN with a state machine
+framework, using Viterbi training with multiple readout filters in a manner
+similar to hidden Markov models, leads to noise-robust classification
+\cite{skowronski_noise-robust_2007}. However, this does not necessarily tell us
+anything about the noise-robustness we may expect from realizing physical
+reservoirs. As a common approach is to first design a model of the system, it is
+therefore crucial to know how how the model will translate into a physical
+medium, particularly when considering noise. Thus, we will in this section
+investigate the impact of adding noise to the input signal without changing the
+internal reservoir dynamics.
+
+This has previously been investigated in LSMs, using reservoirs containing 1232
+leaky integrate integrate-and-fire neurons
+\cite{\cite{verstraeten_isolated_2005}}. Here, adding three types of noise from
+the NOISEX database to word recognition tasks: speech babble, white-noise, and
+car interior noise, saw the error rate consistently staying above 80\% with an
+SNR of 10dB. We further this investigation using the dynamics of ESNs with the
+motivation of exploring the general noise robustness of any reservoir system.
+
+% (TODO): The last sentence is complete garbage.
 
 Additive white Gaussian noise (AWGN) is a common noise model that mimics the
 noise patterns of many random processes in nature. The noise is additive,
