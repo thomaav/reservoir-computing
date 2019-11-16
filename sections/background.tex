@@ -133,10 +133,11 @@ with a single metric.
 
 \subsection{NARMA}
 
-Nonlinear autoregressive moving average (NARMA) \cite{atiya_new_2000} is a class
-of time series models widely used to benchmark the performance of RC models. We
-use the NARMA10 task to evaluate the emulation performance of an ESN, which is a
-temporal task with a time-lag of ten time steps, given by
+Nonlinear autoregressive moving average (NARMA) \cite{atiya_new_2000},
+\cite{kubota_dynamical_2019} is a class of time series models widely used to
+benchmark the performance of RC models. We use the NARMA10 task to evaluate the
+emulation performance of an ESN, which is a temporal task with a time-lag of ten
+time steps, given by
 
 % (TODO): Cite any NARMA users? Many listed in Kubota 2019^.
 
@@ -153,8 +154,16 @@ $\gamma = 1.5$ and $\delta = 0.1$. The input $u_{t}$ is an i.i.d. stream drawn
 from the interval [0, 0.5]. The task presents a challenge of both memory and
 nonlinearity, uncovered to be a universal trade-off in in dynamical systems used
 in reservoir settings \cite{dambre_information_2012, verstraeten_memory_2010},
-therefore making it a well-suited task. The dynamical anatomy of the NARMA10
-task was further investigated in \cite{kubota_dynamical_2019}.
+therefore making it a well-suited task.
+
+Evaluation of ESN performance on the NARMA10 system is a thoroughly explored
+area in the field of RC, with the best NRMSE performances reported for
+traditional ESN reservoirs of size $N = 200$ lying in the range [0.20, 0.25]
+\cite{goudarzi_comparative_2014, rodan_minimum_2011,
+verstraeten_experimental_2007, jaeger_adaptive_nodate}. For some context, using
+a shift register containing the input as a reservoir will achieve a minimal
+NRMSE of 0.4. To achieve NRMSE values below this threshold it is necessary to
+introduce nonlinearity in the reservoir.
 
 % (TODO): Introduce the problem statements individually for each
 % limitation. ''Natural computational systems must have specific topologies, and

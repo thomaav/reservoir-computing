@@ -1,29 +1,3 @@
-Evaluation of ESN performance on the NARMA system is a thoroughly explored area
-in the field of RC \cite{rodan_minimum_2011, verstraeten_experimental_2007,
-jaeger_adaptive_nodate}. Similar performance to previous work has been achieved
-(Fig. \ref{visualization}, \ref{performance}) as a baseline to lend credibility
-to further approaches in this paper.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=2.5in]{img/narma_visualization.png}
-  \caption{
-    Visualization of reservoir output when fed the NARMA10 task. Input is an
-i.i.d. stream generated uniformly in the interval [0, 0.5].
-  }
-  \label{visualization}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=2.5in]{img/general_performance.png}
-  \caption{
-    Reservoir size versus ESN performance for the NARMA10 task. The NRMSE is
-averaged over 10 simulation runs.
-  }
-  \label{performance}
-\end{figure}
-
 All further reservoirs were constructed with the parameters from this baseline,
 unless otherwise specified. The default reservoir size used was 200 hidden
 nodes. $\mathbf{W}^{res}$ and $\mathbf{W}^{in}$ were both generated as random
