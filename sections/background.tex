@@ -79,21 +79,13 @@ equalizing a wireless communication channel \cite{jaeger_harnessing_2004}, and
 short-term traffic \cite{an_short-term_2011}, electric load
 \cite{song_hourly_2011}, and stock price forecasting \cite{lin_short-term_2009}.
 
-\subsection{Reservoir generation}
-
-As with virtually every machine learning technique, the application of ESNs
+As with practically every machine learning technique, the application of ESNs
 requires some experience. Although a conceptually simple idea, generating
 adequate reservoir networks is influenced by multiple global
-parameters. Recommendations to achieve sufficient performance are presented in
-\cite{montavon_practical_2012, jaeger_tutorial_nodate}, suggesting parameters
-such as the scaling of the input weight matrix $\iota$, the spectral radius of
-the reservoir connection matrix $\rho$, the leaking rate of reservoir nodes
-$\alpha$, and the model size parameter $N$ to be of high importance. However, in
-practice the evaluation of a reservoir is an endeavor often conducted by
-training the output and measuring the error, sometimes requiring extensive
-parameter sweeps.
-
-% (TODO): Write about how this relates to physical reservoirs.
+parameters. Parameters recommended to be of the most importance include the
+scaling of the input weight matrix $\iota$, the spectral radius of the reservoir
+connection matrix $\rho$, and the model size parameter $N$
+\cite{montavon_practical_2012, jaeger_tutorial_nodate}.
 
 \subsection{Assessing the quality of a reservoir}
 
