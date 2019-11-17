@@ -48,16 +48,31 @@ with zero-mean, and a variance $\sigma^{2}$.
 \subsection{Measurement equipment accuracy}
 
 When conducting experiments using physical reservoirs, one will inevitably have
-to interact with substrates from software. Whether it be transforming digital
-representations of reservoir perturbations to analog signals that cause the
-excitation, or the reverse mapping of the analog state of the reservoir into a
-digital representation, the accuracy of equipment used for such conversions is
-of crucial importance.
+to interact with substrates with measurement instruments. Whether it be
+transforming digital representations of reservoir perturbations to analog
+signals that cause the excitation, or the reverse mapping of the analog state of
+the reservoir into a digital representation, the accuracy of equipment used for
+such conversions is of crucial importance.
 
-Sensor anomalies, noise, and amplification gain may all impact performance, but
-as found in the previous subsection, reservoirs prove to be quite robust to the
-presence of such noise patterns. Here we thus focus our investigation on the
-quantization done in ADC systems.
+Equipment sensor anomalies, noise, and amplification gain may all impact
+performance. In this section we conduct a case study for a typical conversion of
+physical information present in a system into a digital representation with an
+ADC.
+
+Common ADC errors include gain error, which causes the slope of the transfer
+function to deviate from the ideal slope, and offset error, in which the slope
+of the transfer function is offset by some constant amount. In both of these
+cases, the use of regression methods will cause no performance penalty as a
+result of the error.
+
+A more general problem present in ADCs, which is also manifested similarly in
+virtually all measurement methods, is the resolution of the output signal that
+is produced. ADCs generally have an output quantization range from 6 bits to 24
+bits, and this quantization is of interest when considering physical reservoir
+systems. A resolution that is too low may cause two different internal states in
+the reservoir to be interpreted equally. Naturally, when the amount of discrete
+output bins becomes too scarce for the readout to interpret the high dimensional
+dynamics of the system, the performance will suffer.
 
 \subsection{Partially observable reservoir state}
 
