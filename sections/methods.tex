@@ -39,6 +39,42 @@ in \cite{dambre_information_2012}.
   \label{input_noise_snr}
 \end{figure}
 
+\subsection{Measurement equipment accuracy}
+
+To emulate the behavior of an ADC, we extend our ESN model to allow for
+quantization of reservoir output before it is passed to the readout layer. This
+quantization effectively divides the range of the nonlinear activation function
+of each hidden node into a discrete set of fixed output bins.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=2.5in]{img/adc_quantization.png}
+  \caption{
+    Performance effect of ADC quantization on four reservoirs of different
+sizes. $\tanh$ is used as activation function for the experiment, dividing its
+range of (1-, 1) into $n$ discrete output bins.
+  }
+  \label{adc_quantization}
+\end{figure}
+
+% (TODO): Change this to bits of quantization? As if it's an actual ADC.
+
+Fig. \ref{adc_quantization} shows how quantization affects reservoir
+performance. We plot the error of four different reservoir sizes: 50, 100, 200
+and 400 hidden nodes.
+
+We see a performance degradation from 3000 to 1000 discernible states, something
+of which is more pressing for the bigger reservoirs. As discrete output states
+move beneath 1000, the performance quickly deteriorates. However, even with just
+10 discrete outputs, reservoirs are still able to replicate the input sequence
+to some degree. Furthermore, reservoirs with 400 hidden nodes and just 100
+discrete output bins consistently provide the same performance as that of a
+reservoir with 50 hidden nodes and no output quantization.
+
+% (TODO): Move the methodology to here.
+
+\subsection{Partially visible reservoir state}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../main"

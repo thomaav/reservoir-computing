@@ -10,27 +10,27 @@ similar to that of Tikhonov Regularization \cite{bishop_training_1995}. This has
 been verified to hold for the RC paradigm \cite{jaeger_echo_2001,
 kurkova_stable_2008}, where an additional noise term $\mathbf{v}(t)$ is added to
 the reservoir. The noise is either added to all reservoir nodes, or to an output
-\textit{feedback} of $\mathbf{y}(t)$ back into the reservoir nodes. A more
-pragmatic approach is thus simply using ridge regression, as to avoid the
+\textit{feedback} of $\mathbf{y}(t)$ back into the reservoir nodes. Hence, a
+more pragmatic approach is simply using ridge regression, as to avoid the
 nondeterminism present with dynamic noise injection.
 
 Previous work has shown that combining the traditional ESN with a state machine
 framework, using Viterbi training with multiple readout filters in a manner
 similar to hidden Markov models, leads to noise-robust classification
 \cite{skowronski_noise-robust_2007}. However, this does not necessarily tell us
-anything about the noise-robustness we may expect from realizing physical
-reservoirs. As a common approach is to first design a model of the system, it is
-therefore crucial to know how how the model will translate into a physical
-medium, particularly when considering noise. Thus, we will in this section
-investigate the impact of adding noise to the input signal without changing the
+anything about the inherent noise-robustness we may expect from realizing
+physical reservoirs. As a common approach in research is to first design a model
+of the system, it is therefore crucial to know how how the model will translate
+into a physical medium. Thus, we will in this section investigate the impact of
+adding noise to just the input signal of the test set, without changing the
 internal reservoir dynamics.
 
 This has previously been investigated in LSMs, using reservoirs containing 1232
 leaky integrate integrate-and-fire neurons
-\cite{\cite{verstraeten_isolated_2005}}. Here, adding three types of noise from
-the NOISEX database to word recognition tasks: speech babble, white-noise, and
-car interior noise, saw the error rate consistently staying above 80\% with an
-SNR of 10dB. We further this investigation using the dynamics of ESNs with the
+\cite{verstraeten_isolated_2005}. Here, adding three types of noise from the
+NOISEX database to word recognition tasks: speech babble, white-noise, and car
+interior noise, saw the error rate consistently staying above 80\% with an SNR
+of 10dB. We further this investigation using the dynamics of ESNs with the
 motivation of exploring the general noise robustness of any reservoir system.
 
 % (TODO): The last sentence is complete garbage.
@@ -40,6 +40,46 @@ noise patterns of many random processes in nature. The noise is additive,
 meaning the AWGN output is the sum of the input $u_{i}$ and the noise values
 $v_{i}$. $v_{i}$ is i.i.d and drawn from a Gaussian distribution with zero-mean,
 and a variance $\sigma^{2}$.
+
+\subsection{Measurement equipment accuracy}
+
+When conducting experiments using physical reservoirs, one will inevitably have
+to interact with substrates from software. Whether it be transforming digital
+representations of reservoir perturbations to analog signals that cause the
+excitation, or the reverse mapping of the analog state of the reservoir into a
+digital representation, the accuracy of equipment used for such conversions is
+of crucial importance.
+
+Sensor anomalies, noise, and amplification gain may all impact performance, but
+as found in the previous subsection, reservoirs prove to be quite robust to the
+presence of such noise patterns. Here we thus focus our investigation on the
+quantization done in ADC systems.
+
+\subsection{Partially observable reservoir state}
+
+Consider a physical reservoir system using microelectrode arrays (MEAs) as its
+computational substrate, a common approach when using biological, \textit{in
+vitro} components \cite{aaser_towards_2017}. The goal of such MEAs is to serve
+as an interface that connects biological neuronal activity to electronic
+circuitry, and it does so by having an organization of microelectrodes on a
+two-dimensional grid. Obtaining neural signals is done only through the
+electrode interface by means of a two-way transduction from voltage drop in the
+biological environment to a an electric current and vice versa.
+
+When seeding MEAs with solutions containing neuronal cultures, one is by no
+means guaranteed a neural network that fits the MEA layout. In fact, with common
+grid layouts ranging from 64 to 256 electrodes, each electrode will examine its
+surrounding area, not individual cells. Thus, in this section we intend to
+provide an insight into the performance effect of having reservoirs that are
+only partially observable.
+
+In this section we experiment with the sparsity of $\mathbf{W}_{in}$ and
+$\mathbf{W}_{out}$. In both cases, we now generate the connection matrices such
+that a wanted density, given as the fraction of connected nodes, is
+achieved. Input and output is adjusted separately. Fig. \ref{partial_visibility}
+shows the results of our simulation runs. Additionally, we investigate the
+effect of fixing the input weight distribution completely, hence only allowing a
+constant scaling of the input stream.
 
 %%% Local Variables:
 %%% mode: latex
