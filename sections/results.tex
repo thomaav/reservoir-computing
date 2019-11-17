@@ -18,8 +18,14 @@ power that is necessary.
 
 \subsection{Measurement equipment accuracy}
 
-% (TODO): There are common ADC errors: gain error, linearity error, missing code
-% errors, offset errors.
+In Fig. \ref{adc_quantization} we see a performance degradation from 3000 to
+1000 discernible states, something of which is more pressing for the bigger
+reservoirs. As discrete output states move beneath 1000, the performance quickly
+deteriorates. However, even with just 10 discrete outputs, reservoirs are still
+able to replicate the input sequence to some degree. Furthermore, reservoirs
+with 400 hidden nodes and just 100 discrete output bins consistently provide the
+same performance as that of a reservoir with 50 hidden nodes and no output
+quantization.
 
 A 12-bit ADC has $2^{12}$, or 4096 output codes, which in accordance with our
 experiments would impose no noticeable increase in the prediction error. 16-bit
@@ -39,9 +45,6 @@ permalloy nanomagnets.
 
 % (TODO): I don't really like the conclusion here -- could I conclude with
 % something more _concrete_, almost like tricks of the trade?
-
-% (TODO): Would higher order NARMAs show different degradations, as they require
-% more memory and computation?
 
 \subsection{Partially observable reservoir state}
 
