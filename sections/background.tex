@@ -45,16 +45,10 @@ completion on a training set. The reservoir states are represented by an Nth
 order column vector $\mathbf{X}$, and the one-dimensional output by a first
 order column vector $\mathbf{Y}$. The linear readout layer is then trained to
 minimize the squared output error $E = \norm{\mathbf{Y} - \mathbf{\hat{Y}}}$
-where $\mathbf{\hat{Y}}$ is the target output, which amounts to solving a system
-of linear equations
-
-\begin{equation}
-  \mathbf{\hat{Y}} = \mathbf{W}^{out}\mathbf{X}.
-  \label{hatreg}
-\end{equation}
-
-Well-known methods of solving (\ref{hatreg}) include ridge regression, often
-called Tikhonov regularization, and the Moore-Penrose pseudo-inverse.
+where $\mathbf{\hat{Y}}$ is the target output, which amounts to finding the
+$\mathbf{W}^{out}$ that minimizes this error with linear regression. Well-known
+methods include ridge regression, often called Tikhonov regularization, and the
+Moore-Penrose pseudo-inverse.
 
 When the network is adapted to $\mathbf{W}^{out}$, the ESN is fully trained,
 thus illustrating the apparent simplicity and low algorithmic complexity of the
@@ -77,26 +71,13 @@ $\mathbf{\hat{y}}(t)$
 % I use NRMSE from Reservoir Computing Approaches to Recurrent Neural Network
 % Training by Jaeger.
 
-\subsection{Applications}
-
-Applications of RC lie primarily in the domain of time series prediction and
-classification. The paradigm has been successfully applied to predict myriads of
-time series, where benchmark tasks range from from the simple H\'enon Map
-\cite{goudarzi_comparative_2014}, to time series requiring more computation and
-memory, such as the mildly chaotic Mackey-Glass time series
-\cite{alippi_quantification_2009}, and the Santa Fe chaotic timeseries
-\cite{rodan_minimum_2011}. Real world approaches include equalizing a wireless
-communication channel \cite{jaeger_harnessing_2004}, and short-term traffic,
-electric load, and stock price forecasting \cite{an_short-term_2011,
-song_hourly_2011, lin_short-term_2009}.
-
-Use of reservoir systems for pattern classification tends to involve sequential
-input such as speech \cite{verstraeten_reservoir-based_2006}, but has also seen
-static pattern recognition tasks like detecting invasive plant species
-\cite{wootton_optimizing_2017}. More exotic applications of RC include robot
-control \cite{aislan_antonelo_learning_2015}, reinforcement learning
-\cite{bush_modeling_2005}, and learning grammatical structure
-\cite{tong_learning_2007}.
+Applications of ESNs lie primarily in the domain of time series prediction and
+classification, and the paradigm has been successfully applied to predict
+myriads of benchmark time series \cite{goudarzi_comparative_2014,
+alippi_quantification_2009, rodan_minimum_2011}. Real world approaches include
+equalizing a wireless communication channel \cite{jaeger_harnessing_2004}, and
+short-term traffic \cite{an_short-term_2011}, electric load
+\cite{song_hourly_2011}, and stock price forecasting \cite{lin_short-term_2009}.
 
 \subsection{Reservoir generation}
 

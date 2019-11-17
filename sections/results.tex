@@ -86,16 +86,6 @@ connectivity.
 % (TODO): Also plot output connectivity as amount of output nodes. Perhaps we see
 % that the size of the underlying reservoir does not matter at all?
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=2.5in]{img/input_scaling_distrib.png}
-  \caption{
-    Effect of input scaling on three input weight distributions. With the fixed
-distribution every input weight is set to 1.
-  }
-  \label{input_scaling_distrib}
-\end{figure}
-
 In \cite{jensen_computation_2018}, artificial spin ice is explored as a
 substrate for physical RC. Here, nanomagnetic assemblies are perturbed, using an
 external magnetic field as input source. Thus, every magnet sees exactly the
@@ -109,33 +99,6 @@ scaling differently distributed inputs such that they all achieve acceptable
 performance bodes well for physical RC. In particular, we observe a promising
 result when considering RC with physical substrates in which every node is
 forced to receive the same input.
-
-\begin{figure*}[htbp]
-  \centering
-  \begin{subfigure}{.3\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/input_density_all.png}
-    \caption{}
-  \end{subfigure}
-  \begin{subfigure}{.3\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/output_density_all.png}
-    \caption{}
-  \end{subfigure}
-  \begin{subfigure}{.3\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/partial_visibility.png}
-    \caption{}
-  \end{subfigure}
-  \caption{
-    These figures show the influence of reservoirs that are only partially
-visible on the performance for the NARMA10 task. The density is a measurement
-for the fraction of elements in the input and output matrices containing
-non-zero elements. The heat map was generated using a reservoir size of 200
-hidden nodes.
-  }
-  \label{partial_visibility}
-\end{figure*}
 
 % (TODO): Ensure that the subfigure figure isn't pushed _into_ the references.
 
