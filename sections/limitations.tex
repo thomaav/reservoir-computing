@@ -10,36 +10,40 @@ similar to that of Tikhonov Regularization \cite{bishop_training_1995}. This has
 been verified to hold for the RC paradigm \cite{jaeger_echo_2001,
 kurkova_stable_2008}, where an additional noise term $\mathbf{v}(t)$ is added to
 the reservoir. The noise is either added to all reservoir nodes, or to an output
-\textit{feedback} of $\mathbf{y}(t)$ back into the reservoir nodes. Hence, a
-more pragmatic approach is simply using ridge regression, as to avoid the
-nondeterminism present with dynamic noise injection.
+\textit{feedback} $\mathbf{y}(t)$ that is fed back into the reservoir
+nodes. This work cites simply using ridge regression to be a more pragmatic
+approach, as to avoid the nondeterminism present with dynamic noise injection,
+but has additionally identified the presence of noise within reservoirs to be
+advantageous.
 
-Previous work has shown that combining the traditional ESN with a state machine
-framework, using Viterbi training with multiple readout filters in a manner
-similar to hidden Markov models, leads to noise-robust classification
-\cite{skowronski_noise-robust_2007}. However, this does not necessarily tell us
-anything about the inherent noise-robustness we may expect from realizing
-physical reservoirs. As a common approach in research is to first design a model
-of the system, it is therefore crucial to know how how the model will translate
-into a physical medium. Thus, we will in this section investigate the impact of
-adding noise to just the input signal of the test set, without changing the
-internal reservoir dynamics.
+Whether this internal noise resilience of ESNs translates to a more general
+robustness to noisy inputs is unclear. A common approach in research is to first
+design a model of the system, and it is crucial to know how how the model will
+translate into a physical medium. Previous work has shown that combining the
+traditional ESN with a state machine framework, using Viterbi training with
+multiple readout filters in a manner similar to hidden Markov models, leads to
+noise-robust classification \cite{skowronski_noise-robust_2007}. However, our
+motivation is an investigation of the effect of moving an existing model to a
+physical substrate that may exhibit unknown noise patterns. Hence, we use the
+traditional ESN approach, focusing on the impact of adding noise to just the
+input signal of the test set, without changing the internal reservoir dynamics
+or readout methodology.
 
 This has previously been investigated in LSMs, using reservoirs containing 1232
 leaky integrate integrate-and-fire neurons
 \cite{verstraeten_isolated_2005}. Here, adding three types of noise from the
-NOISEX database to word recognition tasks: speech babble, white-noise, and car
-interior noise, saw the error rate consistently staying above 80\% with an SNR
-of 10dB. We further this investigation using the dynamics of ESNs with the
-motivation of exploring the general noise robustness of any reservoir system.
+NOISEX database: speech babble, white-noise, and car interior noise, to speech
+recognition tasks saw the error rate consistently staying above 80\% with an SNR
+of 10dB. We further this work using the dynamics of ESNs, with the motivation of
+exploring the their general robustness to noisy inputs. This provides insight
+into whether we can expect a similar behavior regardless of the reservoir medium
+that is used to implement rich, complex dynamics.
 
-% (TODO): The last sentence is complete garbage.
-
-Additive white Gaussian noise (AWGN) is a common noise model that mimics the
-noise patterns of many random processes in nature. The noise is additive,
-meaning the AWGN output is the sum of the input $u_{i}$ and the noise values
-$v_{i}$. $v_{i}$ is i.i.d and drawn from a Gaussian distribution with zero-mean,
-and a variance $\sigma^{2}$.
+Modeling random processes in nature is commonly done with the Additive white
+Gaussian noise (AWGN) model. The noise is additive, meaning the AWGN output is
+the sum of the input $\mathbf{u}(t)$ and the noise values
+$\mathbf{v}(t)$. $\mathbf{v}(t)$ is i.i.d and drawn from a Gaussian distribution
+with zero-mean, and a variance $\sigma^{2}$.
 
 \subsection{Measurement equipment accuracy}
 
