@@ -1,10 +1,8 @@
 \subsection{Echo State Networks}
 
-Jaeger proposed the \textit{Echo State Network} \cite{jaeger_echo_2001} as an
-alternative approach to RNNs, in which only the weights of the output units are
-modified. In RNNs, the activation state $\mathbf{x}(t)$ is determined as a
-function of the sequence of inputs that is fed to the network $\mathbf{u}(t),
-\mathbf{u}(t-1), \ldots$ making its activation an ``echo'' of the input history.
+The Echo State Network is a novel approach to training RNNs in which only the
+weights of the output units are adapted \cite{jaeger_echo_2001}. Fig. \ref{esn}
+illustrates the basic architecture of ESN reservoirs.
 
 % (TODO): only in some cases does it have the "echo" state property^.
 
@@ -20,9 +18,7 @@ squares optimum.
   \label{esn}
 \end{figure}
 
-In this paper, we consider discrete-time RNNs with $N$ internal network nodes, a
-single input, and a single output node. Fig. \ref{esn} illustrates the basic
-architecture of such ESN reservoirs. The reservoir state is updated according to
+ In the traditional ESN approach, the reservoir state is updated according to
 
 \begin{equation}
   \mathbf{x}(t + 1) =
