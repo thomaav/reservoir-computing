@@ -87,18 +87,14 @@ biological environment to a an electric current and vice versa.
 
 When seeding MEAs with solutions containing neuronal cultures, one is by no
 means guaranteed a neural network that fits the MEA layout. In fact, with common
-grid layouts ranging from 64 to 256 electrodes, each electrode will examine its
-surrounding area, not individual cells. Thus, in this section we intend to
-provide an insight into the performance effect of having reservoirs that are
+grid layouts ranging from 64 to 256 electrodes, each electrode will examine only
+the parts of the neural network that happens to lie in its vicinity. Existing
+cell clusters may be situated far from any electrode, making it harder to
+capture the information present in their dynamics. There is thus a trade-off
+between the cost of producing grids with a high resolution of electrodes, and
+the resolution of which one may observe the reservoir. In this section we intend
+to provide an insight into the performance effect of having reservoirs that are
 only partially observable.
-
-In this section we experiment with the sparsity of $\mathbf{W}_{in}$ and
-$\mathbf{W}_{out}$. In both cases, we now generate the connection matrices such
-that a wanted density, given as the fraction of connected nodes, is
-achieved. Input and output is adjusted separately. Fig. \ref{partial_visibility}
-shows the results of our simulation runs. Additionally, we investigate the
-effect of fixing the input weight distribution completely, hence only allowing a
-constant scaling of the input stream.
 
 %%% Local Variables:
 %%% mode: latex

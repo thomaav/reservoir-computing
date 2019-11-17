@@ -75,6 +75,14 @@ reservoir with 50 hidden nodes and no output quantization.
 
 \subsection{Partially visible reservoir state}
 
+In this section we experiment with the sparsity of $\mathbf{W}_{in}$ and
+$\mathbf{W}_{out}$. In both cases, we now generate the connection matrices such
+that a wanted density, given as the fraction of connected nodes, is
+achieved. Input and output is adjusted separately. Fig. \ref{partial_visibility}
+shows the results of our simulation runs. Additionally, we investigate the
+effect of fixing the input weight distribution completely, hence only allowing a
+constant scaling of the input stream.
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "../main"
