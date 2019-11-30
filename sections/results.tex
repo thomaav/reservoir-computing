@@ -18,30 +18,39 @@ power that is necessary.
 
 \subsection{Measurement equipment accuracy}
 
-In Fig. \ref{adc_quantization} we see a performance degradation from 3000 to
-1000 discernible states, something of which is more pressing for the bigger
-reservoirs. As discrete output states move beneath 1000, the performance quickly
-deteriorates. However, even with just 10 discrete outputs, reservoirs are still
-able to replicate the input sequence to some degree. Furthermore, reservoirs
-with 400 hidden nodes and just 100 discrete output bins consistently provide the
-same performance as that of a reservoir with 50 hidden nodes and no output
-quantization.
+In Fig. \ref{adc_quantization} we see a performance degradation from 12 to 10
+quantization bits. As discrete output states move beneath a quantization of 10
+bits, the performance quickly deteriorates. However, even with just 4 bits to
+discretely separate outputs, reservoirs are still able to replicate the input
+sequence to some degree. Furthermore, reservoirs with 400 hidden nodes and just
+64 output bits consistently provide the same performance as that of a reservoir
+with 50 hidden nodes and no output quantization.
 
 A 12-bit ADC has $2^{12}$, or 4096 output codes, which in accordance with our
-experiments would impose no noticeable increase in the prediction error. 16-bit
-ADCs, outputting $2^{16}$, or 65536 discrete states, would influence our ESN
-simulations even less. In \cite{soriano_delay-based_2015}, a major factor
-limiting performance of a nonlinear analog electric circuit implementation was
-quantization noise. Low error rates on the Mackey-Glass task were achieved with
-8 bits or more in the ADC. This result is also seen in our ESN implementation,
-where NRMSE starts leveling out around 8 bits of accuracy, or 256 discrete
-states.
+experiments would impose little increase in the prediction error. 16-bit ADCs,
+outputting $2^{16}$, or 65536 discrete states, would influence our ESN
+simulations even less.
 
-These results demonstrate that the reservoir methodology provides an inherent
-resilience to output quantization. When designing physical RC systems, this may
-be applied in preliminary analysis of the output resolution and representation,
-whether it be voltage in electrode arrays or the magnetic polarization of
-permalloy nanomagnets.
+Previously, a major factor limiting the performance of a nonlinear analog
+electric circuit implementation has been found to be quantization noise
+\cite{soriano_delay-based_2015}. Low error rates on the Mackey-Glass task were
+achieved with 8 bits or more in the ADC. This result differs from the
+performance measures seen in our ESN implementation, where NRMSE starts leveling
+out around 10 bits of accuracy.
+
+We attribute this discrepancy to the nature of the $\tanh$ activation. In our
+experiment, $\tanh$ is divided linearly into discrete bins, although we may not
+use the complete range. As the NARMA10 task relies heavily upon memory, and less
+so upon nonlinearity, the activation of a high number of nodes will lie in the
+highly linear part of $\tanh$ in the interval [-0.4, 0.4], with a few nodes
+outside this range. Essentially, this may in the worst cases account for halving
+the available output bins
+
+Our results demonstrate that the reservoir methodology provides an inherent
+resilience to output quantization, specifically so when using ADCs with 12-bits
+of resolution or higher. When designing physical RC systems, this may be applied
+in preliminary analysis of the resolution and representation of output
+activations.
 
 % (TODO): I don't really like the conclusion here -- could I conclude with
 % something more _concrete_, almost like tricks of the trade?

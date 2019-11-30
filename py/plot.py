@@ -313,7 +313,9 @@ def plot_input_noise_trained(dataset):
 @default_font_size
 @show
 def plot_adc_quantization(dataset):
-    quantizations = np.linspace(10, 10000, 100)
+    min_bits = 4
+    max_bits = 14
+    quantizations = np.array([2**n for n in range(min_bits, max_bits+2, 2)])
     hidden_nodes = [50, 100, 200, 400]
     params = {
         'adc_quantization': quantizations,
@@ -322,28 +324,29 @@ def plot_adc_quantization(dataset):
 
     # nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
     # nrmses = np.array(nrmses).T
-    # pickle.dump(nrmses, open('tmp/' + get_time(), 'wb'))
+    # pickle.dump(nrmses, open('tmp/adc_quantization' + get_time(), 'wb'))
 
-    nrmses = pickle.load(open('tmp/quantization', 'rb'))
+    nrmses = pickle.load(open('tmp/adc_quantization2', 'rb'))
 
     labels = ['50 nodes', '100 nodes', '200 nodes', '400 nodes']
     linestyles = ['dotted', 'dashed', 'solid', 'dashdot']
     for i, _nrmses in enumerate(nrmses):
-        plt.plot(quantizations*2, np.squeeze(_nrmses), color='black',
+        plt.plot(quantizations, np.squeeze(_nrmses), color='black',
                  marker='.', linestyle=linestyles[i], label=labels[i])
 
-    maxlim = 1.0
-    minlim = 0.0
+    maxlim = np.max(nrmses) + 0.05
+    minlim = np.min(nrmses) - 0.05
     plt.ylim(minlim, maxlim)
 
-    maxlim = 5000
-    minlim = 0.0
+    maxlim = 2**max_bits
+    minlim = 2**min_bits
     plt.xlim(minlim, maxlim)
+    plt.xscale('log', basex=2)
 
     plt.ylabel('NRMSE')
-    plt.xlabel('Quantization bins for tanh activation')
+    plt.xlabel('Quantization bins for output')
     plt.legend(fancybox=False, loc='upper right', bbox_to_anchor=(1.0, 1.0))
-    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=5000, linewidth=0.2)
+    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=2**max_bits, linewidth=0.2)
 
 
 @default_font_size

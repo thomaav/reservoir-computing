@@ -104,4 +104,7 @@ class ESN(nn.Module):
         if y is not None:
             self.w_out = torch.mv(torch.pinverse(X), y)
         else:
+            import matplotlib.pyplot as plt
+            plt.plot(X)
+            plt.show()
             return torch.mv(X, self.w_out)
