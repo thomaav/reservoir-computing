@@ -25,29 +25,11 @@ repository.}.
 We model AWGN by extending the ESN model to take the sum of two individual
 inputs, $\mathbf{u}(t)$ and $\mathbf{v}(t)$, which represent the signal and the
 noise. The goal of the reservoir remains a computation on the signal
-$\mathbf{u}(t)$, a task now hindered by the unwanted noise. The ESN reservoirs
-used are of size $N = 200$.
+$\mathbf{u}(t)$, a task now hindered by the unwanted noise.
 
 We vary the signal to noise ratio of the injected noise when running the test
 dataset. The signal to noise ratio is measured in dB, and is calculated as $SNR
-= 10\log_{10}(\frac{var(u)}{var(v)})$. The results are shown in
-Fig. \ref{input_noise_snr}, illustrating a slight performance degradation when
-the ratio of signal power to noise power drops below 20 dB. The reservoir
-performance drops more drastically when reaching 10 dB. Similar performance
-degradation was seen in \cite{dambre_information_2012}, where the same SNR
-measure was used to evaluate the signal reconstruction capacity from the state
-of a dynamical system.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=2.5in]{img/input_noise_snr.png}
-  \caption{
-    Noise causing a decrease in performance for an ESN reservoir on the NARMA10
-task ($N = 200$ nodes). When the signal to noise ratio drops below 20dB, the
-performance of the reservoir degrades in an exponential manner.
-  }
-  \label{input_noise_snr}
-\end{figure}
+= 10\log_{10}(\frac{var(u)}{var(v)})$.
 
 \subsection{Measurement equipment accuracy}
 
@@ -56,19 +38,6 @@ quantization of reservoir output before it is passed to the readout layer. This
 quantization effectively divides the range of the nonlinear activation function
 of each hidden node into a discrete set of fixed output bins.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=2.5in]{img/adc_quantization.png}
-  \caption{
-    Performance effect of ADC quantization on four reservoirs of different
-sizes. $\tanh$ is used as activation function for the experiment, dividing its
-range of (1-, 1) into $n$ discrete output bins.
-  }
-  \label{adc_quantization}
-\end{figure}
-
-% (TODO): Change this to bits of quantization? As if it's an actual ADC.
-
 Fig. \ref{adc_quantization} shows how quantization affects reservoir
 performance. We plot the error of four different reservoir sizes: 50, 100, 200
 and 400 hidden nodes to see whether it is possible to compensate for lower
@@ -76,49 +45,11 @@ resolutions by increasing the size of the reservoir.
 
 \subsection{Partially visible reservoir state}
 
-\begin{figure*}[htbp]
-  \centering
-  \begin{subfigure}{.3\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/input_density_all.png}
-    \caption{}
-  \end{subfigure}
-  \begin{subfigure}{.3\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/output_density_all.png}
-    \caption{}
-  \end{subfigure}
-  \begin{subfigure}{.3\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{img/partial_visibility.png}
-    \caption{}
-  \end{subfigure}
-  \caption{
-    These figures show the influence of reservoirs that are only partially
-visible on the performance for the NARMA10 task. The density is a measurement
-for the fraction of elements in the input and output matrices containing
-non-zero elements. The heat map was generated using a reservoir size of 200
-hidden nodes.
-  }
-  \label{partial_visibility}
-\end{figure*}
-
 We begin by experimenting with the sparsity of $\mathbf{W}_{in}$ and
 $\mathbf{W}_{out}$. In both cases, we now generate the connection matrices such
 that a wanted density, given as the fraction of connected nodes, is
 achieved. Input and output is adjusted separately. Fig. \ref{partial_visibility}
 shows the results of our simulation runs.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=2.5in]{img/input_scaling_distrib.png}
-  \caption{
-    Effect of input scaling on three input weight distributions. With the fixed
-distribution every input weight is set to 1. The best performance of all three
-distributions lie around NRMSE $\approx 0.25$.
-  }
-  \label{input_scaling_distrib}
-\end{figure}
 
 Additionally, we examine three different input weight distributions: uniform,
 Gaussian and fixed. All inputs are all sampled as i.i.d streams. The uniform

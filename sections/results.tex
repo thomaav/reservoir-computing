@@ -4,8 +4,23 @@
 % e.g. in software that we are now implementing physically: how does the model
 % then respond to the noise?
 
-% (TODO): Find some more background information on previous works, both in general
-% and with ESN in particular. What is the contribution of this work at all?
+The results are shown in Fig. \ref{input_noise_snr}, illustrating a slight
+performance degradation when the ratio of signal power to noise power drops
+below 20 dB. The reservoir performance drops more drastically when reaching 10
+dB. Similar performance degradation was seen in \cite{dambre_information_2012},
+where the same SNR measure was used to evaluate the signal reconstruction
+capacity from the state of a dynamical system.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=2.5in]{img/input_noise_snr.png}
+  \caption{
+    Noise causing a decrease in performance for an ESN reservoir on the NARMA10
+task ($N = 200$ nodes). When the signal to noise ratio drops below 20dB, the
+performance of the reservoir degrades in an exponential manner.
+  }
+  \label{input_noise_snr}
+\end{figure}
 
 A comparison can be drawn to commonly recommended SNRs in the IEEE 802.11
 standard for Wi-Fi communications, ranging from 15db to 25dB. Below this
@@ -25,6 +40,17 @@ discretely separate outputs, reservoirs are still able to replicate the input
 sequence to some degree. Furthermore, reservoirs with 400 hidden nodes and just
 64 output bits consistently provide the same performance as that of a reservoir
 with 50 hidden nodes and no output quantization.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=2.5in]{img/adc_quantization.png}
+  \caption{
+    Performance effect of ADC quantization on four reservoirs of different
+sizes. $\tanh$ is used as activation function for the experiment, dividing its
+range of (1-, 1) into $n$ discrete output bins.
+  }
+  \label{adc_quantization}
+\end{figure}
 
 A 12-bit ADC has $2^{12}$, or 4096 output codes, which in accordance with our
 experiments would impose little increase in the prediction error. 16-bit ADCs,
@@ -52,10 +78,34 @@ of resolution or higher. When designing physical RC systems, this may be applied
 in preliminary analysis of the resolution and representation of output
 activations.
 
-% (TODO): I don't really like the conclusion here -- could I conclude with
-% something more _concrete_, almost like tricks of the trade?
-
 \subsection{Partially observable reservoir state}
+
+\begin{figure*}[htbp]
+  \centering
+  \begin{subfigure}{.3\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{img/input_density_all.png}
+    \caption{}
+  \end{subfigure}
+  \begin{subfigure}{.3\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{img/output_density_all.png}
+    \caption{}
+  \end{subfigure}
+  \begin{subfigure}{.3\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{img/partial_visibility.png}
+    \caption{}
+  \end{subfigure}
+  \caption{
+    These figures show the influence of reservoirs that are only partially
+visible on the performance for the NARMA10 task. The density is a measurement
+for the fraction of elements in the input and output matrices containing
+non-zero elements. The heat map was generated using a reservoir size of 200
+hidden nodes.
+  }
+  \label{partial_visibility}
+\end{figure*}
 
 When attaching input units to the network by weights, experience has shown that
 choosing $\mathbf{W}_{in}$ can be done freely, as long as
@@ -124,6 +174,17 @@ sparse.
 % (TODO): Discuss how this relates to the maximum information capacity of
 % individual nodes, and include Shannon information and how complexity is defined
 % as the amount of information required to describe something.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=2.5in]{img/input_scaling_distrib.png}
+  \caption{
+    Effect of input scaling on three input weight distributions. With the fixed
+distribution every input weight is set to 1. The best performance of all three
+distributions lie around NRMSE $\approx 0.25$.
+  }
+  \label{input_scaling_distrib}
+\end{figure}
 
 Fig. \ref{input_scaling_distrib} explores the performance of ESNs with three
 different input weight distributions: uniform, Gaussian and fixed. Despite the
