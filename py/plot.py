@@ -94,22 +94,53 @@ def plot_output_density(dataset):
     labels = ['50 nodes', '100 nodes', '200 nodes']
     linestyles = ['dotted', 'dashed', 'solid']
     for i, _nrmses in enumerate(nrmses):
-        plt.plot(density, np.squeeze(_nrmses), color='black',
+        x = density*hidden_nodes[i]
+        plt.plot(x, np.squeeze(_nrmses), color='black',
                  marker='.', linestyle=linestyles[i], label=labels[i])
-
-    maxlim = np.max(nrmses) + 0.05
-    minlim = np.min(nrmses) - 0.05
-    plt.ylim(minlim, maxlim)
 
     plt.ylabel('NRMSE')
     plt.xlabel('Output density')
     plt.legend(fancybox=False, loc='upper right', bbox_to_anchor=(1.0, 1.0))
-    plt.hlines(y = np.arange(0.0, 2.05, 0.05), xmin=0.0, xmax=1.0,
-               linewidth=0.2)
+    plt.hlines(y = np.arange(0.0, 2.05, 0.05), xmin=0.0, xmax=200.0, linewidth=0.2)
 
     maxlim = np.max(nrmses) + 0.15
     minlim = np.min(nrmses) - 0.05
     plt.ylim(minlim, maxlim)
+
+
+@default_font_size
+@show
+def plot_output_nodes(dataset):
+    hidden_nodes = [50, 100, 200]
+    density = np.arange(0.05, 1.05, 0.05)
+    params = {
+        'hidden_nodes': hidden_nodes,
+        'w_out_density': density,
+    }
+
+    nrmses = pickle.load(open('tmp/output_nodes', 'rb'))
+
+    # nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
+    # pickle.dump(nrmses, open('tmp/output_nodes-' + get_time(), 'wb'))
+
+    labels = ['50 nodes', '100 nodes', '200 nodes']
+    colors = ['red', 'green', 'blue']
+    for i, _nrmses in enumerate(nrmses):
+        x = density*hidden_nodes[i]
+        plt.scatter(x, np.squeeze(_nrmses), color=colors[i], marker='.', label=labels[i])
+
+    plt.ylabel('NRMSE')
+    plt.xlabel('Output nodes')
+    plt.legend(fancybox=False, loc='upper right', bbox_to_anchor=(1.0, 1.0))
+    plt.hlines(y = np.arange(0.0, 2.05, 0.05), xmin=0.0, xmax=125.0, linewidth=0.2)
+
+    maxlim = 1.0
+    minlim = np.min(nrmses) - 0.05
+    plt.ylim(minlim, maxlim)
+
+    maxlim = 125.0
+    minlim = 0.0
+    plt.xlim(minlim, maxlim)
 
 
 @default_font_size

@@ -1,17 +1,24 @@
-In this paper, we consider discrete-time3 ESNs with $N$ internal network nodes,
-a single input, and a single output node.
+In this paper, we consider discrete-time ESNs with $N$ internal network nodes, a
+single input, and a single output node.
 
-All further reservoirs were constructed with the parameters from this baseline,
-unless otherwise specified. The default reservoir size used was 200 hidden
-nodes. $\mathbf{W}^{res}$ and $\mathbf{W}^{in}$ were both generated as random
-matrices with i.i.d. entries in the interval [-0.5, 0.5]. Both matrices are
-fully connected, and the reservoir weight matrix was rescaled such that
-$\rho(\mathbf{W}_{res}) = 0.9$. The first 200 states of each run are discarded
-to provide a \textit{washout} of the initial reservoir state. For all
-experiments, the generated input was split into a training and test set, with
-$L_{train} = 2000$ and $L_{test} = 3000$. All reported performances are the mean
-across ten randomizations of each model representative. The Python software
-library implementation is available online\footnote{Some GitHub repository.}.
+The default reservoir size used is 200 hidden nodes. $\mathbf{W}^{res}$ and
+$\mathbf{W}^{in}$ are both generated as random matrices with i.i.d. entries in
+the interval [-0.5, 0.5]. Both matrices are fully connected, and the reservoir
+weight matrix was rescaled such that $\rho(\mathbf{W}_{res}) = 0.9$.  Input
+scaling is set to $\iota = 1.0$.
+
+The first 200 states of each run are discarded to provide a washout of the
+initial reservoir state. For all experiments, the generated input was split into
+a training and test set, with $L_{train} = 2000$ and $L_{test} = 3000$. Reported
+performances are the mean across ten randomizations of each model
+representative.
+
+All reservoirs were constructed with the parameters from this baseline,
+differing only in the parameters given for each specific experiment. The Python
+software library implementation is available online\footnote{Some GitHub
+repository.}.
+
+% (TODO): Specify regression method.
 
 \subsection{Noise}
 

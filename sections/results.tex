@@ -83,13 +83,38 @@ when the output density exceeds this threshold, the performance will continue to
 grow linearly with the density, achieving the best performance at full
 connectivity.
 
+Another interesting result illustrated in Fig. \ref{partial_visibility}b is that
+increasing the reservoir size without increasing the amount of output nodes has
+little effect on the network performance. Changing the x-axis of the previous
+plot the actual amount of connected nodes instead of the output density reveals
+this conclusively, as seen in Fig. \ref{output_nodes}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=2.5in]{img/output_nodes.png}
+  \caption{
+    Output nodes.
+  }
+  \label{output_nodes}
+\end{figure}
+
+Our results suggest that in the case of output connectivity, the performance of
+reservoir systems only correlates with the absolute amount of nodes seen, and
+not with the internal reservoir size. Hence, physical reservoir implementations
+must carefully consider this property, making it imperative that a partial
+visibility of the reservoir dynamics is sufficient for the task of which it is
+designed. In essence, the gathered information that is present in clusters of
+neurons on microelectrode grids may be completely lost if the layout is too
+sparse.
+
+% (TODO): Maybe don't use lines here? Scatter?
+
 % (TODO): Also plot output connectivity as amount of output nodes. Perhaps we see
 % that the size of the underlying reservoir does not matter at all?
 
-In \cite{jensen_computation_2018}, artificial spin ice is explored as a
-substrate for physical RC. Here, nanomagnetic assemblies are perturbed, using an
-external magnetic field as input source. Thus, every magnet sees exactly the
-same input stream.
+% (TODO): Discuss how this relates to the maximum information capacity of
+% individual nodes, and include Shannon information and how complexity is defined
+% as the amount of information required to describe something.
 
 Fig. \ref{input_scaling_distrib} explores the performance of ESNs with three
 different input weight distributions: uniform, Gaussian and fixed. Despite the
@@ -98,7 +123,12 @@ three classes hover around the same NRMSE of around 0.25. This demonstration of
 scaling differently distributed inputs such that they all achieve acceptable
 performance bodes well for physical RC. In particular, we observe a promising
 result when considering RC with physical substrates in which every node is
-forced to receive the same input.
+forced to receive the same input. Exploring different $\mathbf{W}_{in}$
+distributions in ESNs may give an intuition for its importance as a reservoir
+parameter, which may provide valuable in reservoir design, as one may thus
+resort to the cheapest and simplest option.
+
+% (TODO): Rewrite last sentence above.
 
 % (TODO): Ensure that the subfigure figure isn't pushed _into_ the references.
 
@@ -118,7 +148,9 @@ work for internal nodes, unless special topology is employed, e.g. ring
   \label{reservoir_density_distrib}
 \end{figure}
 
-Something about internal reservoir density as an introductory exploration.
+Something about internal reservoir density as an introductory exploration. EA/GA
+for looking at morphology that is equivalent to random connectivity, but easier
+to generate, and thus relevant for physical substrates?
 
 % (TODO): Reason for reservoir sparsity is in the original Jaeger paper,
 % e.g. multiple creating separate networks with rich dynamics.

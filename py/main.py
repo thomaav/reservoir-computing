@@ -27,6 +27,7 @@ def main():
     parser = argparse.ArgumentParser(description='tms RC')
     parser.add_argument('--input_density', action='store_true')
     parser.add_argument('--output_density', action='store_true')
+    parser.add_argument('--output_nodes', action='store_true')
     parser.add_argument('--partial_visibility', action='store_true')
     parser.add_argument('--w_in_distribution', action='store_true')
     parser.add_argument('--w_res_density', action='store_true')
@@ -42,6 +43,8 @@ def main():
         plot_input_density(dataset)
     elif args.output_density:
         plot_output_density(dataset)
+    elif args.output_nodes:
+        plot_output_nodes(dataset)
     elif args.partial_visibility:
         plot_partial_visibility(dataset)
     elif args.w_in_distribution:

@@ -1,18 +1,16 @@
 Training Recurrent Neural Networks is an inherently difficult task. To combat
 the high algorithmic complexity of previous training methods, Liquid State
-Machines (LSMs) \cite{maass_real-time_2002}, Echo State Networks (ESNs)
-\cite{jaeger_echo_2001} and Backpropagation Decorrelation (BPDC)
-\cite{steil_backpropagation-decorrelation:_2004} independently present
-alternative supervised learning methods that don't adapt the internal weights of
-the network. Instead, the output is generated using a simple, memoryless
-classifier or regressor, making the function of the RNN resemble that of a
-kernel in kernel method algorithms, which seek features and general relations in
-datasets to increase separability. Thus, by projecting into a high-dimensional
-space, the temporal information of time series input may be incorporated in the
-instantaneous readout. This methodology has been unified into the research
-subfield of Reservoir Computing (RC) \cite{schrauwen_overview_2007}, of which
-the focus is on separating the randomly generated reservoir from the trained
-readout layer.
+Machines (LSMs) \cite{maass_real-time_2002} and Echo State Networks (ESNs)
+\cite{jaeger_echo_2001} independently present alternative supervised learning
+methods that don't adapt the internal weights of the network. Instead, the
+output is generated using a simple, memoryless classifier or regressor, making
+the function of the RNN resemble that of kernels in kernel method algorithms,
+which seek features and general relations in datasets to increase
+separability. Thus, by projecting into a high-dimensional space, the temporal
+information of time series input may be incorporated in the instantaneous
+readout. This methodology has been unified into the research subfield of
+Reservoir Computing (RC) \cite{schrauwen_overview_2007}, of which the focus is
+on separating the randomly generated reservoir from the trained readout layer.
 
 Interestingly, there is no need for the reservoir to be an artificial neural
 network -- any high-dimensional, driven system exhibiting complex dynamic
