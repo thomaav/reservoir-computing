@@ -7,3 +7,4 @@
 * DONE Make a table of simulation setup.
 * TODO Use ridge regression.
 * DONE Talk about how quantization is very reliant on _where_ in the range values lie, e.g. tanh.
+* TODO Write about how finding simpler topologies is nice, less parameters, good for physical implementations.
