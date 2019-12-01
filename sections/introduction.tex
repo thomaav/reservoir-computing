@@ -1,36 +1,48 @@
-Training Recurrent Neural Networks is an inherently difficult task. To combat
-the high algorithmic complexity of previous training methods, Liquid State
-Machines (LSMs) \cite{maass_real-time_2002} and Echo State Networks (ESNs)
-\cite{jaeger_echo_2001} independently present alternative supervised learning
-methods that don't adapt the internal weights of the network. Instead, the
-output is generated using a simple, memoryless classifier or regressor, making
-the function of the RNN resemble that of kernels in kernel method algorithms,
-which seek features and general relations in datasets to increase
-separability. Thus, by projecting into a high-dimensional space, the temporal
-information of time series input may be incorporated in the instantaneous
-readout. This methodology has been unified into the research subfield of
-Reservoir Computing (RC) \cite{schrauwen_overview_2007}, of which the focus is
-on separating the randomly generated reservoir from the trained readout layer.
+Training Recurrent Neural Networks (RNNs) is an inherently difficult task
+\cite{bengio_learning_1994}. To combat the high algorithmic complexity of
+previous training methods, Echo State Networks (ESNs) \cite{jaeger_echo_2001}
+present an alternative supervised learning technique that does not adapt the
+internal weights of the network. Instead, the output is generated using a
+simple, memoryless classifier or regressor, making the function of the internal
+RNN resemble that of kernel methods. Thus, by projecting the input sequence into
+a high-dimensional space, the temporal information of a time series may be
+incorporated in the instantaneous readout. This methodology, concerned with
+exploiting the underlying dynamics of a \textit{reservoir}, is unified in the
+research subfield of Reservoir Computing (RC).
 
 Interestingly, there is no need for the reservoir to be an artificial neural
 network -- any high-dimensional, driven system exhibiting complex dynamic
 behavior can be used \cite{schrauwen_overview_2007}. Reservoirs are thus
-designed as to harness the dynamics of the \textit{substrate} that implements
-it. A multitude of substrates have shown promise as reservoirs: dynamical
-systems models such as electronic reservoirs using memristor circuits
-\cite{kulkarni_memristor-based_2012}, photonic reservoirs
-\cite{vandoorne_experimental_2014}, and more biologically oriented reservoirs
-such as gene regulation networks \cite{jones_is_2007} or the cat primary visual
-cortex \cite{scholkopf_temporal_2007}. Consult \cite{tanaka_recent_2018} for an
+designed such that we are able to harness the dynamics that governs the
+\textit{substrate} that implements it. A multitude of substrates have shown
+promise as reservoirs: electronic memristor circuits
+\cite{kulkarni_memristor-based_2012}, photonic systems
+\cite{vandoorne_experimental_2014}, mechanical springs
+\cite{hauser_towards_2011} and more biologically oriented reservoirs such as
+gene regulation networks \cite{jones_is_2007} and the cat primary visual cortex
+\cite{scholkopf_temporal_2007}. Consult \cite{tanaka_recent_2018} for an
 overview of recent advances in physical RC.
 
-As implementations of reservoir systems increasingly tend toward physical
+Commonly, preliminary studies are conducted by simulating the proposed dynamical
+system numerically to gauge its applicability in a physical reservoir
+setting. Such models may not entirely encapsulate the uncertainties and
+limitations that will exist in its corresponding physical setting, thus leading
+to a divergence between the performances observed
+\cite{vandoorne_experimental_2014, katumba_neuromorphic_2018,
+jensen_reservoir_2017}. The extent of performance degradation caused by physical
+limitations is not readily understood, and presents a knowledge gap in the field
+of physical RC.
+
+Hence, as implementations of reservoir systems increasingly tend toward physical
 substrates, the computational performance may be affected by intrinsic physical
-limitations. In this paper we seek to investigate several fundamental properties
-related to physical reservoirs: how does noise affect performance? How does the
-accuracy of our measurement equipment affect reservoir quality? What if we are
-only able to partly observe the reservoir? Does there exist network topologies
-that provide more capable reservoirs? We find that ... (TODO): What did we find?
+limitations. In this paper we seek to investigate fundamental properties related
+to physical reservoirs: how does noise affect performance? How does the accuracy
+of our measurement equipment affect reservoir quality? What if we are only able
+to partly observe the reservoir?
+
+The rest of this paper is structured as follows:
+
+% (TODO): Structure.
 
 % (TODO): Add information about Chua's diode as example physical implementation.
 
