@@ -32,11 +32,6 @@ that of already established communications. For example, commonly recommended
 SNRs in the IEEE 802.11 standard for Wi-Fi communications range from 15db to
 25dB. Below this threshold, wireless communication will quickly become unusable.
 
-In summary, our results indicate a robustness to the presence of noise in the
-input stream. This is a promising result when considering physical substrates as
-reservoir mediums, providing lower bounds on the ratio of signal power to noise
-power that is necessary.
-
 \subsection{Measurement equipment accuracy}
 
 In Fig. \ref{adc_quantization} we see a performance degradation from 12 to 10
@@ -53,7 +48,7 @@ with 50 hidden nodes and no output quantization.
   \caption{
     Performance effect of ADC quantization on four reservoirs of different
 sizes. $\tanh$ is used as activation function for the experiment, dividing its
-range of (1-, 1) into $n$ discrete output bins.
+range of (-1, 1) into $2^n$ discrete output bins.
   }
   \label{adc_quantization}
 \end{figure}
@@ -151,14 +146,17 @@ connectivity.
 Another interesting result illustrated in Fig. \ref{partial_visibility}b is that
 increasing the reservoir size without increasing the amount of output nodes has
 little effect on the network performance. Changing the x-axis of the previous
-plot the actual amount of connected nodes instead of the output density reveals
-this conclusively, as seen in Fig. \ref{output_nodes}.
+plot to the actual amount of connected nodes instead of the output density
+reveals this conclusively, as seen in Fig. \ref{output_nodes}.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=2.5in]{img/output_nodes.png}
   \caption{
-    Output nodes.
+    Performance of reservoirs of three different sizes, parameterized by the
+amount of reservoir nodes connected to the readout layer. There is no clear
+distinction between the reservoir sizes, demonstrating that increasing reservoir
+sizes have no effect on performance if the output sampling remains the same.
   }
   \label{output_nodes}
 \end{figure}
@@ -196,10 +194,8 @@ performance bodes well for physical RC. In particular, we observe a promising
 result when considering RC with physical substrates in which every node is
 forced to receive the same input. Exploring different $\mathbf{W}_{in}$
 distributions in ESNs may give an intuition for its importance as a reservoir
-parameter, which may provide valuable in reservoir design, as one may thus
-resort to the cheapest and simplest option.
-
-% (TODO): Rewrite last sentence above.
+parameter, which may provide valuable in reservoir design, as one may resort to
+the simplest or cheapest solution.
 
 %%% Local Variables:
 %%% mode: latex
