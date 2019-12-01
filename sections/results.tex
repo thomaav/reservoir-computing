@@ -4,35 +4,32 @@
 % e.g. in software that we are now implementing physically: how does the model
 % then respond to the noise?
 
-The results are shown in Fig. \ref{input_noise_snr}, illustrating a slight
-performance degradation when the ratio of signal power to noise power drops
-below 20 dB. The reservoir performance drops more drastically when reaching 10
-dB. Similar performance degradation was seen in \cite{dambre_information_2012},
-where the same SNR measure was used to evaluate the signal reconstruction
-capacity from the state of a dynamical system.
+The results are shown in Fig. \ref{input_noise_snr}, illustrating a performance
+degradation when the ratio of signal power to noise power drops below 20 dB. The
+reservoir performance drops more drastically below 10 dB, quickly turning
+insufficient for the prediction task. Similar performance degradation was seen
+in \cite{dambre_information_2012}, where the same SNR measure was used to
+evaluate the signal reconstruction capacity from the state of a dynamical
+system.
 
 \begin{figure}
   \centering
   \includegraphics[width=2.5in]{img/input_noise_snr.png}
   \caption{
     Noise causing a decrease in performance for an ESN reservoir on the NARMA10
-task ($N = 200$ nodes). When the signal to noise ratio drops below 20dB, the
-performance of the reservoir degrades in an exponential manner.
+task. When the signal to noise ratio drops below 20dB, the performance of the
+reservoir degrades in an exponential manner.
   }
   \label{input_noise_snr}
 \end{figure}
 
-In information theory one will often evaluate a communication system in terms of
-its channel capacity, presenting an upper bound for the rate one is reliably
-able to transmit information. Given a communications channel subjected to
-Gaussian noise, the Shannon-Hartley theorem \cite{shannon_communication_1949}
-states the capacity as $C = B\log_2(1 + \frac{S}{N})$, where $C$ is the capacity
-in bits per second, $B$ is bandwidth in hertz, and $\frac{S}{N}$ denotes the
-signal to noise ratio.
-
-In practice, finding a way to transmit data at a bit-rate R with a low bit-error
-rate can be done, as long as $R \leq C$. For example, commonly recommended SNRs
-in the IEEE 802.11 standard for Wi-Fi communications range from 15db to
+The eventual diminishing return from increasing the signal to noise ratio seen
+in Fig. \ref{input_noise_snr} is expected given the relationship between
+information transmission capacity and SNR given by the Shannon-Hartley
+theorem. This is related to our results in the sense that we can compare the
+information processing capabilities of a reservoir in the presence of noise with
+that of already established communications. For example, commonly recommended
+SNRs in the IEEE 802.11 standard for Wi-Fi communications range from 15db to
 25dB. Below this threshold, wireless communication will quickly become unusable.
 
 In summary, our results indicate a robustness to the presence of noise in the

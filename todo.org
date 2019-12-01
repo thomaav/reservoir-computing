@@ -2,8 +2,8 @@
 * DONE Write about this output connectivity stuff above.
 * TODO Write about output connectivity in the context of information processing.
 * TODO Write about Chua diode, and the impact of noise that is hard to characterize.
-* TODO Change quantization image to bit size on x-axis. Change the x-axis length.
-* TODO Write about Shannon information stuff for noise to replace current WiFi stuff.
+* DONE Change quantization image to bit size on x-axis. Change the x-axis length.
+* DONE Write about Shannon information stuff for noise to replace current WiFi stuff.
 * DONE Make a table of simulation setup.
 * DONE (Don't) use ridge regression.
 * DONE Talk about how quantization is very reliant on _where_ in the range values lie, e.g. tanh.

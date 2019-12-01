@@ -45,6 +45,15 @@ the sum of the input $\mathbf{u}(t)$ and the noise values
 $\mathbf{v}(t)$. $\mathbf{v}(t)$ is i.i.d and drawn from a Gaussian distribution
 with zero-mean, and a variance $\sigma^{2}$.
 
+In information theory a communication system can be evaluated in terms of its
+channel capacity, presenting an upper bound for the rate one is reliably able to
+transmit information. Given a communications channel subjected to Gaussian
+noise, the Shannon-Hartley theorem \cite{shannon_communication_1949} states this
+capacity as a proportional relationship between the capacity and the binary
+logarithm of the linear power ratio between the signal and the noise: $C =
+B\log_2(1 + \frac{S}{N})$, where $C$ is the capacity in bits per second, $B$ is
+bandwidth in hertz, and $\frac{S}{N}$ denotes the signal to noise ratio.
+
 \subsection{Measurement equipment accuracy}
 
 When conducting experiments using physical reservoirs, one will inevitably have
