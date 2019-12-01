@@ -18,7 +18,7 @@ class ESN(nn.Module):
                  w_in_density=1.0, w_out_density=1.0, w_res_density=1.0,
                  input_scaling=1.0, w_in_distrib=Distribution.uniform,
                  w_res_distrib=Distribution.uniform, awgn_train_std=0.0,
-                 awgn_test_std=0.0, adc_quantization=None, readout='pseudoinv',
+                 awgn_test_std=0.0, adc_quantization=None, readout='pinv',
                  w_ridge=0.00):
         super(ESN, self).__init__()
 
@@ -109,7 +109,7 @@ class ESN(nn.Module):
             if self.readout == 'rr':
                 self.rr.fit(X, y)
                 self.w_out = torch.from_numpy(self.rr.coef_).float()
-            elif self.readout == 'pseudoinv':
+            elif self.readout == 'pinv':
                 self.w_out = torch.mv(torch.pinverse(X), y)
             else:
                 raise NotImplementedError('Unknown readout regression method')
