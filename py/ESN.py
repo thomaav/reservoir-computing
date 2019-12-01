@@ -2,6 +2,7 @@ import enum
 import numpy as np
 import torch
 import torch.nn as nn
+from sklearn.linear_model import Ridge
 
 from util import spectral_radius as _spectral_radius
 
@@ -17,7 +18,8 @@ class ESN(nn.Module):
                  w_in_density=1.0, w_out_density=1.0, w_res_density=1.0,
                  input_scaling=1.0, w_in_distrib=Distribution.uniform,
                  w_res_distrib=Distribution.uniform, awgn_train_std=0.0,
-                 awgn_test_std=0.0, adc_quantization=None):
+                 awgn_test_std=0.0, adc_quantization=None, readout='pseudoinv',
+                 w_ridge=0.00):
         super(ESN, self).__init__()
 
         self.hidden_nodes = hidden_nodes
@@ -33,6 +35,8 @@ class ESN(nn.Module):
         self.awgn_train_std = awgn_train_std
         self.awgn_test_std = awgn_test_std
         self.adc_quantization = adc_quantization
+        self.readout = readout
+        self.rr = Ridge(alpha=w_ridge)
 
         # We can't just mask w_out with the density, as the masked out nodes
         # must be hidden during training as well.
@@ -102,9 +106,12 @@ class ESN(nn.Module):
         y = y[self.washout:] if y is not None else y
 
         if y is not None:
-            self.w_out = torch.mv(torch.pinverse(X), y)
+            if self.readout == 'rr':
+                self.rr.fit(X, y)
+                self.w_out = torch.from_numpy(self.rr.coef_).float()
+            elif self.readout == 'pseudoinv':
+                self.w_out = torch.mv(torch.pinverse(X), y)
+            else:
+                raise NotImplementedError('Unknown readout regression method')
         else:
-            import matplotlib.pyplot as plt
-            plt.plot(X)
-            plt.show()
             return torch.mv(X, self.w_out)
