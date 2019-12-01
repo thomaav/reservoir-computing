@@ -36,19 +36,39 @@ of physical RC.
 Hence, as implementations of reservoir systems increasingly tend toward physical
 substrates, the computational performance may be affected by intrinsic physical
 limitations. In this paper we seek to investigate fundamental properties related
-to physical reservoirs: how does noise affect performance? How does the accuracy
-of our measurement equipment affect reservoir quality? What if we are only able
-to partly observe the reservoir?
+to physical reservoirs.
 
-The rest of this paper is structured as follows:
+Reservoir robustness to noise is a primary concern that has been demonstrated
+both numerically and experimentally in an optoeletronic setting, where
+pre-processing techniques have been shown to reduce performance degradations
+\cite{soriano_optoelectronic_2013}. It is well-established that ESNs are
+resilient to internal noise \cite{jaeger_echo_2001}, but it is uncertain whether
+this translates to intrinsically noise inputs. ESNs provide a natural context
+for studying the general significance of white noise.
 
-% (TODO): Structure.
+Another relevant noise characteristic is that of equipment
+accuracy. Quantization noise, i.e. the resolution of the interface equipment, is
+usually determined by DAC and ADC instruments. Employing equipment with
+sufficient resolution has been found to be important when using physical
+reservoirs \cite{soriano_delay-based_2015}. The quantized ESN model, qESN,
+exhibits similar dynamics to that of random Boolean networks
+\cite{busing_connectivity_2010}.
 
-% (TODO): Add information about Chua's diode as example physical implementation.
+Physical substrates will also differ in their process for both input
+perturbation and state observation. The impact of input and output density,
+i.e. the amount of reservoir nodes that are visible to an observer, will impact
+performance.
 
-% (TODO): Physical substrates present difficulties, no longer possible to just
-% tune the spectral radius (keys from practical guide: spectral radius, input
-% scaling, leakiness).
+Lastly, being able to vary the input that each node sees freely is desirable,
+especially when considering substrates with a restrictive topology. This is a
+property that has previously been suggested to hold for ESNs
+\cite{jaeger_echo_2001}.
+
+The rest of this paper is structured as follows: first we provide relevant
+background theory, including the motivation behind the exploration of each
+physical limitation. Next we present methods and the simulation setup, followed
+by a section on results and discussion. Finally we draw conclusions and suggest
+future work.
 
 %%% Local Variables:
 %%% mode: latex
