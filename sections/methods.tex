@@ -5,7 +5,9 @@ The default reservoir size used is 200 hidden nodes. $\mathbf{W}^{res}$ and
 $\mathbf{W}^{in}$ are both generated as random matrices with i.i.d. entries in
 the interval [-0.5, 0.5]. Both matrices are fully connected, and the reservoir
 weight matrix was rescaled such that $\rho(\mathbf{W}_{res}) = 0.9$.  Input
-scaling is set to $\iota = 1.0$.
+scaling is set to $\iota = 1.0$. $\mathbf{W}_{out}$ is adapted with the
+Moore-Penrose pseudo-inverse using singular value decomposition, as this was
+found to lead to the best results.
 
 The first 200 states of each run are discarded to provide a washout of the
 initial reservoir state. For all experiments, the generated input was split into

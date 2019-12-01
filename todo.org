@@ -5,6 +5,6 @@
 * TODO Change quantization image to bit size on x-axis. Change the x-axis length.
 * TODO Write about Shannon information stuff for noise to replace current WiFi stuff.
 * DONE Make a table of simulation setup.
-* TODO Use ridge regression.
+* DONE (Don't) use ridge regression.
 * DONE Talk about how quantization is very reliant on _where_ in the range values lie, e.g. tanh.
 * TODO Write about how finding simpler topologies is nice, less parameters, good for physical implementations.
