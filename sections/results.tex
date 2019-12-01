@@ -22,9 +22,18 @@ performance of the reservoir degrades in an exponential manner.
   \label{input_noise_snr}
 \end{figure}
 
-A comparison can be drawn to commonly recommended SNRs in the IEEE 802.11
-standard for Wi-Fi communications, ranging from 15db to 25dB. Below this
-threshold, wireless communication will quickly become unusable.
+In information theory one will often evaluate a communication system in terms of
+its channel capacity, presenting an upper bound for the rate one is reliably
+able to transmit information. Given a communications channel subjected to
+Gaussian noise, the Shannon-Hartley theorem \cite{shannon_communication_1949}
+states the capacity as $C = B\log_2(1 + \frac{S}{N})$, where $C$ is the capacity
+in bits per second, $B$ is bandwidth in hertz, and $\frac{S}{N}$ denotes the
+signal to noise ratio.
+
+In practice, finding a way to transmit data at a bit-rate R with a low bit-error
+rate can be done, as long as $R \leq C$. For example, commonly recommended SNRs
+in the IEEE 802.11 standard for Wi-Fi communications range from 15db to
+25dB. Below this threshold, wireless communication will quickly become unusable.
 
 In summary, our results indicate a robustness to the presence of noise in the
 input stream. This is a promising result when considering physical substrates as
