@@ -1,8 +1,38 @@
-Further investigations is inclined to be of twofold nature. First, it is ...
+Further investigations is inclined to be of twofold nature. First, a deeper
+exploration of physical limitations should include physical implementations of
+reservoir systems to compare their performance tendencies to simulated
+systems. A correlation between the performance of the simulation and the
+physical realization will tell us something about the generality of the
+limitations we study. Next, once a specific physical system is chosen, the
+specific limitations that are relevant for that system should be studied.
 
-\subsection{What if nodes are dying? Binary vs. non-binary}
+Artificial spin ice computation has proven to be a promising substrate for
+material computation \cite{jensen_computation_2018}, making it a good candidate
+for a study of real physical limitations.
 
-\subsection{Topology and physical morphology}
+Arranging a large number of nanomagnets in a 2D lattice presents topological
+limitations that is not naturally present in ESN simulations. An interesting
+topic is thus how enforcing the layout of the system to be two-dimensional
+affects computational capabilities. The physical morphology of the lattice ,
+e.g. monoclinic, hexagonal and tetragonal crystal families, may play interesting
+roles for computation. Imposing such restrictions in simulation may reveal
+insights about physical systems.
+
+Another restriction in artificial spin ice systems is that of a distinction
+between the microstate and the macrostate. Studying the magnetic spin of
+individual particles is a computationally infeasible endeavor, hence requiring
+implementations to observe the system in some macrostate manner. The
+degeneration of many microstates to one macrostate, whether by averaging or
+otherwiser, could alter the observed dynamics.
+
+Finally we would like to point out a particularly compelling limitation when
+considering substrates that do not stem from biological evolution. In this work
+we show that the ESN model is robust to input errors such as noise, but are not
+concerned with the effect of internal model errors. Although self-organizing,
+biologically inspired systems show an inherent robustness to defects, e.g. dead
+or noisy cells in a neural networks, this may not be the case in other
+substrates. We believe internal malfunctions to be a restriction that could
+manifest itself in physical reservoirs.
 
 %%% Local Variables:
 %%% mode: latex
