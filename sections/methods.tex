@@ -4,10 +4,13 @@ single input, and a single output node.
 The default reservoir size used is 200 hidden nodes. $\mathbf{W}^{res}$ and
 $\mathbf{W}^{in}$ are both generated as random matrices with i.i.d. entries in
 the interval [-0.5, 0.5]. Both matrices are fully connected, and the reservoir
-weight matrix was rescaled such that $\rho(\mathbf{W}_{res}) = 0.9$.  Input
-scaling is set to $\iota = 1.0$. $\mathbf{W}_{out}$ is adapted with the
-Moore-Penrose pseudo-inverse using singular value decomposition, as this was
-found to lead to the best results.
+weight matrix was rescaled such that $\rho(\mathbf{W}_{res}) = 0.9$. This method
+for instantiating $\mathbf{W}_{res}$ and $\mathbf{W}_{in}$ is common
+practice. Input scaling is set to $\iota = 1.0$, as the parameter was found to
+have small impact on performance when initializing $\mathbf{W}_{in}$ from a
+uniform distribution. $\mathbf{W}_{out}$ is adapted with the Moore-Penrose
+pseudo-inverse using singular value decomposition, as this was found to lead to
+the best results.
 
 The first 200 states of each run are discarded to provide a washout of the
 initial reservoir state. For all experiments, the generated input was split into
@@ -22,6 +25,12 @@ repository.}.
 
 \subsection{Noise}
 
+Modeling random processes in nature is commonly done with the Additive white
+Gaussian noise (AWGN) model. The noise is additive, meaning the AWGN output is
+the sum of the input $\mathbf{u}(t)$ and the noise values
+$\mathbf{v}(t)$. $\mathbf{v}(t)$ is i.i.d and drawn from a Gaussian distribution
+with zero-mean, and a variance $\sigma^{2}$.
+
 We model AWGN by extending the ESN model to take the sum of two individual
 inputs, $\mathbf{u}(t)$ and $\mathbf{v}(t)$, which represent the signal and the
 noise. The goal of the reservoir remains a computation on the signal
@@ -35,28 +44,28 @@ dataset. The signal to noise ratio is measured in dB, and is calculated as $SNR
 
 To emulate the behavior of an ADC, we extend our ESN model to allow for
 quantization of reservoir output before it is passed to the readout layer. This
-quantization effectively divides the range of the nonlinear activation function
-of each hidden node into a discrete set of fixed output bins.
+quantization effectively divides the range of the nonlinear activation function,
+i.e. $\tanh$ with a range [-1, 1], of each hidden node into a discrete set of
+fixed output bins.
 
-Fig. \ref{adc_quantization} shows how quantization affects reservoir
-performance. We plot the error of four different reservoir sizes: 50, 100, 200
-and 400 hidden nodes to see whether it is possible to compensate for lower
-resolutions by increasing the size of the reservoir.
+We run experiments with four different reservoir sizes: 50, 100, 200 and 400
+hidden nodes, to see whether it is possible to compensate for lower resolutions
+by increasing the size of the reservoir.
 
 \subsection{Partially visible reservoir state}
 
 We begin by experimenting with the sparsity of $\mathbf{W}_{in}$ and
 $\mathbf{W}_{out}$. In both cases, we now generate the connection matrices such
 that a wanted density, given as the fraction of connected nodes, is
-achieved. Input and output is adjusted separately. Fig. \ref{partial_visibility}
-shows the results of our simulation runs.
+achieved. Input and output is adjusted separately.
 
 Additionally, we examine three different input weight distributions: uniform,
-Gaussian and fixed. All inputs are all sampled as i.i.d streams. The uniform
-distribution is sampled in the interval [-0.5, 0.5], the Gaussian distribution
-is sampled with a zero mean and standard deviation $\sigma = 1.0$, and the fixed
-distribution has every input weight set to 1. Moreover, we explore the parameter
-space of the input scaling in the interval [0.1, 1.0].
+Gaussian and fixed. All inputs are sampled as i.i.d streams with distributions
+commonly used in the literature. The uniform distribution is sampled in the
+interval [-0.5, 0.5], the Gaussian distribution is sampled with a zero mean and
+standard deviation $\sigma = 1.0$, and the fixed distribution has every input
+weight set to 1. Moreover, we explore the parameter space of the input scaling
+in the interval [0.1, 1.0].
 
 %%% Local Variables:
 %%% mode: latex
