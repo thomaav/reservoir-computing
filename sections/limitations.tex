@@ -2,19 +2,19 @@
 
 Physical, real world systems are affected by noise. By extension, designers of
 reservoirs that use material substrates must be aware of the effects the noise
-that is present may have on computational power.
+may have on computational power.
 
 It is well known in the field of traditional artificial neural networks that an
 addition of noise to training data can lead to generalization improvements
 similar to that of Tikhonov Regularization \cite{bishop_training_1995}. This has
-been verified to hold for the RC paradigm \cite{jaeger_echo_2001,
-kurkova_stable_2008}, where an additional noise term $\mathbf{v}(t)$ is added to
-the reservoir. The noise is either added to all reservoir nodes, or to an output
-\textit{feedback} $\mathbf{y}(t)$ that is fed back into the reservoir
-nodes. This work cites simply using ridge regression to be a more pragmatic
-approach, as to avoid the nondeterminism present with dynamic noise injection,
-but has additionally identified the presence of noise within reservoirs to be
-advantageous.
+been verified to hold for the RC paradigm, where an additional noise term
+$\mathbf{v}(t)$ is added to the reservoir \cite{jaeger_echo_2001}. The noise is
+either added to all reservoir nodes, or to an output \textit{feedback}
+$\mathbf{y}(t)$ that is fed back into the reservoir nodes. Simply using ridge
+regression is cited to be a more pragmatic approach, as to avoid the
+nondeterminism present with dynamic noise injection, but the presence of noise
+within reservoirs has also been identified to be advantageous
+\cite{kurkova_stable_2008}.
 
 Whether this internal noise resilience of ESNs translates to a more general
 robustness to noisy inputs is unclear. A common approach in research is to first
@@ -33,18 +33,12 @@ This has previously been investigated in Liquid State Machines (LSM)
 \cite{maass_real-time_2002}, which are similar to ESNs, using reservoirs
 containing 1232 leaky integrate integrate-and-fire neurons
 \cite{verstraeten_isolated_2005}. Here, adding three types of noise from the
-NOISEX database: speech babble, white-noise, and car interior noise, to speech
+NOISEX database: speech babble, white noise, and car interior noise, to speech
 recognition tasks saw the error rate consistently staying above 80\% with an SNR
 of 10dB. We further this work using the dynamics of ESNs, with the motivation of
-exploring the their general robustness to noisy inputs. This provides insight
-into whether we can expect a similar behavior regardless of the reservoir medium
-that is used to implement rich, complex dynamics.
-
-Modeling random processes in nature is commonly done with the Additive white
-Gaussian noise (AWGN) model. The noise is additive, meaning the AWGN output is
-the sum of the input $\mathbf{u}(t)$ and the noise values
-$\mathbf{v}(t)$. $\mathbf{v}(t)$ is i.i.d and drawn from a Gaussian distribution
-with zero-mean, and a variance $\sigma^{2}$.
+exploring their general robustness to noisy inputs. This provides insight into
+whether we can expect a similar behavior regardless of the reservoir medium that
+is used to implement rich, complex dynamics.
 
 In information theory a communication system can be evaluated in terms of its
 channel capacity, presenting an upper bound for the rate one is reliably able to
@@ -58,7 +52,7 @@ bandwidth in hertz, and $\frac{S}{N}$ denotes the signal to noise ratio.
 \subsection{Measurement equipment accuracy}
 
 When conducting experiments using physical reservoirs, one will inevitably have
-to interact with substrates with measurement instruments. Whether it be
+to interact with substrates using measurement instruments. Whether it be
 transforming digital representations of reservoir perturbations to analog
 signals that cause the excitation, or the reverse mapping of the analog state of
 the reservoir into a digital representation, the accuracy of equipment used for
