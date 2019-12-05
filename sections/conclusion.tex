@@ -1,20 +1,19 @@
-In this work we have explored the impact of several limitations in physical
-reservoir computing (RC). Through Echo State Network (ESN) simulations we have
-uncovered characteristics exhibited by white noise, quantization noise and
-partially visible reservoirs in prediction of the NARMA10 time series.
+In this work we have explored the impact of limitations imposed by physics in
+physical reservoir computing (RC). Through Echo State Network (ESN) simulations
+we have uncovered characteristics exhibited by white noise, quantization noise
+and partially visible reservoirs in prediction of the NARMA10 time series.
 
 By modeling additive white Gaussian noise (AWGN) we have found that the RC
 paradigm provides an inherent robustness to noisy inputs. This is a promising
-result when considering physical substrates as a reservoir medium, suggesting a
-lower bound of 10dB on the ratio of signal power to noise power that is
-tolerable to provide a satisfactory representation of the signal in the
-reservoir dynamics.
+result when considering physical substrates as a reservoir medium, suggesting an
+lower bound of 10dB SNR as tolerable to provide a satisfactory representation of
+the signal in the reservoir dynamics.
 
 Moreover, our experiments show that this resilience to white noise also extends
 to ADC quantization noise. By quantizing the output of the $\tanh$ activation
-function of hidden nodes in the ESNs, we have demonstrated that general
-reconstruction capability of our reservoirs on the NARMA10 task is unhindered
-when using an ADC with 12 bits of resolution or more.
+function of hidden nodes in the ESNs, we have demonstrated that the general
+reconstruction capability of our reservoirs is unhindered when using an ADC with
+12 bits of resolution or more.
 
 We have also investigated the importance of input and output connectivity, as to
 provide insights into reservoirs that are only partially visible to an
@@ -34,8 +33,8 @@ dynamics is captured.
 The work presented contains an introductory exploration of physical limitations
 in RC, and thus casts quite a wide net. Developing a concrete understanding of
 the issues faced when moving simulation models to physical realizations is a
-prerequisite to exploiting computational properties in matter. With ESN
-simulations we have demonstrated the particular impact of several common
+prerequisite to exploiting computational properties in physical systems. With
+ESN simulations we have demonstrated the particular impact of several common
 physical limits, which should be transferable to reservoirs manifesting similar
 dynamics.
 
