@@ -1,16 +1,11 @@
 \subsection{Noise}
 
-% (TODO): Write about main motivation for doing this: what if we have a model
-% e.g. in software that we are now implementing physically: how does the model
-% then respond to the noise?
-
 The results are shown in Fig. \ref{input_noise_snr}, illustrating a performance
 degradation when the ratio of signal power to noise power drops below 20 dB. The
 reservoir performance drops more drastically below 10 dB, quickly turning
-insufficient for the prediction task. Similar performance degradation was seen
-in \cite{dambre_information_2012}, where the same SNR measure was used to
-evaluate the signal reconstruction capacity from the state of a dynamical
-system.
+insufficient for the prediction task. Similar performance degradation has been
+seen in previous work, using the same SNR measure to evaluate signal
+reconstruction capacity in a dynamical system \cite{dambre_information_2012}.
 
 \begin{figure}
   \centering
@@ -39,7 +34,7 @@ quantization bits. As discrete output states move beneath a quantization of 10
 bits, the performance quickly deteriorates. However, even with just 4 bits to
 discretely separate outputs, reservoirs are still able to replicate the input
 sequence to some degree. Furthermore, reservoirs with 400 hidden nodes and just
-64 output bits consistently provide the same performance as that of a reservoir
+64 output bins consistently provide the same performance as that of a reservoir
 with 50 hidden nodes and no output quantization.
 
 \begin{figure}[H]
@@ -47,8 +42,8 @@ with 50 hidden nodes and no output quantization.
   \includegraphics[width=3.3in]{img/adc_quantization.png}
   \caption{
     Performance effect of ADC quantization on four reservoirs of different
-sizes. $\tanh$ is used as activation function for the experiment, dividing its
-range of (-1, 1) into $2^n$ discrete output bins.
+sizes. The range (-1, 1) of the $\tanh$ activation function is divided into
+$2^n$ discrete output bins.
   }
   \label{adc_quantization}
 \end{figure}
@@ -73,12 +68,6 @@ highly linear part of $\tanh$ in the interval [-0.4, 0.4], with a few nodes
 outside this range. Essentially, this may in the worst cases account for halving
 the available output bins
 
-Our results demonstrate that the reservoir methodology provides an inherent
-resilience to output quantization, specifically so when using ADCs with 12-bits
-of resolution or higher. When designing physical RC systems, this may be applied
-in preliminary analysis of the resolution and representation of output
-activations.
-
 \subsection{Partially observable reservoir state}
 
 \begin{figure*}[htbp]
@@ -94,20 +83,15 @@ activations.
     \caption{}
   \end{subfigure}
   \caption{
-    These figures show the influence of reservoirs that are only partially
-visible on the performance for the NARMA10 task. The density is a measurement
-for the fraction of elements in the input and output matrices containing
-non-zero elements. The heat map was generated using a reservoir size of 200
-hidden nodes.
+    Influence of reservoirs that are only partially visible on the
+performance. The density is a measurement for the fraction of elements in the
+input and output matrices containing non-zero elements.
   }
   \label{partial_visibility}
 \end{figure*}
 
-When attaching input units to the network by weights, experience has shown that
-choosing $\mathbf{W}_{in}$ can be done freely, as long as
-$\rho(\mathbf{W}_{res}) < 1$ is satisfied \cite{jaeger_echo_2001}. Experimental
-results from adjusting the sparsity of $\mathbf{W}_{in}$ is shown in
-Fig. \ref{partial_visibility}a, in which all experiments were done with a
+Experimental results from adjusting the sparsity of $\mathbf{W}_{in}$ is shown
+in Fig. \ref{partial_visibility}a, in which all experiments were done with a
 uniform input weight distribution in the interval [-0.5, 0.5].
 
 Across all three reservoir sizes, we see a small increase in the signal
@@ -132,11 +116,10 @@ node reservoirs, there is a noticeable transition from a linear to an
 exponential NRMSE growth.
 
 We may understand these results to indicate that there is a critical point in
-the output density space where there the readout layer starts seeing enough of
-the reservoir dynamics to reconstruct the input NARMA10 signal. Additionally,
-when the output density exceeds this threshold, the performance will continue to
-grow linearly with the density, achieving the best performance at full
-connectivity.
+the output density space where the readout layer starts seeing enough of the
+reservoir dynamics to reconstruct the input NARMA10 signal. Additionally, when
+the output density exceeds this threshold, the performance will continue to grow
+linearly with the density, achieving the best performance at full connectivity.
 
 Another interesting result illustrated in Fig. \ref{partial_visibility}b is that
 increasing the reservoir size without increasing the amount of output nodes has
@@ -148,7 +131,7 @@ reveals this conclusively, as seen in Fig. \ref{output_nodes}.
   \centering
   \includegraphics[width=3.3in]{img/output_nodes.png}
   \caption{
-    Performance of reservoirs of three different sizes, parameterized by the
+    Performance of reservoirs of three different sizes, as a function of the
 amount of reservoir nodes connected to the readout layer. There is no clear
 distinction between the reservoir sizes, demonstrating that increasing reservoir
 sizes have no effect on performance if the output sampling remains the same.

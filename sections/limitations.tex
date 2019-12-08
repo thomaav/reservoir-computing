@@ -38,7 +38,9 @@ recognition tasks saw the error rate consistently staying above 80\% with an SNR
 of 10dB. We further this work using the dynamics of ESNs, with the motivation of
 exploring their general robustness to noisy inputs. This provides insight into
 whether we can expect a similar behavior regardless of the reservoir medium that
-is used to implement rich, complex dynamics.
+is used to implement rich, complex dynamics. Furthermore, the general
+information capacity of internal reservoir nodes has been shown to degrade with
+noisier inputs \cite{dambre_information_2012}.
 
 In information theory a communication system can be evaluated in terms of its
 channel capacity, presenting an upper bound for the rate one is reliably able to
@@ -107,7 +109,10 @@ spin ice, recently deemed a highly promising substrate for material computation
 \cite{jensen_computation_2018}, contains nanomagnet elements that may be
 manipulated in many ways. A common approach is external magnetic fields, which
 proposes a choice between a global application to the entire assembly and to
-more specific, narrow areas.
+more specific, narrow areas. When attaching input units to the ESN reservoir by
+weights, experience has shown that choosing $\mathbf{W}_{in}$ can be done freely
+as long as $\rho(\mathbf{W}_{res}) < 1$ is satisfied \cite{jaeger_echo_2001},
+which is an enticing prospect in the context of physical reservoirs.
 
 %%% Local Variables:
 %%% mode: latex

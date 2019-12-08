@@ -16,12 +16,15 @@ The first 200 states of each run are discarded to provide a washout of the
 initial reservoir state. For all experiments, the generated input was split into
 a training and test set, with $L_{train} = 2000$ and $L_{test} = 3000$. Reported
 performances are the mean across ten randomizations of each model
-representative.
+representative. A few experiments were run with more randomizations to achieve
+statistical significance, which is reported in each such case.
 
 All reservoirs were constructed with the parameters from this baseline,
 differing only in the parameters given for each specific experiment. The Python
 software library implementation is available online\footnote{Some GitHub
 repository.}.
+
+% (TODO): Some GitHub repository.
 
 \subsection{Noise}
 
@@ -45,19 +48,22 @@ dataset. The signal to noise ratio is measured in dB, and is calculated as $SNR
 To emulate the behavior of an ADC, we extend our ESN model to allow for
 quantization of reservoir output before it is passed to the readout layer. This
 quantization effectively divides the range of the nonlinear activation function,
-i.e. $\tanh$ with a range [-1, 1], of each hidden node into a discrete set of
+i.e. $\tanh$ with a range (-1, 1), of each hidden node into a discrete set of
 fixed output bins.
 
 We run experiments with four different reservoir sizes: 50, 100, 200 and 400
 hidden nodes, to see whether it is possible to compensate for lower resolutions
-by increasing the size of the reservoir.
+by increasing the size of the reservoir. For this experiment each model
+representative is run 20 times.
 
 \subsection{Partially visible reservoir state}
 
 We begin by experimenting with the sparsity of $\mathbf{W}_{in}$ and
 $\mathbf{W}_{out}$. In both cases, we now generate the connection matrices such
 that a wanted density, given as the fraction of connected nodes, is
-achieved. Input and output is adjusted separately.
+achieved. Input and output is adjusted separately. For the input density
+experiment each model representative is run 50 times to determine that there is
+a definitive trend.
 
 Additionally, we examine three different input weight distributions: uniform,
 Gaussian and fixed. All inputs are sampled as i.i.d streams with distributions

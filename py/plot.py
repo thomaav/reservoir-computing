@@ -54,13 +54,18 @@ def plot_input_density(dataset):
         'w_in_density': density,
     }
 
-    nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
+    nrmses, stds = evaluate_esn_2d(dataset, params, runs_per_iteration=50)
+    pickle.dump(nrmses, open('tmp/input_density_nrmse' + get_time(), 'wb'))
+    pickle.dump(stds, open('tmp/input_density_std' + get_time(), 'wb'))
+
+    # nrmses = pickle.load(open('tmp/input_density_nrmse', 'rb'))
+    # stds = pickle.load(open('tmp/input_density_std', 'rb'))
 
     labels = ['50 nodes', '100 nodes', '200 nodes']
     linestyles = ['dotted', 'dashed', 'solid']
     for i, _nrmses in enumerate(nrmses):
-        plt.plot(density, np.squeeze(_nrmses), color='black',
-                 marker='.', linestyle=linestyles[i], label=labels[i])
+        plt.errorbar(density, np.squeeze(_nrmses), yerr=stds[i], capsize=3.0,
+                     color='black', marker='.', linestyle=linestyles[i], label=labels[i])
 
     maxlim = np.max(nrmses) + 0.05
     minlim = np.min(nrmses) - 0.05
@@ -89,7 +94,7 @@ def plot_output_density(dataset):
         'w_out_density': density,
     }
 
-    nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
+    nrmses, stds = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
 
     labels = ['50 nodes', '100 nodes', '200 nodes']
     linestyles = ['dotted', 'dashed', 'solid']
@@ -120,14 +125,15 @@ def plot_output_nodes(dataset):
 
     nrmses = pickle.load(open('tmp/output_nodes', 'rb'))
 
-    # nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
+    # nrmses, stds = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
     # pickle.dump(nrmses, open('tmp/output_nodes-' + get_time(), 'wb'))
 
     labels = ['50 nodes', '100 nodes', '200 nodes']
     colors = ['red', 'green', 'blue']
+    markers = ['.', '+', '^']
     for i, _nrmses in enumerate(nrmses):
         x = density*hidden_nodes[i]
-        plt.scatter(x, np.squeeze(_nrmses), color=colors[i], marker='.', label=labels[i])
+        plt.scatter(x, np.squeeze(_nrmses), color='black', marker=markers[i], label=labels[i])
 
     plt.ylabel('NRMSE')
     plt.xlabel('Output nodes')
@@ -155,7 +161,7 @@ def plot_partial_visibility(dataset):
         'w_out_density': output_density
     }
 
-    nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
+    nrmses, stds = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
     pickle.dump(nrmses, open('tmp/' + get_time(), 'wb'))
 
     sns.heatmap(list(reversed(nrmses)), vmin=0.2, vmax=0.6, square=True)
@@ -190,7 +196,7 @@ def plot_input_scaling_input_distrib(dataset):
         'w_in_distrib': distrib,
     }
 
-    nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
+    nrmses, stds = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
 
     # We need to transpose, since we want the input scaling to be the x-axis,
     # but it is before w_in_density alphabetically.
@@ -229,7 +235,7 @@ def plot_w_res_density_w_res_distrib(dataset):
         'w_res_distrib': distrib,
     }
 
-    nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
+    nrmses, stds = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
 
     # We need to transpose, since we want the input scaling to be the x-axis,
     # but it is before w_in_density alphabetically.
@@ -287,7 +293,7 @@ def plot_input_noise_trained(dataset):
     u_train, y_train, u_test, y_test = dataset
     print(snr(u_train.var(), min(train_noise_std)**2))
 
-    nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
+    nrmses, stds = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
     nrmses = np.array(nrmses).T
 
     sns.heatmap(list(reversed(nrmses)), vmin=0.0, vmax=1.0, square=True)
@@ -322,31 +328,36 @@ def plot_adc_quantization(dataset):
         'hidden_nodes': hidden_nodes,
     }
 
-    # nrmses = evaluate_esn_2d(dataset, params, runs_per_iteration=10)
+    # nrmses, stds = evaluate_esn_2d(dataset, params, runs_per_iteration=20)
     # nrmses = np.array(nrmses).T
-    # pickle.dump(nrmses, open('tmp/adc_quantization' + get_time(), 'wb'))
+    # stds = np.array(stds).T
+    # pickle.dump(nrmses, open('tmp/adc_quantization_nrmse' + get_time(), 'wb'))
+    # pickle.dump(stds, open('tmp/adc_quantization_std' + get_time(), 'wb'))
 
-    nrmses = pickle.load(open('tmp/adc_quantization2', 'rb'))
+    nrmses = pickle.load(open('tmp/adc_quantization_nrmse', 'rb'))
+    stds = pickle.load(open('tmp/adc_quantization_std', 'rb'))
 
     labels = ['50 nodes', '100 nodes', '200 nodes', '400 nodes']
     linestyles = ['dotted', 'dashed', 'solid', 'dashdot']
     for i, _nrmses in enumerate(nrmses):
-        plt.plot(quantizations, np.squeeze(_nrmses), color='black',
-                 marker='.', linestyle=linestyles[i], label=labels[i])
+        plt.errorbar(quantizations, np.squeeze(_nrmses), yerr=stds[i], capsize=3.0,
+                     color='black', marker='.', linestyle=linestyles[i], label=labels[i])
 
     maxlim = np.max(nrmses) + 0.05
     minlim = np.min(nrmses) - 0.05
     plt.ylim(minlim, maxlim)
 
-    maxlim = 2**max_bits
-    minlim = 2**min_bits
+    maxlim = 2**max_bits + 2000.0
+    minlim = 2**min_bits - 2.0
     plt.xlim(minlim, maxlim)
     plt.xscale('log', basex=2)
+    plt.xticks(np.logspace(min_bits, max_bits, base=2, num=6), np.arange(min_bits, max_bits+2, 2))
 
     plt.ylabel('NRMSE')
-    plt.xlabel('Quantization bins for output')
+    plt.xlabel('Quantization bits for output')
     plt.legend(fancybox=False, loc='upper right', bbox_to_anchor=(1.0, 1.0))
-    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=2**max_bits, linewidth=0.2)
+    plt.hlines(y = np.arange(0.0, 1.05, 0.05), xmin=0.0, xmax=2**(max_bits+1), linewidth=0.2)
+    plt.tight_layout()
 
 
 @default_font_size

@@ -51,7 +51,8 @@ def evaluate_esn_2d(dataset, params, runs_per_iteration=1, test_snrs=None):
     p1 = sorted_params[0]
     p2 = sorted_params[1]
     n_p1, n_p2 = len(params[p1]), len(params[p2])
-    output = [[] for _ in range(n_p1)]
+    nrmse_output = [[] for _ in range(n_p1)]
+    std_output = [[] for _ in range(n_p1)]
     for i in range(n_p1):
         if test_snrs is not None:
             test_snrs.append([])
@@ -72,9 +73,10 @@ def evaluate_esn_2d(dataset, params, runs_per_iteration=1, test_snrs=None):
                 test_snrs_t.append(snr(u_test.var(), esn.v.var()))
                 v = esn.v
 
-        output[p1_i].append(np.mean(nrmses))
+        nrmse_output[p1_i].append(np.mean(nrmses))
+        std_output[p1_i].append(np.std(nrmses))
         if test_snrs is not None:
             test_snrs[p1_i].append(np.mean(test_snrs_t))
 
     # (TODO): Return a dict of different metrics that includes SNR.
-    return output
+    return nrmse_output, std_output
