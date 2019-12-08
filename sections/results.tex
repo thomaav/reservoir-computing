@@ -1,14 +1,6 @@
 \subsection{Noise}
 
-In this experiment we vary the input signal to noise ratio. The results are
-shown in Fig. \ref{input_noise_snr}, illustrating an increase in error when the
-ratio of signal power to noise power drops below 20 dB. The reservoir error
-increases more drastically below 10 dB, quickly becoming insufficient for the
-prediction task. A similar increase in error has been seen in previous work,
-using the same SNR measure to evaluate signal reconstruction capacity in a
-dynamical system \cite{dambre_information_2012}.
-
-\begin{figure}
+\begin{figure}[t!]
   \centering
   \includegraphics[width=3.3in]{img/input_noise_snr.png}
   \caption{
@@ -18,6 +10,14 @@ reservoir degrades in an exponential manner.
   }
   \label{input_noise_snr}
 \end{figure}
+
+In this experiment we vary the input signal to noise ratio. The results are
+shown in Fig. \ref{input_noise_snr}, illustrating an increase in error when the
+ratio of signal power to noise power drops below 20 dB. The reservoir error
+increases more drastically below 10 dB, quickly becoming insufficient for the
+prediction task. A similar increase in error has been seen in previous work,
+using the same SNR measure to evaluate signal reconstruction capacity in a
+dynamical system \cite{dambre_information_2012}.
 
 The eventual diminishing return from increasing the signal to noise ratio seen
 in Fig. \ref{input_noise_snr} is expected given the relationship between
@@ -34,16 +34,7 @@ communication will quickly become unusable.
 
 \subsection{Measurement equipment accuracy}
 
-We extend the ESN model to quantize the activation of the internal nodes of the
-reservoir. Fig. \ref{adc_quantization} shows a performance degradation from 12
-to 10 quantization bits. As discrete output states move beneath a quantization
-of 10 bits, the performance quickly deteriorates. However, even with just 4 bits
-to discretely separate outputs, reservoirs are still able to replicate the input
-sequence to some degree. Furthermore, reservoirs with 400 hidden nodes and just
-64 output bins consistently provide the same performance as that of a reservoir
-with 50 hidden nodes and no output quantization.
-
-\begin{figure}
+\begin{figure}[t!]
   \centering
   \includegraphics[width=3.3in]{img/adc_quantization.png}
   \caption{
@@ -53,6 +44,15 @@ $2^n$ discrete output bins.
   }
   \label{adc_quantization}
 \end{figure}
+
+We extend the ESN model to quantize the activation of the internal nodes of the
+reservoir. Fig. \ref{adc_quantization} shows a performance degradation from 12
+to 10 quantization bits. As discrete output states move beneath a quantization
+of 10 bits, the performance quickly deteriorates. However, even with just 4 bits
+to discretely separate outputs, reservoirs are still able to replicate the input
+sequence to some degree. Furthermore, reservoirs with 400 hidden nodes and just
+64 output bins consistently provide the same performance as that of a reservoir
+with 50 hidden nodes and no output quantization.
 
 A 12-bit ADC has $2^{12}$, or 4096 output codes, which in accordance with our
 experiments would impose little increase in the prediction error. 16-bit ADCs,
@@ -76,16 +76,16 @@ the available output bins
 
 \subsection{Partially observable reservoir state}
 
-\begin{figure*}[htbp]
+\begin{figure*}[t!]
   \centering
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[width=0.8\linewidth]{img/input_density_all.png}
+    \includegraphics[width=1.0\linewidth]{img/input_density_all.png}
     \caption{}
   \end{subfigure}
   \begin{subfigure}{.49\textwidth}
     \centering
-    \includegraphics[width=0.8\linewidth]{img/output_density_all.png}
+    \includegraphics[width=1.0\linewidth]{img/output_density_all.png}
     \caption{}
   \end{subfigure}
   \caption{
@@ -134,7 +134,7 @@ little effect on the network performance. Changing the x-axis of the previous
 plot to the actual amount of connected nodes instead of the output density
 reveals this conclusively, as seen in Fig. \ref{output_nodes}.
 
-\begin{figure}[H]
+\begin{figure}[t!]
   \centering
   \includegraphics[width=3.3in]{img/output_nodes.png}
   \caption{
@@ -159,7 +159,7 @@ sparse.
 % individual nodes, and include Shannon information and how complexity is defined
 % as the amount of information required to describe something.
 
-\begin{figure}[H]
+\begin{figure}[t!]
   \centering
   \includegraphics[width=3.3in]{img/input_scaling_distrib.png}
   \caption{
