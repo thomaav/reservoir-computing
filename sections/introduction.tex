@@ -1,8 +1,8 @@
 Training Recurrent Neural Networks (RNNs) is an inherently difficult task
 \cite{bengio_learning_1994}. To combat the high algorithmic complexity of
-previous training methods, Echo State Networks (ESNs) \cite{jaeger_echo_2001}
-present an alternative supervised learning technique that does not adapt the
-internal weights of the network. Instead, the output is generated using a
+previous training methods, Echo State Networks (ESNs) present an alternative
+supervised learning technique that does not adapt the internal weights of the
+network \cite{jaeger_echo_2001}. Instead, the output is generated using a
 simple, memoryless classifier or regressor, making the function of the internal
 RNN resemble that of kernel methods. Thus, by projecting the input sequence into
 a high-dimensional space, the temporal information of a time series may be
@@ -18,8 +18,8 @@ designed such that we are able to harness the dynamics that governs the
 promise as reservoirs: electronic memristor circuits
 \cite{kulkarni_memristor-based_2012}, photonic systems
 \cite{vandoorne_experimental_2014}, mechanical springs
-\cite{hauser_towards_2011} and more biologically oriented reservoirs such as
-gene regulation networks \cite{jones_is_2007} and the cat primary visual cortex
+\cite{hauser_towards_2011}, and more biologically oriented reservoirs such as
+gene regulation networks \cite{jones_is_2007}, and the cat primary visual cortex
 \cite{scholkopf_temporal_2007}. Consult \cite{tanaka_recent_2018} for an
 overview of recent advances in physical RC.
 
@@ -61,7 +61,7 @@ Lastly, being able to vary the input magnitude that each node sees freely is
 desirable. Scaling the input signal before it is presented to the network is
 usually easily accomplished, but applying individual weights for each internal
 node is not, especially when considering a restrictive topology. Simple
-weighting schemes, such as fixing all input weights to the same value, are of
+weighting schemes, such as fixing all input weights to the same value are of
 interest.
 
 The rest of this paper is structured as follows: first we provide relevant

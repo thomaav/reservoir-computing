@@ -26,7 +26,7 @@ providing a least squares optimum.
 At time-step $t$, the ESN reservoir is defined by its input, internal, and
 output units, denoted by $\mathbf{u}(t)$, $\mathbf{x}(t)$, and $\mathbf{y}(t)$,
 respectively. The reservoir dynamics are characterized by three weight matrices,
-$\mathbf{W}^{res}$, $\mathbf{W}^{in}$, and $\mathbf{W}_{out}$. In the
+$\mathbf{W}^{in}$, $\mathbf{W}^{res}$, and $\mathbf{W}_{out}$. In the
 traditional ESN approach, the reservoir state is thus evolved according to
 
 \begin{equation}
@@ -51,7 +51,7 @@ matrix $\mathbf{X}$, and the one-dimensional output into a vector
 $\mathbf{Y}$. The linear readout layer is then trained to minimize the squared
 output error $E = \norm{\mathbf{Y} - \mathbf{\hat{Y}}}$ where $\mathbf{\hat{Y}}$
 is the target output, which amounts to finding the $\mathbf{W}^{out}$ that
-minimizes this error with linear regression. Well-known methods include ridge
+minimizes the error with linear regression. Well-known methods include ridge
 regression, often called Tikhonov regularization, and the Moore-Penrose
 pseudo-inverse.
 
@@ -83,8 +83,8 @@ model size parameter $N$ \cite{montavon_practical_2012, jaeger_tutorial_nodate}.
 \subsection{Assessing the quality of a reservoir}
 
 In the RC methodology, computation and memory retainment are intertwined, in
-stark contrast to traditional architectures which use separate memory storage
-units. Attributing task-solving performance to either memory capacity or
+stark contrast to traditional computer architectures that use separate memory
+storage units. Attributing task-solving performance to either memory capacity or
 computation is therefore quite difficult.
 
 Attempts have been made to unify quality metrics for reservoir substrates,

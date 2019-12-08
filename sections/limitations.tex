@@ -8,12 +8,11 @@ It is well known in the field of traditional artificial neural networks that an
 addition of noise to training data can lead to generalization improvements
 similar to that of Tikhonov Regularization \cite{bishop_training_1995}. This has
 been verified to hold for the RC paradigm, where an additional noise term
-$\mathbf{v}(t)$ is added to the reservoir \cite{jaeger_echo_2001}. The noise is
-either added to all reservoir nodes, or to an output \textit{feedback}
-$\mathbf{y}(t)$ that is fed back into the reservoir nodes. Simply using ridge
-regression is cited to be a more pragmatic approach, as to avoid the
-nondeterminism present with dynamic noise injection, but the presence of noise
-within reservoirs has also been identified to be advantageous
+$\mathbf{v}(t)$ is instead added to the internal reservoir itself
+\cite{jaeger_echo_2001}. The noise is either added to all reservoir nodes, or to
+an output \textit{feedback} $\mathbf{y}(t)$ that is fed back into the reservoir
+nodes. Simply using ridge regression is cited to be a more pragmatic approach,
+as to avoid the nondeterminism present with dynamic noise injection
 \cite{kurkova_stable_2008}.
 
 Whether this internal noise resilience of ESNs translates to a more general
@@ -35,12 +34,12 @@ containing 1232 leaky integrate integrate-and-fire neurons
 \cite{verstraeten_isolated_2005}. Here, adding three types of noise from the
 NOISEX database: speech babble, white noise, and car interior noise, to speech
 recognition tasks saw the error rate consistently staying above 80\% with an SNR
-of 10dB. We further this work using the dynamics of ESNs, with the motivation of
-exploring their general robustness to noisy inputs. This provides insight into
-whether we can expect a similar behavior regardless of the reservoir medium that
-is used to implement rich, complex dynamics. Furthermore, the general
-information capacity of internal reservoir nodes has been shown to degrade with
-noisier inputs \cite{dambre_information_2012}.
+of 10dB. Furthermore, the general information capacity of internal reservoir
+nodes has been shown to degrade with noisier inputs
+\cite{dambre_information_2012}. We further this work using the dynamics of ESNs,
+with the motivation of exploring their general robustness to noisy inputs. This
+provides insight into whether we can expect a similar behavior regardless of the
+reservoir medium that is used to implement rich, complex dynamics.
 
 In information theory a communication system can be evaluated in terms of its
 channel capacity, presenting an upper bound for the rate one is reliably able to

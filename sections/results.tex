@@ -4,9 +4,9 @@
   \centering
   \includegraphics[width=3.3in]{img/input_noise_snr.png}
   \caption{
-    Noise causing a decrease in performance for an ESN reservoir on the NARMA10
-task. When the signal to noise ratio drops below 20dB, the performance of the
-reservoir degrades in an exponential manner.
+    Noise causing a decrease in performance for an ESN reservoir. When the
+signal to noise ratio drops below 20dB, the performance of the reservoir
+degrades in an exponential manner.
   }
   \label{input_noise_snr}
 \end{figure}
@@ -20,17 +20,17 @@ using the same SNR measure to evaluate signal reconstruction capacity in a
 dynamical system \cite{dambre_information_2012}.
 
 The eventual diminishing return from increasing the signal to noise ratio seen
-in Fig. \ref{input_noise_snr} is expected given the relationship between
-information transmission capacity and SNR given by the Shannon-Hartley
+in Fig. \ref{input_noise_snr} is expected given the logarithmic relationship
+between information transmission capacity and SNR given by the Shannon-Hartley
 theorem. This is related to our results in the sense that we can compare the
 information processing capabilities of a reservoir in the presence of noise with
 that of already established communications. For example, commonly recommended
 SNRs in the IEEE 802.11 standard for Wi-Fi communications range from 15db to
 25dB when using standardized bandwidth bands of 2.4GHz and 5GHz. Hence, maximum
 theoretical channel capacities are determined by the $\frac{S}{N}$ term, in
-which the signal is determined by power radiation from the antenna, and the
-noise by equipment quality and interference. Below the given threshold, wireless
-communication will quickly become unusable.
+which the signal strength is determined by power radiation from the antenna, and
+the noise by equipment quality and interference. Below the given threshold,
+wireless communication will quickly become unusable.
 
 \subsection{Measurement equipment accuracy}
 
@@ -72,7 +72,7 @@ use the complete range. As the NARMA10 task relies heavily upon memory, and less
 so upon nonlinearity, the activation of a high number of nodes will lie in the
 highly linear part of $\tanh$ in the interval [-0.4, 0.4], with a few nodes
 outside this range. Essentially, this may in the worst cases account for halving
-the available output bins
+the available output bins.
 
 \subsection{Partially observable reservoir state}
 
