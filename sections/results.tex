@@ -46,13 +46,13 @@ $2^n$ discrete output bins.
 \end{figure}
 
 We extend the ESN model to quantize the activation of the internal nodes of the
-reservoir. Fig. \ref{adc_quantization} shows a performance degradation from 12
-to 10 quantization bits. As discrete output states move beneath a quantization
-of 10 bits, the performance quickly deteriorates. However, even with just 4 bits
-to discretely separate outputs, reservoirs are still able to replicate the input
-sequence to some degree. Furthermore, reservoirs with 400 hidden nodes and just
-64 output bins consistently provide the same performance as that of a reservoir
-with 50 hidden nodes and no output quantization.
+reservoir. Fig. \ref{adc_quantization} shows an increase in error from 12 to 10
+quantization bits. As discrete output states move beneath a quantization of 10
+bits, the error quickly increases. However, even with just 4 bits to discretely
+separate outputs, reservoirs are still able to replicate the input sequence to
+some degree. Furthermore, reservoirs with 400 hidden nodes and just 64 output
+bins consistently provide the same error rates as that of a reservoir with 50
+hidden nodes and no output quantization.
 
 A 12-bit ADC has $2^{12}$, or 4096 output codes, which in accordance with our
 experiments would impose little increase in the prediction error. 16-bit ADCs,
@@ -117,22 +117,22 @@ possible to adjust after-the-fact, as opposed to changing the physical hardware
 layout of the system.
 
 Next, a general trend seen when adjusting output connectivity, is a slight,
-linear decrease in performance from a completely dense output matrix to a
-density of 0.4 (Fig. \ref{partial_visibility}b). Furthermore, for the 50 and 100
-node reservoirs, there is a noticeable transition from a linear to an
-exponential NRMSE growth.
+linear increase in error from a completely dense output matrix to a density of
+0.4 (Fig. \ref{partial_visibility}b). Furthermore, for the 50 and 100 node
+reservoirs, there is a noticeable transition from a linear to an exponential
+NRMSE growth.
 
 We may understand these results to indicate that there is a critical point in
 the output density space where the readout layer starts seeing enough of the
-reservoir dynamics to reconstruct the input NARMA10 signal. Additionally, when
-the output density exceeds this threshold, the performance will continue to grow
+reservoir dynamics to reconstruct the input signal. Additionally, when the
+output density exceeds this threshold, the performance will continue to grow
 linearly with the density, achieving the best performance at full connectivity.
 
 Another interesting result illustrated in Fig. \ref{partial_visibility}b is that
 increasing the reservoir size without increasing the amount of output nodes has
-little effect on the network performance. Changing the x-axis of the previous
-plot to the actual amount of connected nodes instead of the output density
-reveals this conclusively, as seen in Fig. \ref{output_nodes}.
+little effect on the network error. Changing the x-axis of the previous plot to
+the actual amount of connected nodes instead of the output density reveals this
+conclusively, as seen in Fig. \ref{output_nodes}.
 
 \begin{figure}[t!]
   \centering
@@ -155,10 +155,6 @@ designed. In essence, the gathered information that is present in clusters of
 neurons on microelectrode grids may be completely lost if the layout is too
 sparse.
 
-% (TODO): Discuss how this relates to the maximum information capacity of
-% individual nodes, and include Shannon information and how complexity is defined
-% as the amount of information required to describe something.
-
 \begin{figure}[t!]
   \centering
   \includegraphics[width=3.3in]{img/input_scaling_distrib.png}
@@ -175,7 +171,7 @@ input weights in some interval [-a, a] gives good performance. However, is it
 possible to achieve a competitive error rate using other weight distributions?
 Fig. \ref{input_scaling_distrib} explores the performance of ESNs with three
 different input weight distributions: uniform, Gaussian and fixed. Despite the
-performance disparity with increasing input scaling, the best performance of all
+performance disparity with increasing input scaling, the best error rates of all
 three classes hover around the same NRMSE of around 0.25. This demonstration of
 scaling differently distributed inputs such that they all achieve acceptable
 performance bodes well for physical RC. In particular, we observe a promising
