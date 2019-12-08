@@ -1,11 +1,12 @@
 \subsection{Noise}
 
-The results are shown in Fig. \ref{input_noise_snr}, illustrating a performance
-degradation when the ratio of signal power to noise power drops below 20 dB. The
-reservoir performance drops more drastically below 10 dB, quickly turning
-insufficient for the prediction task. Similar performance degradation has been
-seen in previous work, using the same SNR measure to evaluate signal
-reconstruction capacity in a dynamical system \cite{dambre_information_2012}.
+In this experiment we vary the input signal to noise ratio. The results are
+shown in Fig. \ref{input_noise_snr}, illustrating an increase in error when the
+ratio of signal power to noise power drops below 20 dB. The reservoir error
+increases more drastically below 10 dB, quickly becoming insufficient for the
+prediction task. A similar increase in error has been seen in previous work,
+using the same SNR measure to evaluate signal reconstruction capacity in a
+dynamical system \cite{dambre_information_2012}.
 
 \begin{figure}
   \centering
@@ -25,19 +26,24 @@ theorem. This is related to our results in the sense that we can compare the
 information processing capabilities of a reservoir in the presence of noise with
 that of already established communications. For example, commonly recommended
 SNRs in the IEEE 802.11 standard for Wi-Fi communications range from 15db to
-25dB. Below this threshold, wireless communication will quickly become unusable.
+25dB when using standardized bandwidth bands of 2.4GHz and 5GHz. Hence, maximum
+theoretical channel capacities are determined by the $\frac{S}{N}$ term, in
+which the signal is determined by power radiation from the antenna, and the
+noise by equipment quality and interference. Below the given threshold, wireless
+communication will quickly become unusable.
 
 \subsection{Measurement equipment accuracy}
 
-In Fig. \ref{adc_quantization} we see a performance degradation from 12 to 10
-quantization bits. As discrete output states move beneath a quantization of 10
-bits, the performance quickly deteriorates. However, even with just 4 bits to
-discretely separate outputs, reservoirs are still able to replicate the input
+We extend the ESN model to quantize the activation of the internal nodes of the
+reservoir. Fig. \ref{adc_quantization} shows a performance degradation from 12
+to 10 quantization bits. As discrete output states move beneath a quantization
+of 10 bits, the performance quickly deteriorates. However, even with just 4 bits
+to discretely separate outputs, reservoirs are still able to replicate the input
 sequence to some degree. Furthermore, reservoirs with 400 hidden nodes and just
 64 output bins consistently provide the same performance as that of a reservoir
 with 50 hidden nodes and no output quantization.
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=3.3in]{img/adc_quantization.png}
   \caption{
@@ -90,9 +96,10 @@ input and output matrices containing non-zero elements.
   \label{partial_visibility}
 \end{figure*}
 
-Experimental results from adjusting the sparsity of $\mathbf{W}_{in}$ is shown
-in Fig. \ref{partial_visibility}a, in which all experiments were done with a
-uniform input weight distribution in the interval [-0.5, 0.5].
+First, we investigate partially visible reservoirs by adjusting the sparsity of
+$\mathbf{W}_{in}$. Results are shown in Fig. \ref{partial_visibility}a, in which
+all experiments were done with a uniform input weight distribution in the
+interval [-0.5, 0.5].
 
 Across all three reservoir sizes, we see a small increase in the signal
 prediction error when increasing input connectivity from an initial density of
@@ -163,6 +170,9 @@ distributions lie around NRMSE $\approx 0.25$.
   \label{input_scaling_distrib}
 \end{figure}
 
+It is well-established in RC methodology that using a uniform distribution of
+input weights in some interval [-a, a] gives good performance. However, is it
+possible to achieve a competitive error rate using other weight distributions?
 Fig. \ref{input_scaling_distrib} explores the performance of ESNs with three
 different input weight distributions: uniform, Gaussian and fixed. Despite the
 performance disparity with increasing input scaling, the best performance of all
