@@ -6,7 +6,7 @@ may have on computational power.
 
 It is well known in the field of traditional artificial neural networks that an
 addition of noise to training data can lead to generalization improvements
-similar to that of Tikhonov Regularization \cite{bishop_training_1995}. This has
+similar to that of Tikhonov regularization \cite{bishop_training_1995}. This has
 been verified to hold for the RC paradigm, where an additional noise term
 $\mathbf{v}(t)$ is instead added to the internal reservoir itself
 \cite{jaeger_echo_2001}. The noise is either added to all reservoir nodes, or to
@@ -44,11 +44,12 @@ reservoir medium that is used to implement rich, complex dynamics.
 In information theory a communication system can be evaluated in terms of its
 channel capacity, presenting an upper bound for the rate one is reliably able to
 transmit information. Given a communications channel subjected to Gaussian
-noise, the Shannon-Hartley theorem \cite{shannon_communication_1949} states this
-capacity as a proportional relationship between the capacity and the binary
-logarithm of the linear power ratio between the signal and the noise: $C =
-B\log_2(1 + \frac{S}{N})$, where $C$ is the capacity in bits per second, $B$ is
-bandwidth in hertz, and $\frac{S}{N}$ denotes the signal to noise ratio.
+noise, the Shannon-Hartley theorem states this capacity as a proportional
+relationship between the capacity and the binary logarithm of the linear power
+ratio between the signal and the noise: $C = B\log_2(1 + \frac{S}{N})$, where
+$C$ is the capacity in bits per second, $B$ is bandwidth in hertz, and
+$\frac{S}{N}$ denotes the signal to noise ratio
+\cite{shannon_communication_1949}.
 
 \subsection{Measurement equipment accuracy}
 
@@ -105,14 +106,15 @@ only partially observable.
 An extension to partial visibility also considered this section is limitations
 in input perturbation. Physical substrates will typically differ in the
 available options for presenting an input stream to the reservoir. Artificial
-spin ice, recently deemed a highly promising substrate for material computation
-\cite{jensen_computation_2018}, contains nanomagnet elements that may be
-manipulated in many ways. A common approach is external magnetic fields, which
-proposes a choice between a global application to the entire assembly and to
-more specific, narrow areas. When attaching input units to the ESN reservoir by
-weights, experience has shown that choosing $\mathbf{W}^{in}$ can be done freely
-as long as $\rho(\mathbf{W}^{res}) < 1$ is satisfied \cite{jaeger_echo_2001},
-which is an enticing prospect in the context of physical reservoirs.
+spin ice, recently deemed a highly promising substrate for material computation,
+contains nanomagnet elements that may be manipulated in many ways
+\cite{jensen_computation_2018}. A common approach is external magnetic fields,
+which proposes a choice between a global application to the entire assembly and
+to more specific, narrow areas. When attaching input units to the ESN reservoir
+by weights, experience has shown that choosing $\mathbf{W}^{in}$ can be done
+freely as long as $\rho(\mathbf{W}^{res}) < 1$ is satisfied
+\cite{jaeger_echo_2001}, which is an enticing prospect in the context of
+physical reservoirs.
 
 %%% Local Variables:
 %%% mode: latex
