@@ -4,13 +4,13 @@ single input, and a single output node.
 The default reservoir size used is 200 hidden nodes. $\mathbf{W}^{res}$ and
 $\mathbf{W}^{in}$ are both generated as random matrices with i.i.d. entries in
 the interval [-0.5, 0.5]. Both matrices are fully connected, and the reservoir
-weight matrix was rescaled such that $\rho(\mathbf{W}_{res}) = 0.9$. This method
-for instantiating $\mathbf{W}_{res}$ and $\mathbf{W}_{in}$ is common practice in
-RC. Input scaling is set to $\iota = 1.0$, as the parameter was found to have
-little impact on performance when initializing $\mathbf{W}_{in}$ from a uniform
-distribution. $\mathbf{W}_{out}$ is adapted with the Moore-Penrose
-pseudo-inverse using singular value decomposition, as this was found to lead to
-the best results.
+weight matrix was rescaled such that $\rho(\mathbf{W}^{res}) = 0.9$. This method
+for instantiating $\mathbf{W}^{res}$ and $\mathbf{W}^{in}$ is common practice in
+RC \cite{montavon_practical_2012}. Input scaling is set to $\iota = 1.0$, as the
+parameter was found to have little impact on performance when initializing
+$\mathbf{W}^{in}$ from a uniform distribution. $\mathbf{W}^{out}$ is adapted
+with the Moore-Penrose pseudo-inverse using singular value decomposition, as
+this was found to lead to the best results.
 
 The first 200 states of each run are discarded to provide a washout of the
 initial reservoir state. For all experiments, the generated input was split into
@@ -56,8 +56,8 @@ representative is run 20 times.
 
 \subsection{Partially visible reservoir state}
 
-We begin by experimenting with the sparsity of $\mathbf{W}_{in}$ and
-$\mathbf{W}_{out}$. In both cases, we now generate the connection matrices such
+We begin by experimenting with the sparsity of $\mathbf{W}^{in}$ and
+$\mathbf{W}^{out}$. In both cases, we now generate the connection matrices such
 that a wanted density, given as the fraction of connected nodes, is
 achieved. Input and output is adjusted separately. For the input density
 experiment each model representative is run 50 times to determine that there is

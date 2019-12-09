@@ -51,8 +51,8 @@ quantization bits. As discrete output states move beneath a quantization of 10
 bits, the error quickly increases. However, even with just 4 bits to discretely
 separate outputs, reservoirs are still able to replicate the input sequence to
 some degree. Furthermore, reservoirs with 400 hidden nodes and just 64 output
-bins consistently provide the same error rates as that of a reservoir with 50
-hidden nodes and no output quantization.
+bins (6 bits) consistently provide the same error rates as that of a reservoir
+with 50 hidden nodes and no output quantization.
 
 A 12-bit ADC has $2^{12}$, or 4096 output codes, which in accordance with our
 experiments would impose little increase in the prediction error. 16-bit ADCs,
@@ -97,7 +97,7 @@ input and output matrices containing non-zero elements.
 \end{figure*}
 
 First, we investigate partially visible reservoirs by adjusting the sparsity of
-$\mathbf{W}_{in}$. Results are shown in Fig. \ref{partial_visibility}a, in which
+$\mathbf{W}^{in}$. Results are shown in Fig. \ref{partial_visibility}a, in which
 all experiments were done with a uniform input weight distribution in the
 interval [-0.5, 0.5].
 
@@ -167,19 +167,20 @@ distributions lie around NRMSE $\approx 0.25$.
 \end{figure}
 
 It is well-established in RC methodology that using a uniform distribution of
-input weights in some interval [-a, a] gives good performance. However, is it
-possible to achieve a competitive error rate using other weight distributions?
-Fig. \ref{input_scaling_distrib} explores the performance of ESNs with three
-different input weight distributions: uniform, Gaussian and fixed. Despite the
-performance disparity with increasing input scaling, the best error rates of all
-three classes hover around the same NRMSE of around 0.25. This demonstration of
-scaling differently distributed inputs such that they all achieve acceptable
-performance bodes well for physical RC. In particular, we observe a promising
-result when considering RC with physical substrates in which every node is
-forced to receive the same input. Exploring different $\mathbf{W}_{in}$
-distributions in ESNs may give an intuition for its importance as a reservoir
-parameter, which may provide valuable in reservoir design, as one may resort to
-the simplest or cheapest solution.
+input weights in some interval [-a, a] gives good performance
+\cite{montavon_practical_2012}. However, is it possible to achieve a competitive
+error rate using other weight distributions?  Fig. \ref{input_scaling_distrib}
+explores the performance of ESNs with three different input weight
+distributions: uniform, Gaussian and fixed. Despite the performance disparity
+with increasing input scaling, the best error rates of all three classes hover
+around the same NRMSE of around 0.25. This demonstration of scaling differently
+distributed inputs such that they all achieve acceptable performance bodes well
+for physical RC. In particular, we observe a promising result when considering
+RC with physical substrates in which every node is forced to receive the same
+input. Exploring different $\mathbf{W}^{in}$ distributions in ESNs may give an
+intuition for its importance as a reservoir parameter, which may provide
+valuable in reservoir design, as one may resort to the simplest or cheapest
+solution.
 
 %%% Local Variables:
 %%% mode: latex

@@ -67,8 +67,9 @@ ADC.
 Common ADC errors include gain error, which causes the slope of the transfer
 function to deviate from the ideal slope, and offset error, in which the slope
 of the transfer function is offset by some constant amount. In both of these
-cases, the use of regression methods will cause no performance penalty as a
-result of the error.
+cases, assuming that the error is approximately linear, the use of regression
+methods will make up for this error by scaling and offsetting with the readout
+weights, thus causing no performance penalty.
 
 A more general problem present in ADCs, which is also manifested similarly in
 virtually all measurement methods, is the resolution of the output signal that
@@ -109,8 +110,8 @@ spin ice, recently deemed a highly promising substrate for material computation
 manipulated in many ways. A common approach is external magnetic fields, which
 proposes a choice between a global application to the entire assembly and to
 more specific, narrow areas. When attaching input units to the ESN reservoir by
-weights, experience has shown that choosing $\mathbf{W}_{in}$ can be done freely
-as long as $\rho(\mathbf{W}_{res}) < 1$ is satisfied \cite{jaeger_echo_2001},
+weights, experience has shown that choosing $\mathbf{W}^{in}$ can be done freely
+as long as $\rho(\mathbf{W}^{res}) < 1$ is satisfied \cite{jaeger_echo_2001},
 which is an enticing prospect in the context of physical reservoirs.
 
 %%% Local Variables:

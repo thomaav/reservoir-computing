@@ -133,7 +133,7 @@ def plot_output_nodes(dataset):
     markers = ['.', '+', '^']
     for i, _nrmses in enumerate(nrmses):
         x = density*hidden_nodes[i]
-        plt.scatter(x, np.squeeze(_nrmses), color='black', marker=markers[i], label=labels[i])
+        plt.scatter(x, np.squeeze(_nrmses), marker=markers[i], label=labels[i])
 
     plt.ylabel('NRMSE')
     plt.xlabel('Output nodes')
