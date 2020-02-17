@@ -30,6 +30,7 @@ def main():
     params = {
         'hidden_nodes': hidden_nodes,
         'spectral_radius': 0.9,
+        'input_scaling': 0.01,
     }
 
     print('Statistics')
