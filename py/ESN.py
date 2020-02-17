@@ -15,11 +15,11 @@ class Distribution(enum.Enum):
 
 class ESN(nn.Module):
     def __init__(self, hidden_nodes=200, spectral_radius=0.9, washout=200,
-                 w_in_density=1.0, w_out_density=1.0, w_res_density=1.0,
+                 w_in_density=1.0, w_res_density=1.0, w_out_density=1.0,
                  input_scaling=1.0, w_in_distrib=Distribution.uniform,
                  w_res_distrib=Distribution.uniform, awgn_train_std=0.0,
                  awgn_test_std=0.0, adc_quantization=None, readout='pinv',
-                 w_ridge=0.00):
+                 w_ridge=0.00, mc=False):
         super(ESN, self).__init__()
 
         self.hidden_nodes = hidden_nodes
@@ -37,6 +37,12 @@ class ESN(nn.Module):
         self.adc_quantization = adc_quantization
         self.readout = readout
         self.rr = Ridge(alpha=w_ridge)
+        self.mc = mc
+
+        # To evaluate memory capacity, 1.4*N is suggested as number of output
+        # nodes in «Computational analysis of memory capacity in echo state
+        # networks».
+        self.output_nodes = int(1.4*self.hidden_nodes) if self.mc else 0
 
         # We can't just mask w_out with the density, as the masked out nodes
         # must be hidden during training as well.
@@ -72,7 +78,7 @@ class ESN(nn.Module):
         self.register_buffer('w_out', w_out)
 
 
-    def forward(self, u, y=None):
+    def forward(self, u, y=None, u_mc=None):
         timeseries_len = u.size()[0]
         X = torch.zeros(timeseries_len, self.output_dim)
         x = torch.zeros(self.hidden_nodes)
@@ -101,6 +107,28 @@ class ESN(nn.Module):
         # Record the previous time series passed through the reservoir.
         self.X = X
         self.v = v
+
+        self.w_outs = torch.zeros(self.output_nodes, self.hidden_nodes)
+        if self.mc:
+            train_len = (X.shape[0]-self.washout) - u_mc.shape[0]
+
+            Xplus = torch.pinverse(X[self.washout:train_len])
+            u_train = u[self.washout:train_len]
+            for k in range(1, self.output_nodes+1):
+                # Ignore chosen readout method for now, just use SVD with
+                # torch.pinverse.
+                self.w_outs[k-1] = torch.mv(Xplus[:, k:], u_train[:-k])
+
+            X_test = X[self.washout+train_len:]
+            u_test = u[self.washout+train_len:]
+            ys = torch.mm(self.w_outs, X_test.T)
+
+            import matplotlib.pyplot as plt
+            plt.plot(u_test)
+            plt.plot(ys[0])
+            plt.show()
+
+            return
 
         X = X[self.washout:]
         y = y[self.washout:] if y is not None else y
