@@ -19,7 +19,7 @@ class ESN(nn.Module):
                  input_scaling=1.0, w_in_distrib=Distribution.uniform,
                  w_res_distrib=Distribution.uniform, awgn_train_std=0.0,
                  awgn_test_std=0.0, adc_quantization=None, readout='pinv',
-                 w_ridge=0.00, mc=False):
+                 w_ridge=0.00):
         super(ESN, self).__init__()
 
         self.hidden_nodes = hidden_nodes
@@ -37,12 +37,6 @@ class ESN(nn.Module):
         self.adc_quantization = adc_quantization
         self.readout = readout
         self.rr = Ridge(alpha=w_ridge)
-        self.mc = mc
-
-        # To evaluate memory capacity, 1.4*N is suggested as number of output
-        # nodes in «Computational analysis of memory capacity in echo state
-        # networks».
-        self.output_nodes = int(1.4*self.hidden_nodes) if self.mc else 0
 
         # We can't just mask w_out with the density, as the masked out nodes
         # must be hidden during training as well.
@@ -108,28 +102,6 @@ class ESN(nn.Module):
         self.X = X
         self.v = v
 
-        self.w_outs = torch.zeros(self.output_nodes, self.hidden_nodes)
-        if self.mc:
-            train_len = (X.shape[0]-self.washout) - u_mc.shape[0]
-
-            Xplus = torch.pinverse(X[self.washout:train_len])
-            u_train = u[self.washout:train_len]
-            for k in range(1, self.output_nodes+1):
-                # Ignore chosen readout method for now, just use SVD with
-                # torch.pinverse.
-                self.w_outs[k-1] = torch.mv(Xplus[:, k:], u_train[:-k])
-
-            X_test = X[self.washout+train_len:]
-            u_test = u[self.washout+train_len:]
-            ys = torch.mm(self.w_outs, X_test.T)
-
-            import matplotlib.pyplot as plt
-            plt.plot(u_test)
-            plt.plot(ys[0])
-            plt.show()
-
-            return
-
         X = X[self.washout:]
         y = y[self.washout:] if y is not None else y
 
@@ -143,3 +115,39 @@ class ESN(nn.Module):
                 raise NotImplementedError('Unknown readout regression method')
         else:
             return torch.mv(X, self.w_out)
+
+
+    def memory_capacity(self, washout, u_train, u_test, plot=False):
+        # To evaluate memory capacity, 1.4*N is suggested as number of output
+        # nodes in «Computational analysis of memory capacity in echo state
+        # networks».
+        output_nodes = int(1.4*self.hidden_nodes)
+        washout_len = washout.shape[0]
+        train_len = u_train.shape[0]
+
+        self(torch.cat((washout, u_train, u_test), 0))
+
+        w_outs = torch.zeros(output_nodes, self.hidden_nodes)
+        Xplus = torch.pinverse(self.X[washout_len:washout_len+train_len])
+        for k in range(1, output_nodes+1):
+            # Ignore chosen readout method for now, just use SVD with
+            # torch.pinverse.
+            w_outs[k-1] = torch.mv(Xplus[:, k:], u_train[:-k])
+
+        X_test = self.X[washout_len+train_len:]
+        ys = torch.mm(w_outs, X_test.T)
+
+        if plot:
+            import matplotlib.pyplot as plt
+            plt.plot(u_test)
+            for k in range(output_nodes):
+                plt.plot(ys[k][k+1:])
+            plt.show()
+
+        mc = 0
+        for k in range(output_nodes):
+            u_tk = u_test[:-(k+1)]
+            numerator = (np.cov(u_tk, ys[k][k+1:], bias=True)[0][1])**2
+            denominator = torch.var(u_tk)*torch.var(ys[k][k+1:])
+            mc += numerator/denominator
+        return float(mc)

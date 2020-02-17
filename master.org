@@ -1,0 +1,8 @@
+* kernel rank
+* generalization
+* linear memory
+* different types of lattices
+** square, hex etc.
+* drysse noder i 2d
+** different types of probability distributions (scale free?)
+** drysse noder i 3d, how much better? some nodes 2d some 3d and increase?

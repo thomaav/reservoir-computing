@@ -29,6 +29,7 @@ def main():
     hidden_nodes = 150
     params = {
         'hidden_nodes': hidden_nodes,
+        'spectral_radius': 0.9,
     }
 
     print('Statistics')
@@ -45,7 +46,7 @@ def main():
     print('  Kernel quality:\t', kq)
     print('  Reservoir size:\t', hidden_nodes)
 
-    mc = memory_capacity()
+    mc = memory_capacity(esn)
     print()
     print('  Memory capacity:\t', mc)
 

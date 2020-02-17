@@ -30,18 +30,15 @@ def kernel_quality(inputs, esn, ks):
     return np.linalg.matrix_rank(M)
 
 
-def memory_capacity():
-    hidden_nodes = 50
-    esn = ESN(hidden_nodes=hidden_nodes, washout=100, mc=True)
-
+def memory_capacity(esn):
     # Generated according to «Computational analysis of memory capacity in echo
     # state networks», discarding 100 for transients (washout), using 1100 for
     # training and 1000 for testing the memory capacity.
     inputs = torch.FloatTensor(2200).uniform_(-1, 1)
-    u_train = inputs[:1200]
+    washout = inputs[:100]
+    u_train = inputs[100:1200]
     u_test = inputs[1200:]
-
-    esn(torch.cat((u_train, u_test), 0), u_mc=u_test)
+    return esn.memory_capacity(washout, u_train, u_test, plot=False)
 
 
 def evaluate_esn(dataset, esn, washout=200, plot=False):
