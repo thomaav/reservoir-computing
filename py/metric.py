@@ -19,7 +19,8 @@ def nmse(y_predicted, y):
 
 def kernel_quality(inputs, esn, ks):
     split_overflow = len(inputs) % ks
-    inputs = inputs[:-split_overflow]
+    if split_overflow != 0:
+        inputs = inputs[:-split_overflow]
     us = np.split(inputs, ks)
 
     M = [0]*ks

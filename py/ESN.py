@@ -2,9 +2,11 @@ import enum
 import numpy as np
 import torch
 import torch.nn as nn
+import networkx as nx
 from sklearn.linear_model import Ridge
 
 from util import spectral_radius as _spectral_radius
+from matrix import waxman
 
 
 class Distribution(enum.Enum):
@@ -19,7 +21,7 @@ class ESN(nn.Module):
                  input_scaling=1.0, w_in_distrib=Distribution.uniform,
                  w_res_distrib=Distribution.uniform, awgn_train_std=0.0,
                  awgn_test_std=0.0, adc_quantization=None, readout='pinv',
-                 w_ridge=0.00):
+                 w_ridge=0.00, w_res_type=None):
         super(ESN, self).__init__()
 
         self.hidden_nodes = hidden_nodes
@@ -37,6 +39,7 @@ class ESN(nn.Module):
         self.adc_quantization = adc_quantization
         self.readout = readout
         self.rr = Ridge(alpha=w_ridge)
+        self.w_res_type = w_res_type
 
         # We can't just mask w_out with the density, as the masked out nodes
         # must be hidden during training as well.
@@ -54,6 +57,12 @@ class ESN(nn.Module):
 
         w_res[torch.rand(self.hidden_nodes, self.hidden_nodes) > self.w_res_density] = 0.0
         w_res *= self.spectral_radius / _spectral_radius(w_res)
+
+        if self.w_res_type == 'waxman':
+            G = waxman(n=self.hidden_nodes, alpha=1.0, beta=1.0,
+                       connectivity='global', z_frac=1.0, scale=0.01)
+            A = nx.to_numpy_matrix(G)
+            w_res = torch.FloatTensor(A)
 
         if self.w_in_distrib == Distribution.gaussian:
             w_in = torch.empty(self.hidden_nodes).normal_(mean=0.0, std=1.0)
