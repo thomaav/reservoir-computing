@@ -26,10 +26,11 @@ def main():
         if args.cache_dataset:
             cache_dataset(dataset)
 
-    hidden_nodes = 50
+    hidden_nodes = 200
     params = {
         'hidden_nodes': hidden_nodes,
-        'input_scaling': 0.9,
+        'input_scaling': 1.0,
+        'spectral_radius': 0.9,
         'w_res_type': 'waxman'
     }
 

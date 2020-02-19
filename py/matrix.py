@@ -12,13 +12,14 @@ def euclidean(x, y):
 
 
 
-def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0):
+def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
+           directed=False):
     """
     B. M. Waxman, Routing of multipoint connections.
 
     Adapted from the NetworkX implementation.
     """
-    G = nx.Graph()
+    G = nx.DiGraph() if directed else nx.Graph()
     G.add_nodes_from(range(n))
 
     domain = (0, 0, 0, 1, 1, 1)
@@ -42,7 +43,10 @@ def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0):
     elif connectivity == 'global':
         for pair in combinations(G, 2):
             u, v = pair[0], pair[1]
-            G.add_edge(u, v, weight=euclidean(pos[u], pos[v])*scale)
+            if directed:
+                u, v = (u, v) if np.random.random() < .5 else (v, u)
+            weight_sign = 1 if np.random.random() < .5 else -1
+            G.add_edge(u, v, weight=weight_sign*euclidean(pos[u], pos[v])*scale)
 
     return G
 

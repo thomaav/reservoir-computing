@@ -61,9 +61,11 @@ class ESN(nn.Module):
 
         if self.w_res_type == 'waxman':
             G = waxman(n=self.hidden_nodes, alpha=1.0, beta=1.0,
-                       connectivity='global', z_frac=1.0, scale=0.01)
+                       connectivity='global', z_frac=1.0, scale=1.0,
+                       directed=True)
             A = nx.to_numpy_matrix(G)
             w_res = torch.FloatTensor(A)
+            w_res *= self.spectral_radius / _spectral_radius(w_res)
 
         if self.w_in_distrib == Distribution.gaussian:
             w_in = torch.empty(self.hidden_nodes).normal_(mean=0.0, std=1.0)
@@ -82,7 +84,7 @@ class ESN(nn.Module):
         self.register_buffer('w_out', w_out)
 
 
-    def forward(self, u, y=None, u_mc=None):
+    def forward(self, u, y=None, u_mc=None, plot=False):
         timeseries_len = u.size()[0]
         X = torch.zeros(timeseries_len, self.output_dim)
         x = torch.zeros(self.hidden_nodes)
@@ -111,6 +113,11 @@ class ESN(nn.Module):
         # Record the previous time series passed through the reservoir.
         self.X = X
         self.v = v
+
+        if plot:
+            import matplotlib.pyplot as plt
+            plt.plot(self.X)
+            plt.show()
 
         X = X[self.washout:]
         y = y[self.washout:] if y is not None else y
