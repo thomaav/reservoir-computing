@@ -4,6 +4,11 @@ import networkx as nx
 from ESN import *
 
 
+def nx_show(G):
+    nx.draw(G, pos=nx.spring_layout(G), with_labels=True)
+    plt.show()
+
+
 if __name__ == '__main__':
     # Fetch an adjacency matrix.
     esn = ESN(hidden_nodes=20, w_res_density=0.1)

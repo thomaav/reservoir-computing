@@ -7,6 +7,7 @@ from sklearn.linear_model import Ridge
 
 from util import spectral_radius as _spectral_radius
 from matrix import waxman
+from network import nx_show
 
 
 class Distribution(enum.Enum):
