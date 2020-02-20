@@ -402,12 +402,10 @@ def visualize(dataset, washout=200):
     plt.ylabel('Reservoir output')
     plt.xlabel('Time')
 
-
 def scatter_3d(G):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    G = matrix.waxman(n=50, alpha=1.0, beta=1.0, z_frac=1.0)
     xs, ys, zs = [], [], []
     for n in G.nodes:
         xs.append(G.nodes[n]['pos'][0])
