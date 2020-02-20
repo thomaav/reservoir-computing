@@ -55,6 +55,10 @@ if __name__ == '__main__':
     G = waxman(n=20, alpha=1.0, beta=1.0)
     A = nx.to_numpy_matrix(G)
 
+    from plot import scatter_3d
+    scatter_3d(G)
+    exit()
+
     import matplotlib.pyplot as plt
     nx.draw(G, pos=nx.spring_layout(G), with_labels=True)
     plt.show()
