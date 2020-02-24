@@ -1,9 +1,20 @@
 import numpy as np
 from sklearn.model_selection import ParameterGrid
+from itertools import product
 
 from ESN import ESN
 from metric import evaluate_esn, eval_esn_with_params
 from util import snr
+
+
+def experiment(f, params):
+    dim = len(params)
+    param_names = [l[0] for l in params.items()]
+    param_values = [l[1] for l in params.items()]
+    for experiment in product(*param_values):
+        _params = {pn: pv for pn, pv in zip(param_names, experiment)}
+        print(f(_params))
+        # (TODO): finish.
 
 
 def evaluate_esn_1d(dataset, params, runs_per_iteration=1, test_snrs=None):

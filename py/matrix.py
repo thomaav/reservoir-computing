@@ -52,6 +52,7 @@ def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
 
 
 def tetragonal(dim, periodic=False):
+    # (TODO): rectangular
     G = nx.grid_graph(dim, periodic=periodic)
     return G
 

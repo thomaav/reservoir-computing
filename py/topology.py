@@ -1,6 +1,9 @@
+from collections import OrderedDict
+
 from ESN import Distribution
 from dataset import NARMA, cache_dataset, load_dataset
-from metric import eval_esn_with_params, kernel_quality, memory_capacity
+from metric import eval_esn_with_params, run_esn_experiment, kernel_quality, memory_capacity
+from gridsearch import experiment
 
 
 def parse_args():
@@ -51,6 +54,12 @@ def main():
     mc = memory_capacity(esn)
     print()
     print('  Memory capacity:\t', mc)
+
+    params = OrderedDict()
+    params['dataset'] = [dataset]
+    params['hidden_nodes'] = [81]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    experiment(run_esn_experiment, params)
 
 
 if __name__ == '__main__':

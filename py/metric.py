@@ -42,6 +42,14 @@ def memory_capacity(esn):
     return esn.memory_capacity(washout, u_train, u_test, plot=False)
 
 
+def run_esn_experiment(params):
+    dataset = params['dataset']
+    del params['dataset']
+
+    esn = ESN(**params)
+    return evaluate_esn(dataset, esn)
+
+
 def evaluate_esn(dataset, esn, washout=200, plot=False):
     u_train, y_train, u_test, y_test = dataset
     esn(u_train, y_train)
