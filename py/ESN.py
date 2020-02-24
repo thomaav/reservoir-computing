@@ -6,8 +6,7 @@ import networkx as nx
 from sklearn.linear_model import Ridge
 
 from util import spectral_radius as _spectral_radius
-from matrix import waxman
-from network import nx_show
+import matrix
 
 
 class Distribution(enum.Enum):
@@ -42,30 +41,45 @@ class ESN(nn.Module):
         self.rr = Ridge(alpha=w_ridge)
         self.w_res_type = w_res_type
 
+        if self.w_res_type == 'waxman':
+            G = matrix.waxman(n=self.hidden_nodes, alpha=1.0, beta=1.0,
+                              connectivity='global', z_frac=1.0, scale=1.0,
+                              directed=True)
+            A = nx.to_numpy_matrix(G)
+            w_res = torch.FloatTensor(A)
+            w_res *= self.spectral_radius / _spectral_radius(w_res)
+        if self.w_res_type in ['tetragonal', 'hexagonal', 'triangular']:
+            # (TODO): Increasing neighborhood.
+            sqrt = np.sqrt(self.hidden_nodes)
+            if sqrt - int(sqrt) != 0:
+                raise ValueError("Non square number of nodes given for lattice")
+            if self.w_res_type == 'tetragonal':
+                G = matrix.tetragonal([int(sqrt), int(sqrt)], periodic=False)
+            elif self.w_res_type == 'hexagonal':
+                G = matrix.hexagonal(int(sqrt) // 2, int(sqrt), periodic=False)
+            elif self.w_res_type == 'triangular':
+                G = matrix.triangular(int(sqrt) * 2, int(sqrt), periodic=False)
+            A = nx.to_numpy_matrix(G)
+            self.hidden_nodes = len(A)
+            w_res = torch.FloatTensor(A)
+            w_res *= self.spectral_radius / _spectral_radius(w_res)
+        else:
+            if self.w_res_distrib == Distribution.gaussian:
+                w_res = torch.empty(self.hidden_nodes, hidden_nodes).normal_(mean=0.0, std=1.0)
+            elif self.w_res_distrib == Distribution.uniform:
+                w_res = torch.rand(self.hidden_nodes, self.hidden_nodes) - 0.5
+            elif self.w_res_distrib == Distribution.fixed:
+                w_res = torch.ones(self.hidden_nodes, self.hidden_nodes)
+
+            w_res[torch.rand(self.hidden_nodes, self.hidden_nodes) > self.w_res_density] = 0.0
+            w_res *= self.spectral_radius / _spectral_radius(w_res)
+
         # We can't just mask w_out with the density, as the masked out nodes
         # must be hidden during training as well.
         mask_size = int(self.hidden_nodes*self.w_out_density)
         self.w_out_mask = np.random.choice(self.hidden_nodes, mask_size, replace=False)
         self.w_out_mask = torch.from_numpy(self.w_out_mask)
         self.output_dim = self.w_out_mask.shape[0]
-
-        if self.w_res_distrib == Distribution.gaussian:
-            w_res = torch.empty(self.hidden_nodes, hidden_nodes).normal_(mean=0.0, std=1.0)
-        elif self.w_res_distrib == Distribution.uniform:
-            w_res = torch.rand(self.hidden_nodes, self.hidden_nodes) - 0.5
-        elif self.w_res_distrib == Distribution.fixed:
-            w_res = torch.ones(self.hidden_nodes, self.hidden_nodes)
-
-        w_res[torch.rand(self.hidden_nodes, self.hidden_nodes) > self.w_res_density] = 0.0
-        w_res *= self.spectral_radius / _spectral_radius(w_res)
-
-        if self.w_res_type == 'waxman':
-            G = waxman(n=self.hidden_nodes, alpha=1.0, beta=1.0,
-                       connectivity='global', z_frac=1.0, scale=1.0,
-                       directed=True)
-            A = nx.to_numpy_matrix(G)
-            w_res = torch.FloatTensor(A)
-            w_res *= self.spectral_radius / _spectral_radius(w_res)
 
         if self.w_in_distrib == Distribution.gaussian:
             w_in = torch.empty(self.hidden_nodes).normal_(mean=0.0, std=1.0)

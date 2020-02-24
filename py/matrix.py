@@ -51,14 +51,25 @@ def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
     return G
 
 
-if __name__ == '__main__':
-    G = waxman(n=20, alpha=1.0, beta=1.0)
-    A = nx.to_numpy_matrix(G)
+def tetragonal(dim, periodic=False):
+    G = nx.grid_graph(dim, periodic=periodic)
+    return G
 
-    from plot import scatter_3d
-    scatter_3d(G)
-    exit()
+
+def hexagonal(m, n, periodic=False):
+    G = nx.hexagonal_lattice_graph(m, n, periodic=periodic)
+    return G
+
+
+def triangular(m, n, periodic=False):
+    G = nx.triangular_lattice_graph(m, n, periodic=periodic)
+    return G
+
+
+if __name__ == '__main__':
+    G = triangular(5, 5)
 
     import matplotlib.pyplot as plt
     nx.draw(G, pos=nx.spring_layout(G), with_labels=True)
     plt.show()
+

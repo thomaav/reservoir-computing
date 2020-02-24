@@ -422,3 +422,25 @@ def scatter_3d(G):
 
     ax.scatter(xs, ys, zs, color='black')
     plt.show()
+
+
+def scatter_2d(G):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    xs, ys, zs = [], [], []
+    for n in G.nodes:
+        xs.append(G.nodes[n]['pos'][0])
+        ys.append(G.nodes[n]['pos'][1])
+        zs.append(G.nodes[n]['pos'][2])
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.set_zlim(0, 1)
+
+    ax.scatter(xs, ys, zs, color='black')
+    plt.show()

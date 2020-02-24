@@ -16,3 +16,4 @@ plots/
 tmp/
 *.pyc
 master.html
+*.ipynb_checkpoints*

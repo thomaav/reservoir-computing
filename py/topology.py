@@ -26,12 +26,12 @@ def main():
         if args.cache_dataset:
             cache_dataset(dataset)
 
-    hidden_nodes = 200
+    hidden_nodes = 49
     params = {
         'hidden_nodes': hidden_nodes,
         'input_scaling': 1.0,
         'spectral_radius': 0.9,
-        'w_res_type': 'waxman'
+        'w_res_type': 'tetragonal'
     }
 
     print('Statistics')
@@ -40,13 +40,13 @@ def main():
     print('  NRMSE:\t\t', nrmse)
 
     inputs = dataset[0]
-    ks = hidden_nodes
+    ks = esn.hidden_nodes
     kq = kernel_quality(inputs, esn, ks=ks)
     print()
     print('  k_len:\t\t', len(inputs) // ks)
     print('  ks:\t\t\t', ks)
     print('  Kernel quality:\t', kq)
-    print('  Reservoir size:\t', hidden_nodes)
+    print('  Reservoir size:\t', esn.hidden_nodes)
 
     mc = memory_capacity(esn)
     print()
