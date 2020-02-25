@@ -2,7 +2,7 @@ from collections import OrderedDict
 
 from ESN import Distribution
 from dataset import NARMA, cache_dataset, load_dataset
-from metric import eval_esn_with_params, run_esn_experiment, kernel_quality, memory_capacity
+from metric import eval_esn_with_params, esn_topology, kernel_quality, memory_capacity
 from gridsearch import experiment
 
 
@@ -57,9 +57,10 @@ def main():
 
     params = OrderedDict()
     params['dataset'] = [dataset]
-    params['hidden_nodes'] = [81]
+    params['hidden_nodes'] = [9, 16, 25, 36, 49, 64, 81]
     params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
-    experiment(run_esn_experiment, params)
+    df = experiment(esn_topology, params)
+    print(df)
 
 
 if __name__ == '__main__':

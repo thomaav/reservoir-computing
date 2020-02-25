@@ -444,3 +444,26 @@ def scatter_2d(G):
 
     ax.scatter(xs, ys, zs, color='black')
     plt.show()
+
+
+def plot_trisurf(data, labels, title=None, xlim=None, ylim=None, zlim=None):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    if title is not None:
+        ax.set_title(title)
+
+    ax.set_xlabel(labels['x'])
+    ax.set_ylabel(labels['y'])
+    ax.set_zlabel(labels['z'])
+
+    if xlim is not None:
+        ax.set_xlim(xlim[0], xlim[1])
+    if ylim is not None:
+        ax.set_ylim(ylim[0], ylim[1])
+    if zlim is not None:
+        ax.set_zlim(zlim[0], zlim[1])
+
+    ax.plot_trisurf(data['x'], data['y'], data['z'])
+    plt.tight_layout()
+    plt.show()

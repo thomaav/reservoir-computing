@@ -21,7 +21,7 @@ class ESN(nn.Module):
                  input_scaling=1.0, w_in_distrib=Distribution.uniform,
                  w_res_distrib=Distribution.uniform, awgn_train_std=0.0,
                  awgn_test_std=0.0, adc_quantization=None, readout='pinv',
-                 w_ridge=0.00, w_res_type=None):
+                 w_ridge=0.00, w_res_type=None, periodic_lattice=False):
         super(ESN, self).__init__()
 
         self.hidden_nodes = hidden_nodes
@@ -40,6 +40,7 @@ class ESN(nn.Module):
         self.readout = readout
         self.rr = Ridge(alpha=w_ridge)
         self.w_res_type = w_res_type
+        self.periodic_lattice = periodic_lattice
 
         if self.w_res_type == 'waxman':
             G = matrix.waxman(n=self.hidden_nodes, alpha=1.0, beta=1.0,
@@ -49,16 +50,15 @@ class ESN(nn.Module):
             w_res = torch.FloatTensor(A)
             w_res *= self.spectral_radius / _spectral_radius(w_res)
         if self.w_res_type in ['tetragonal', 'hexagonal', 'triangular']:
-            # (TODO): Increasing neighborhood.
             sqrt = np.sqrt(self.hidden_nodes)
             if sqrt - int(sqrt) != 0:
                 raise ValueError("Non square number of nodes given for lattice")
             if self.w_res_type == 'tetragonal':
-                G = matrix.tetragonal([int(sqrt), int(sqrt)], periodic=False)
+                G = matrix.tetragonal([int(sqrt), int(sqrt)], periodic=periodic_lattice)
             elif self.w_res_type == 'hexagonal':
-                G = matrix.hexagonal(int(sqrt) // 2, int(sqrt), periodic=False)
+                G = matrix.hexagonal(int(sqrt) // 2, int(np.ceil(sqrt/2)*2), periodic=periodic_lattice)
             elif self.w_res_type == 'triangular':
-                G = matrix.triangular(int(sqrt) * 2, int(sqrt), periodic=False)
+                G = matrix.triangular(int(sqrt) * 2, int(sqrt), periodic=periodic_lattice)
             A = nx.to_numpy_matrix(G)
             self.hidden_nodes = len(A)
             w_res = torch.FloatTensor(A)

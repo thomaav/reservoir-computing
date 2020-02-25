@@ -1,4 +1,6 @@
 import numpy as np
+import pandas as pd
+import os
 from sklearn.model_selection import ParameterGrid
 from itertools import product
 
@@ -7,14 +9,32 @@ from metric import evaluate_esn, eval_esn_with_params
 from util import snr
 
 
-def experiment(f, params):
+def experiment(f, params, runs=10):
     dim = len(params)
     param_names = [l[0] for l in params.items()]
     param_values = [l[1] for l in params.items()]
+    results = []
+
     for experiment in product(*param_values):
         _params = {pn: pv for pn, pv in zip(param_names, experiment)}
-        print(f(_params))
-        # (TODO): finish.
+        for i in range(runs):
+            # (TODO): append gets really slow eventually.
+            result = f(**_params)
+            results.append(result)
+
+    # (TODO): Fix this.
+    if 'dataset' in param_names:
+        param_names.remove('dataset')
+
+    column_names = [f.__name__, *param_names]
+    df = pd.DataFrame(results, columns=column_names)
+    return df
+
+
+def load_experiment(path):
+    if os.path.isfile(path):
+        return pd.read_pickle(path)
+    raise FileNotFoundError
 
 
 def evaluate_esn_1d(dataset, params, runs_per_iteration=1, test_snrs=None):

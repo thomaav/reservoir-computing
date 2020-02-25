@@ -17,3 +17,4 @@ tmp/
 *.pyc
 master.html
 *.ipynb_checkpoints*
+experiments/

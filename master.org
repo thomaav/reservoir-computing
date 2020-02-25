@@ -55,6 +55,9 @@
 ** Andre aktiveringsfunksjoner for noder i gittere
   Bytte ut tanh med andre funksjoner, evt. se på funksjoner som er spesielt
   relevante for physical reservoir computing.
+** Dersom naboskap er globalt, hvor mange negative koblinger trengs?
+  Dette ser ut til å være viktig, særlig i Waxman. Jo flere inn-kanter, jo
+  viktigere er det at noen av dem er negative.
 
 * Modeller for å generere grafer
 ** Erdos-Renyi
