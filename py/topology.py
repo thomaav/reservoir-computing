@@ -34,13 +34,14 @@ def main():
         'hidden_nodes': hidden_nodes,
         'input_scaling': 1.0,
         'spectral_radius': 0.9,
-        'w_res_type': 'tetragonal'
+        'w_res_type': 'waxman'
     }
 
     print('Statistics')
 
     nrmse, esn = eval_esn_with_params(dataset, params=params)
     print('  NRMSE:\t\t', nrmse)
+    print(esn.w_res)
 
     inputs = dataset[0]
     ks = esn.hidden_nodes
@@ -54,13 +55,6 @@ def main():
     mc = memory_capacity(esn)
     print()
     print('  Memory capacity:\t', mc)
-
-    params = OrderedDict()
-    params['dataset'] = [dataset]
-    params['hidden_nodes'] = [9, 16, 25, 36, 49, 64, 81]
-    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
-    df = experiment(esn_topology, params)
-    print(df)
 
 
 if __name__ == '__main__':

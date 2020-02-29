@@ -62,6 +62,11 @@ def esn_topology_periodic(hidden_nodes, periodic, w_res_type):
     return memory_capacity(esn), esn.hidden_nodes, periodic, w_res_type
 
 
+def esn_waxman_zfrac(dataset, hidden_nodes, wax_zfrac, wax_directed):
+    esn = ESN(hidden_nodes=hidden_nodes, wax_zfrac=wax_zfrac, wax_directed=wax_directed)
+    return evaluate_esn(dataset, esn), esn.hidden_nodes, wax_zfrac, wax_directed
+
+
 def evaluate_esn(dataset, esn, washout=200, plot=False):
     u_train, y_train, u_test, y_test = dataset
     esn(u_train, y_train)

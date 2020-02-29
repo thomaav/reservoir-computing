@@ -6,6 +6,7 @@ import numpy as np
 import pickle
 import seaborn as sns
 import matrix
+import networkx as nx
 
 from ESN import Distribution
 from gridsearch import evaluate_esn_1d, evaluate_esn_2d
@@ -453,9 +454,10 @@ def plot_trisurf(data, labels, title=None, xlim=None, ylim=None, zlim=None):
     if title is not None:
         ax.set_title(title)
 
-    ax.set_xlabel(labels['x'])
-    ax.set_ylabel(labels['y'])
-    ax.set_zlabel(labels['z'])
+    if labels is not None:
+        ax.set_xlabel(labels['x'])
+        ax.set_ylabel(labels['y'])
+        ax.set_zlabel(labels['z'])
 
     if xlim is not None:
         ax.set_xlim(xlim[0], xlim[1])
@@ -467,3 +469,43 @@ def plot_trisurf(data, labels, title=None, xlim=None, ylim=None, zlim=None):
     ax.plot_trisurf(data['x'], data['y'], data['z'])
     plt.tight_layout()
     plt.show()
+
+
+def plot_lattice(G):
+    pos = nx.get_node_attributes(G, 'pos')
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.set_aspect('equal')
+
+    nx.draw(G, pos=pos, with_labels=False, node_size=30, node_color='black')
+
+    x1, x2, y1, y2 = plt.axis()
+    plt.axis((x1-0.5, x2+0.5, y1-0.5, y2+0.5))
+
+    plt.show()
+
+
+def plot_df(df, groupby, axes, labels=None):
+    grouped_df = df.groupby(groupby).mean().reset_index()
+
+    data = [grouped_df[axis] for axis in axes]
+    plt.plot(*data)
+
+    if labels is not None:
+        plt.xlabel=labels[0]
+        plt.ylabel=labels[1]
+
+    plt.show()
+
+
+def plot_df_trisurf(df, groupby, axes, labels=None):
+    grouped_df = df.groupby(groupby).mean().reset_index()
+
+    data = {
+        'x': grouped_df[axes[0]],
+        'y': grouped_df[axes[1]],
+        'z': grouped_df[axes[2]],
+    }
+
+    plot_trisurf(data=data, labels=labels)

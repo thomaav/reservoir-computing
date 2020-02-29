@@ -13,7 +13,7 @@ def euclidean(x, y):
 
 
 def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
-           directed=False):
+           directed=False, sign_frac=0.0):
     """
     B. M. Waxman, Routing of multipoint connections.
 
@@ -43,10 +43,13 @@ def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
     elif connectivity == 'global':
         for pair in combinations(G, 2):
             u, v = pair[0], pair[1]
+            weight_sign = -1 if np.random.random() < sign_frac else 1
             if directed:
                 u, v = (u, v) if np.random.random() < .5 else (v, u)
-            weight_sign = 1 if np.random.random() < .5 else -1
-            G.add_edge(u, v, weight=weight_sign*euclidean(pos[u], pos[v])*scale)
+                G.add_edge(u, v, weight=weight_sign*euclidean(pos[u], pos[v])*scale)
+            else:
+                G.add_edge(u, v, weight=weight_sign*euclidean(pos[u], pos[v])*scale)
+                G.add_edge(v, u, weight=weight_sign*euclidean(pos[v], pos[u])*scale)
 
     return G
 

@@ -17,6 +17,8 @@ def experiment(f, params, runs=10):
 
     for experiment in product(*param_values):
         _params = {pn: pv for pn, pv in zip(param_names, experiment)}
+        print({p: v for p, v in _params.items() if p != 'dataset'})
+
         for i in range(runs):
             # (TODO): append gets really slow eventually.
             result = f(**_params)
