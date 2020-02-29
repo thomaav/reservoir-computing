@@ -18,6 +18,10 @@ def load_dataset():
     y_test = torch.FloatTensor(np.load('dataset/y_test.npy'))
     return [u_train, y_train, u_test, y_test]
 
+# Hack to keep the dataset as a global variable from dataset.dataset in other
+# modules without passing it explicitly to functions. It is re-initialized
+# whenever NARMA is re-run.
+dataset = None
 
 def NARMA(sample_len, system_order=10):
     if system_order != 10:

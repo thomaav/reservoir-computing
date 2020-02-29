@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import torch
 import numpy as np
 
+import dataset as ds
 from ESN import ESN
 
 
@@ -42,29 +43,15 @@ def memory_capacity(esn):
     return esn.memory_capacity(washout, u_train, u_test, plot=False)
 
 
-def esn_topology(dataset, hidden_nodes, w_res_type):
-    esn = ESN(hidden_nodes=hidden_nodes, w_res_type=w_res_type)
-    return evaluate_esn(dataset, esn), esn.hidden_nodes, w_res_type
+def esn_nrmse(params):
+    dataset = ds.dataset
+    esn = ESN(**params)
+    return evaluate_esn(dataset, esn)
 
 
-def esn_topology_mc(hidden_nodes, w_res_type):
-    esn = ESN(hidden_nodes=hidden_nodes, w_res_type=w_res_type)
-    return memory_capacity(esn), esn.hidden_nodes, w_res_type
-
-
-def esn_topology_input_scaling_mc(hidden_nodes, input_scaling, w_res_type):
-    esn = ESN(hidden_nodes=hidden_nodes, input_scaling=input_scaling, w_res_type=w_res_type)
-    return memory_capacity(esn), esn.hidden_nodes, input_scaling, w_res_type
-
-
-def esn_topology_periodic(hidden_nodes, periodic, w_res_type):
-    esn = ESN(hidden_nodes=hidden_nodes, periodic_lattice=periodic, w_res_type=w_res_type)
-    return memory_capacity(esn), esn.hidden_nodes, periodic, w_res_type
-
-
-def esn_waxman_zfrac(dataset, hidden_nodes, wax_zfrac, wax_directed):
-    esn = ESN(hidden_nodes=hidden_nodes, wax_zfrac=wax_zfrac, wax_directed=wax_directed)
-    return evaluate_esn(dataset, esn), esn.hidden_nodes, wax_zfrac, wax_directed
+def esn_mc(params):
+    esn = ESN(**params)
+    return memory_capacity(esn)
 
 
 def evaluate_esn(dataset, esn, washout=200, plot=False):
@@ -90,14 +77,3 @@ def evaluate_esn(dataset, esn, washout=200, plot=False):
         plt.show()
 
     return _nrmse
-
-
-def eval_esn_with_params(dataset, params={}):
-    esn = ESN(**params)
-    return evaluate_esn(dataset, esn), esn
-
-
-def evaluate_prediction(y_predicted, y):
-    plt.plot(y, 'black', linestyle='dashed')
-    plt.plot(y_predicted, 'green')
-    plt.show()

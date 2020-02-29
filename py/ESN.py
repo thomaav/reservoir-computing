@@ -21,9 +21,8 @@ class ESN(nn.Module):
                  input_scaling=1.0, w_in_distrib=Distribution.uniform,
                  w_res_distrib=Distribution.uniform, awgn_train_std=0.0,
                  awgn_test_std=0.0, adc_quantization=None, readout='pinv',
-                 w_ridge=0.00, w_res_type=None, periodic_lattice=False,
-                 wax_zfrac=1.0, wax_directed=False):
-        super(ESN, self).__init__()
+                 w_ridge=0.00, w_res_type=None, **kwargs):
+        super().__init__()
 
         self.hidden_nodes = hidden_nodes
         self.spectral_radius = spectral_radius
@@ -41,14 +40,9 @@ class ESN(nn.Module):
         self.readout = readout
         self.rr = Ridge(alpha=w_ridge)
         self.w_res_type = w_res_type
-        self.periodic_lattice = periodic_lattice
-        self.wax_zfrac = wax_zfrac
-        self.wax_directed = wax_directed
 
         if self.w_res_type == 'waxman':
-            G = matrix.waxman(n=self.hidden_nodes, alpha=1.0, beta=1.0,
-                              connectivity='global', z_frac=self.wax_zfrac, scale=1.0,
-                              directed=self.wax_directed)
+            G = matrix.waxman(n=self.hidden_nodes, alpha=1.0, beta=1.0, connectivity='global', **kwargs)
             A = nx.to_numpy_matrix(G)
             w_res = torch.FloatTensor(A)
             w_res *= self.spectral_radius / _spectral_radius(w_res)
@@ -57,11 +51,11 @@ class ESN(nn.Module):
             if sqrt - int(sqrt) != 0:
                 raise ValueError("Non square number of nodes given for lattice")
             if self.w_res_type == 'tetragonal':
-                G = matrix.tetragonal([int(sqrt), int(sqrt)], periodic=periodic_lattice)
+                G = matrix.tetragonal([int(sqrt), int(sqrt)], **kwargs)
             elif self.w_res_type == 'hexagonal':
-                G = matrix.hexagonal(int(sqrt) // 2, int(np.ceil(sqrt/2)*2), periodic=periodic_lattice)
+                G = matrix.hexagonal(int(sqrt) // 2, int(np.ceil(sqrt/2)*2), **kwargs)
             elif self.w_res_type == 'triangular':
-                G = matrix.triangular(int(sqrt) * 2, int(sqrt), periodic=periodic_lattice)
+                G = matrix.triangular(int(sqrt) * 2, int(sqrt), **kwargs)
             self.G = G
             A = nx.to_numpy_matrix(G)
             self.hidden_nodes = len(A)

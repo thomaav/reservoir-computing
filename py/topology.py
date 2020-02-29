@@ -1,8 +1,8 @@
 from collections import OrderedDict
 
-from ESN import Distribution
-from dataset import NARMA, cache_dataset, load_dataset
-from metric import eval_esn_with_params, esn_topology, kernel_quality, memory_capacity
+import dataset as ds
+from ESN import Distribution, ESN
+from metric import esn_nrmse, evaluate_esn, kernel_quality, memory_capacity
 from gridsearch import experiment
 
 
@@ -21,13 +21,13 @@ def main():
     args = parse_args()
 
     if args.load_dataset:
-        dataset = load_dataset()
+        dataset = ds.load_dataset()
     else:
-        u_train, y_train = NARMA(sample_len = 2000)
-        u_test, y_test = NARMA(sample_len = 3000)
-        dataset = [u_train, y_train, u_test, y_test]
+        u_train, y_train = ds.NARMA(sample_len = 2000)
+        u_test, y_test = ds.NARMA(sample_len = 3000)
+        ds.dataset = [u_train, y_train, u_test, y_test]
         if args.cache_dataset:
-            cache_dataset(dataset)
+            ds.cache_dataset(dataset)
 
     hidden_nodes = 49
     params = {
@@ -39,11 +39,11 @@ def main():
 
     print('Statistics')
 
-    nrmse, esn = eval_esn_with_params(dataset, params=params)
+    esn = ESN(**params)
+    nrmse = evaluate_esn(ds.dataset, esn)
     print('  NRMSE:\t\t', nrmse)
-    print(esn.w_res)
 
-    inputs = dataset[0]
+    inputs = ds.dataset[0]
     ks = esn.hidden_nodes
     kq = kernel_quality(inputs, esn, ks=ks)
     print()

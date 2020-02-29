@@ -499,7 +499,7 @@ def plot_df(df, groupby, axes, labels=None):
     plt.show()
 
 
-def plot_df_trisurf(df, groupby, axes, labels=None):
+def plot_df_trisurf(df, groupby, axes, **kwargs):
     grouped_df = df.groupby(groupby).mean().reset_index()
 
     data = {
@@ -508,4 +508,4 @@ def plot_df_trisurf(df, groupby, axes, labels=None):
         'z': grouped_df[axes[2]],
     }
 
-    plot_trisurf(data=data, labels=labels)
+    plot_trisurf(data=data, **kwargs)

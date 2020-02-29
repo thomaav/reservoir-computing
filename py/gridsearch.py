@@ -17,16 +17,12 @@ def experiment(f, params, runs=10):
 
     for experiment in product(*param_values):
         _params = {pn: pv for pn, pv in zip(param_names, experiment)}
-        print({p: v for p, v in _params.items() if p != 'dataset'})
+        print(_params)
 
         for i in range(runs):
             # (TODO): append gets really slow eventually.
-            result = f(**_params)
-            results.append(result)
-
-    # (TODO): Fix this.
-    if 'dataset' in param_names:
-        param_names.remove('dataset')
+            result = f(_params)
+            results.append([result] + list(_params.values()))
 
     column_names = [f.__name__, *param_names]
     df = pd.DataFrame(results, columns=column_names)
