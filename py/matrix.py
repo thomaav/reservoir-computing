@@ -21,7 +21,7 @@ def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
     G = nx.DiGraph() if directed else nx.Graph()
     G.add_nodes_from(range(n))
 
-    domain = (0, 0, 0, 100, 100, 100)
+    domain = (0, 0, 0, 1, 1, 1)
     xmin, ymin, zmin, xmax, ymax, zmax = domain
 
     uniform = np.random.uniform
