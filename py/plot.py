@@ -9,7 +9,6 @@ import matrix
 import networkx as nx
 
 from ESN import Distribution
-from gridsearch import evaluate_esn_1d, evaluate_esn_2d
 from metric import *
 from util import snr
 
