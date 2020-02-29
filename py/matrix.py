@@ -11,9 +11,8 @@ def euclidean(x, y):
     return sqrt(sum((a - b) ** 2 for a, b in zip(x, y)))
 
 
-
 def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
-           directed=False, sign_frac=0.0):
+           directed=False, sign_frac=0.0, dist_function=euclidean):
     """
     B. M. Waxman, Routing of multipoint connections.
 
@@ -22,7 +21,7 @@ def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
     G = nx.DiGraph() if directed else nx.Graph()
     G.add_nodes_from(range(n))
 
-    domain = (0, 0, 0, 1, 1, 1)
+    domain = (0, 0, 0, 100, 100, 100)
     xmin, ymin, zmin, xmax, ymax, zmax = domain
 
     uniform = np.random.uniform
@@ -46,10 +45,10 @@ def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
             weight_sign = -1 if np.random.random() < sign_frac else 1
             if directed:
                 u, v = (u, v) if np.random.random() < .5 else (v, u)
-                G.add_edge(u, v, weight=weight_sign*euclidean(pos[u], pos[v])*scale)
+                G.add_edge(u, v, weight=weight_sign*dist_function(pos[u], pos[v])*scale)
             else:
-                G.add_edge(u, v, weight=weight_sign*euclidean(pos[u], pos[v])*scale)
-                G.add_edge(v, u, weight=weight_sign*euclidean(pos[v], pos[u])*scale)
+                G.add_edge(u, v, weight=weight_sign*dist_function(pos[u], pos[v])*scale)
+                G.add_edge(v, u, weight=weight_sign*dist_function(pos[v], pos[u])*scale)
 
     return G
 

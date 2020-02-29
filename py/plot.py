@@ -447,7 +447,7 @@ def scatter_2d(G):
     plt.show()
 
 
-def plot_trisurf(data, labels, title=None, xlim=None, ylim=None, zlim=None):
+def plot_trisurf(data, labels=None, title=None, xlim=None, ylim=None, zlim=None, azim=-45):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -467,6 +467,7 @@ def plot_trisurf(data, labels, title=None, xlim=None, ylim=None, zlim=None):
         ax.set_zlim(zlim[0], zlim[1])
 
     ax.plot_trisurf(data['x'], data['y'], data['z'])
+    ax.view_init(azim=azim)
     plt.tight_layout()
     plt.show()
 
@@ -507,5 +508,12 @@ def plot_df_trisurf(df, groupby, axes, **kwargs):
         'y': grouped_df[axes[1]],
         'z': grouped_df[axes[2]],
     }
+
+    if 'labels' not in kwargs:
+        kwargs['labels'] = {
+            'x': axes[0],
+            'y': axes[1],
+            'z': axes[2],
+        }
 
     plot_trisurf(data=data, **kwargs)

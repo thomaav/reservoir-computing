@@ -4,6 +4,7 @@ import dataset as ds
 from ESN import Distribution, ESN
 from metric import esn_nrmse, evaluate_esn, kernel_quality, memory_capacity
 from gridsearch import experiment
+from matrix import euclidean
 
 
 def parse_args():
@@ -34,7 +35,7 @@ def main():
         'hidden_nodes': hidden_nodes,
         'input_scaling': 1.0,
         'spectral_radius': 0.9,
-        'w_res_type': 'waxman'
+        'w_res_type': 'waxman',
     }
 
     print('Statistics')
