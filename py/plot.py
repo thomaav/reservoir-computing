@@ -471,18 +471,22 @@ def plot_trisurf(data, labels=None, title=None, xlim=None, ylim=None, zlim=None,
     plt.show()
 
 
-def plot_lattice(G):
+def plot_lattice(G, title=''):
     pos = nx.get_node_attributes(G, 'pos')
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
+    fig, ax = plt.subplots()
     ax.set_aspect('equal')
+    ax.set_title(title)
 
-    nx.draw(G, pos=pos, with_labels=False, node_size=30, node_color='black')
+    nx.draw(G, pos=pos, ax=ax, with_labels=False, node_size=30, node_color='black')
 
     x1, x2, y1, y2 = plt.axis()
     plt.axis((x1-0.5, x2+0.5, y1-0.5, y2+0.5))
 
+    ax.set_axis_on()
+    ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
+
+    plt.tight_layout()
     plt.show()
 
 
