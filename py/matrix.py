@@ -70,6 +70,9 @@ def rectangular(m, n, rect_ratio=1.0, periodic=False):
         pos = G.nodes[n]['pos']
         G.nodes[n]['pos'] = (pos[0], pos[1]*rect_ratio)
 
+    for u, v, d in G.edges(data=True):
+        d['weight'] = 1/euclidean(G.nodes[u]['pos'], G.nodes[v]['pos'])
+
     return G
 
 
