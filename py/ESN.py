@@ -46,7 +46,7 @@ class ESN(nn.Module):
             A = nx.to_numpy_matrix(G)
             w_res = torch.FloatTensor(A)
             w_res *= self.spectral_radius / _spectral_radius(w_res)
-        elif self.w_res_type in ['tetragonal', 'hexagonal', 'triangular']:
+        elif self.w_res_type in ['tetragonal', 'hexagonal', 'triangular', 'rectangular']:
             sqrt = np.sqrt(self.hidden_nodes)
             if sqrt - int(sqrt) != 0:
                 raise ValueError("Non square number of nodes given for lattice")
@@ -56,6 +56,8 @@ class ESN(nn.Module):
                 G = matrix.hexagonal(int(sqrt) // 2, int(np.ceil(sqrt/2)*2), **kwargs)
             elif self.w_res_type == 'triangular':
                 G = matrix.triangular(int(sqrt) * 2, int(sqrt), **kwargs)
+            elif self.w_res_type == 'rectangular':
+                G = matrix.rectangular(int(sqrt), int(sqrt), **kwargs)
             self.G = G
             A = nx.to_numpy_matrix(G)
             self.hidden_nodes = len(A)

@@ -63,6 +63,16 @@ def tetragonal(dim, periodic=False):
     return G
 
 
+def rectangular(m, n, rect_ratio=1.0, periodic=False):
+    G = tetragonal([m, n], periodic=periodic)
+
+    for n in G:
+        pos = G.nodes[n]['pos']
+        G.nodes[n]['pos'] = (pos[0], pos[1]*rect_ratio)
+
+    return G
+
+
 def hexagonal(m, n, periodic=False):
     G = nx.hexagonal_lattice_graph(m, n, periodic=periodic)
     return G
