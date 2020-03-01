@@ -516,3 +516,31 @@ def plot_df_trisurf(df, groupby, axes, **kwargs):
         }
 
     plot_trisurf(data=data, **kwargs)
+
+
+def reject_outliers(data, m=2.0):
+    d = np.abs(data - np.median(data))
+    mdev = np.median(d)
+    s = d/mdev if mdev else 0
+    return data[s<m]
+
+
+def plot_esn_weight_hist(params, n_bins, ax=None, show=False, **kwargs):
+    esn = ESN(**params)
+    weights = esn.w_res.data.numpy().flatten()
+
+    # Clip outliers.
+    wout_outliers = reject_outliers(weights, m=20.0)
+    min_clip, max_clip = np.min(wout_outliers), np.max(wout_outliers)
+    np.clip(weights, min_clip, max_clip, out=weights)
+
+    _plt = plt
+    if ax is not None:
+        _plt = ax
+
+    bin_width = (max_clip - min_clip) / n_bins
+    bins = np.arange(min_clip, max_clip + bin_width, bin_width)
+    _plt.hist(weights, bins=bins, edgecolor='black', **kwargs)
+
+    if show:
+        plt.show()
