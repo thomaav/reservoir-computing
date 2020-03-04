@@ -36,6 +36,8 @@ def list_chunks(lst, n):
 
 
 def _experiment(f, param_names, param_values, affinity=0, runs=10):
+    os.sched_setaffinity(0, {affinity})
+
     results = []
     for experiment in param_values:
         _params = {pn: pv for pn, pv in zip(param_names, experiment)}
@@ -53,7 +55,6 @@ def experiment(f, params, runs=10):
     param_values = list(product(*[l[1] for l in params.items()]))
 
     cpus = mp.cpu_count()-1 or 1
-    cpus = 1
     pool = mp.Pool(processes=cpus)
 
     try:

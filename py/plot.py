@@ -446,9 +446,11 @@ def scatter_2d(G):
     plt.show()
 
 
-def plot_trisurf(data, labels=None, title=None, xlim=None, ylim=None, zlim=None, azim=-45):
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+def plot_trisurf(data, labels=None, ax=None, title=None, xlim=None,
+                 ylim=None, zlim=None, azim=-45, show=True):
+    if ax is None:
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
 
     if title is not None:
         ax.set_title(title)
@@ -467,8 +469,9 @@ def plot_trisurf(data, labels=None, title=None, xlim=None, ylim=None, zlim=None,
 
     ax.plot_trisurf(data['x'], data['y'], data['z'])
     ax.view_init(azim=azim)
-    plt.tight_layout()
-    plt.show()
+
+    if show:
+        plt.show()
 
 
 def plot_lattice(G, title='', ax=None, show=True):
@@ -505,8 +508,13 @@ def plot_df(df, groupby, axes, labels=None):
     plt.show()
 
 
-def plot_df_trisurf(df, groupby, axes, **kwargs):
-    grouped_df = df.groupby(groupby).mean().reset_index()
+def plot_df_trisurf(df, groupby, axes, agg='mean', **kwargs):
+    if agg == 'min':
+        grouped_df = df.groupby(groupby).min().reset_index()
+    elif agg =='max':
+        grouped_df = df.groupby(groupby).max().reset_index()
+    else:
+        grouped_df = df.groupby(groupby).mean().reset_index()
 
     data = {
         'x': grouped_df[axes[0]],
