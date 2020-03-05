@@ -42,6 +42,9 @@
   F.eks. gradvise forstyrrelser ved å begynne med et kvadratgitter og så "riste"
   noder. Her kan man lage en gradvis overgang til fullstendig tilfeldig
   konnektivitet.
+
+  Annen idé: om dette over ikke gir stor forskjell, test hva som skjer dersom
+  man istedenfor "rister" kanter.
 ** Er det viktig om kantene av gitteret gjør en "wrap-around"?
   Dette kan være spennende for å utforske. Jeg tenker at det kan være relevant
   mtp. minnekapasitet om alle kanter av gitteret har en definitiv "slutt" slik
