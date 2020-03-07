@@ -36,6 +36,7 @@ def main():
         'input_scaling': 1.0,
         'spectral_radius': 0.9,
         'w_res_type': 'waxman',
+        'readout': 'rr',
     }
 
     print('Statistics')

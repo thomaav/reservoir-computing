@@ -402,7 +402,7 @@ def visualize(dataset, washout=200):
     plt.ylabel('Reservoir output')
     plt.xlabel('Time')
 
-def scatter_3d(G):
+def scatter_3d(G, title='', cols=None):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -412,6 +412,8 @@ def scatter_3d(G):
         ys.append(G.nodes[n]['pos'][1])
         zs.append(G.nodes[n]['pos'][2])
 
+    ax.set_title(title)
+
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
@@ -420,7 +422,12 @@ def scatter_3d(G):
     ax.set_ylim(0, 1)
     ax.set_zlim(0, 1)
 
-    ax.scatter(xs, ys, zs, color='black')
+    if cols is None:
+        c = 'black'
+    else:
+        c = cols
+
+    ax.scatter(xs, ys, zs, c=c, cmap='binary')
     plt.show()
 
 

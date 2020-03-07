@@ -43,6 +43,7 @@ class ESN(nn.Module):
 
         if self.w_res_type == 'waxman':
             G = matrix.waxman(n=self.hidden_nodes, alpha=1.0, beta=1.0, connectivity='global', **kwargs)
+            self.G = G
             A = nx.to_numpy_matrix(G)
             w_res = torch.FloatTensor(A)
             w_res *= self.spectral_radius / _spectral_radius(w_res)
@@ -138,6 +139,7 @@ class ESN(nn.Module):
 
         if y is not None:
             if self.readout == 'rr':
+                print(X.shape, y.shape)
                 self.rr.fit(X, y)
                 self.w_out = torch.from_numpy(self.rr.coef_).float()
             elif self.readout == 'pinv':
@@ -158,15 +160,19 @@ class ESN(nn.Module):
 
         self(torch.cat((washout, u_train, u_test), 0))
 
-        w_outs = torch.zeros(output_nodes, self.hidden_nodes)
-        Xplus = torch.pinverse(self.X[washout_len:washout_len+train_len])
+        self.w_outs = torch.zeros(output_nodes, self.hidden_nodes)
+        if self.readout == 'pinv':
+            Xplus = torch.pinverse(self.X[washout_len:washout_len+train_len])
         for k in range(1, output_nodes+1):
-            # Ignore chosen readout method for now, just use SVD with
-            # torch.pinverse.
-            w_outs[k-1] = torch.mv(Xplus[:, k:], u_train[:-k])
+            if self.readout == 'rr':
+                X = self.X[washout_len:washout_len+train_len]
+                self.rr.fit(X[k:, :], u_train[:-k])
+                self.w_outs[k-1] = torch.from_numpy(self.rr.coef_).float()
+            elif self.readout == 'pinv':
+                self.w_outs[k-1] = torch.mv(Xplus[:, k:], u_train[:-k])
 
         X_test = self.X[washout_len+train_len:]
-        ys = torch.mm(w_outs, X_test.T)
+        ys = torch.mm(self.w_outs, X_test.T)
 
         if plot:
             import matplotlib.pyplot as plt
