@@ -49,7 +49,7 @@ def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
                 G.add_edge(u, v, weight=weight_sign*dist_function(pos[u], pos[v])*scale)
             else:
                 G.add_edge(u, v, weight=weight_sign*dist_function(pos[u], pos[v])*scale)
-                G.add_edge(vp, u, weight=weight_sign*dist_function(pos[v], pos[u])*scale)
+                G.add_edge(v, u, weight=weight_sign*dist_function(pos[v], pos[u])*scale)
 
     return G
 
