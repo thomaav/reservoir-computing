@@ -7,6 +7,7 @@ import pickle
 import seaborn as sns
 import matrix
 import networkx as nx
+import torch
 
 from ESN import Distribution
 from metric import *
@@ -485,7 +486,7 @@ def plot_trisurf(data, labels=None, ax=None, title=None, xlim=None,
         plt.show()
 
 
-def plot_lattice(G, title='', ax=None, show=True):
+def plot_lattice(G, title='', ax=None, neigh_color=False, show=True):
     pos = nx.get_node_attributes(G, 'pos')
 
     if ax is None:
@@ -493,7 +494,14 @@ def plot_lattice(G, title='', ax=None, show=True):
     ax.set_aspect('equal')
     ax.set_title(title)
 
-    nx.draw(G, pos=pos, ax=ax, with_labels=False, node_size=30, node_color='black')
+    if neigh_color:
+        A = nx.to_numpy_matrix(G)
+        A = torch.FloatTensor(A).data.numpy()
+        colors = A[0]
+    else:
+        colors = 'black'
+
+    nx.draw(G, pos=pos, ax=ax, with_labels=False, node_size=30, node_color=colors)
 
     x1, x2, y1, y2 = ax.axis()
     ax.axis((x1-0.5, x2+0.5, y1-0.5, y2+0.5))

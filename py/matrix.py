@@ -1,5 +1,6 @@
 import networkx as nx
 import numpy as np
+import torch
 from itertools import combinations
 from math import sqrt, exp
 
@@ -48,9 +49,13 @@ def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
                 G.add_edge(u, v, weight=weight_sign*dist_function(pos[u], pos[v])*scale)
             else:
                 G.add_edge(u, v, weight=weight_sign*dist_function(pos[u], pos[v])*scale)
-                G.add_edge(v, u, weight=weight_sign*dist_function(pos[v], pos[u])*scale)
+                G.add_edge(vp, u, weight=weight_sign*dist_function(pos[v], pos[u])*scale)
 
     return G
+
+
+def add_edge(G, u, v, dist_function=euclidean):
+    G.add_edge(u, v, weight=dist_function(G.nodes[u]['pos'], G.nodes[v]['pos']))
 
 
 def tetragonal(dim, periodic=False):
@@ -84,6 +89,35 @@ def hexagonal(m, n, periodic=False):
 def triangular(m, n, periodic=False):
     G = nx.triangular_lattice_graph(m, n, periodic=periodic)
     return G
+
+
+def grow_neighborhoods(G, dist_function=euclidean, l=1):
+    def get_neighbors(A, n): return A[n].nonzero()[0]
+
+    # I have no idea what is happening with the np matrix here, as there seems
+    # to be some sort of infinite recurrence of the first element -- but this
+    # does not happen with torch? What in the world is going on…
+    A = nx.to_numpy_matrix(G)
+    A = torch.FloatTensor(A).data.numpy()
+
+    # Required to get the correct u,v for add_edge.
+    nodes = {i: n for i, n in enumerate(G.nodes())}
+
+    for n in range(len(A)):
+        cur_neigh = get_neighbors(A, n)
+
+        for i in range(l):
+            next_neigh = np.concatenate([get_neighbors(A, neigh) for neigh in cur_neigh])
+            next_neigh = np.setdiff1d(next_neigh, cur_neigh)
+            cur_neigh = np.concatenate([cur_neigh, next_neigh])
+
+        # We are not modifying A by doing this, so we can add the edges directly
+        # without worrying about growing the neighborhood indefinitely.
+        new_neigh = cur_neigh
+        for neigh in new_neigh:
+            u = nodes[n]
+            v = nodes[neigh]
+            add_edge(G, u, v, dist_function)
 
 
 if __name__ == '__main__':
