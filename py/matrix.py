@@ -13,7 +13,7 @@ def euclidean(x, y):
 
 
 def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
-           directed=False, sign_frac=0.0, dist_function=euclidean):
+           directed=False, sign_frac=0.0, dist_function=euclidean, l=0):
     """
     B. M. Waxman, Routing of multipoint connections.
 
@@ -55,10 +55,11 @@ def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
 
 
 def add_edge(G, u, v, dist_function=euclidean):
-    G.add_edge(u, v, weight=dist_function(G.nodes[u]['pos'], G.nodes[v]['pos']))
+    if u != v:
+        G.add_edge(u, v, weight=dist_function(G.nodes[u]['pos'], G.nodes[v]['pos']))
 
 
-def tetragonal(dim, periodic=False):
+def tetragonal(dim, periodic=False, dist_function=None):
     # (TODO): rectangular
     G = nx.grid_graph(dim, periodic=periodic)
 
@@ -68,7 +69,7 @@ def tetragonal(dim, periodic=False):
     return G
 
 
-def rectangular(m, n, rect_ratio=1.0, periodic=False):
+def rectangular(m, n, rect_ratio=1.0, periodic=False, dist_function=None):
     G = tetragonal([m, n], periodic=periodic)
 
     for n in G:
@@ -81,12 +82,12 @@ def rectangular(m, n, rect_ratio=1.0, periodic=False):
     return G
 
 
-def hexagonal(m, n, periodic=False):
+def hexagonal(m, n, periodic=False, dist_function=None):
     G = nx.hexagonal_lattice_graph(m, n, periodic=periodic)
     return G
 
 
-def triangular(m, n, periodic=False):
+def triangular(m, n, periodic=False, dist_function=None):
     G = nx.triangular_lattice_graph(m, n, periodic=periodic)
     return G
 

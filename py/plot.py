@@ -454,8 +454,8 @@ def scatter_2d(G):
     plt.show()
 
 
-def plot_trisurf(data, labels=None, ax=None, title=None, xlim=None,
-                 ylim=None, zlim=None, azim=-45, show=True, label=None, **kwargs):
+def plot_trisurf(data, labels=None, ax=None, title=None, xlim=None, ylim=None,
+                 zlim=None, azim=-45, elev=None, show=True, label=None, **kwargs):
     if ax is None:
         fig = plt.figure()
         ax = fig.gca(projection='3d')
@@ -476,7 +476,7 @@ def plot_trisurf(data, labels=None, ax=None, title=None, xlim=None,
         ax.set_zlim(zlim[0], zlim[1])
 
     _ax = ax.plot_trisurf(data['x'], data['y'], data['z'], label=label, **kwargs)
-    ax.view_init(azim=azim)
+    ax.view_init(azim=azim, elev=elev)
 
     if label is not None:
         _ax._facecolors2d=_ax._facecolors3d

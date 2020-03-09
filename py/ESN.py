@@ -21,7 +21,7 @@ class ESN(nn.Module):
                  input_scaling=1.0, w_in_distrib=Distribution.uniform,
                  w_res_distrib=Distribution.uniform, awgn_train_std=0.0,
                  awgn_test_std=0.0, adc_quantization=None, readout='pinv',
-                 w_ridge=0.00, w_res_type=None, **kwargs):
+                 w_ridge=0.00, w_res_type=None, grow_neigh=0, **kwargs):
         super().__init__()
 
         self.hidden_nodes = hidden_nodes
@@ -40,6 +40,7 @@ class ESN(nn.Module):
         self.readout = readout
         self.rr = Ridge(alpha=w_ridge)
         self.w_res_type = w_res_type
+        self.grow_neigh = grow_neigh
 
         if self.w_res_type == 'waxman':
             G = matrix.waxman(n=self.hidden_nodes, alpha=1.0, beta=1.0, connectivity='global', **kwargs)
@@ -60,6 +61,10 @@ class ESN(nn.Module):
             elif self.w_res_type == 'rectangular':
                 G = matrix.rectangular(int(sqrt), int(sqrt), **kwargs)
             self.G = G
+
+            if self.grow_neigh > 0:
+                matrix.grow_neighborhoods(G, l=grow_neigh, **kwargs)
+
             A = nx.to_numpy_matrix(G)
             self.hidden_nodes = len(A)
             w_res = torch.FloatTensor(A)
@@ -139,7 +144,6 @@ class ESN(nn.Module):
 
         if y is not None:
             if self.readout == 'rr':
-                print(X.shape, y.shape)
                 self.rr.fit(X, y)
                 self.w_out = torch.from_numpy(self.rr.coef_).float()
             elif self.readout == 'pinv':
