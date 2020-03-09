@@ -521,34 +521,50 @@ def plot_df(df, groupby, axes, labels=None):
     plt.plot(*data)
 
     if labels is not None:
-        plt.xlabel=labels[0]
-        plt.ylabel=labels[1]
+        plt.xlabel(labels[0])
+        plt.ylabel(labels[1])
 
     plt.show()
 
 
-def plot_df_trisurf(df, groupby, axes, agg='mean', **kwargs):
-    if agg == 'min':
-        grouped_df = df.groupby(groupby).min().reset_index()
-    elif agg =='max':
-        grouped_df = df.groupby(groupby).max().reset_index()
-    else:
-        grouped_df = df.groupby(groupby).mean().reset_index()
+def plot_df_trisurf(df, groupby, axes, agg=['mean'], show=True, title='', ax=None, **kwargs):
+    if ax is None:
+        axs = get_3d_subplot_axs(len(agg))
 
-    data = {
-        'x': grouped_df[axes[0]],
-        'y': grouped_df[axes[1]],
-        'z': grouped_df[axes[2]],
-    }
+    plt.suptitle(title)
 
-    if 'labels' not in kwargs:
-        kwargs['labels'] = {
-            'x': axes[0],
-            'y': axes[1],
-            'z': axes[2],
+    for i, _agg in enumerate(agg):
+        if _agg == 'min':
+            grouped_df = df.groupby(groupby).min().reset_index()
+        elif _agg =='max':
+            grouped_df = df.groupby(groupby).max().reset_index()
+        else:
+            grouped_df = df.groupby(groupby).mean().reset_index()
+
+        data = {
+            'x': grouped_df[axes[0]],
+            'y': grouped_df[axes[1]],
+            'z': grouped_df[axes[2]],
         }
 
-    plot_trisurf(data=data, **kwargs)
+        if 'labels' not in kwargs:
+            kwargs['labels'] = {
+                'x': axes[0],
+                'y': axes[1],
+                'z': axes[2],
+            }
+
+        if ax is None:
+            cur_ax = axs[i]
+        else:
+            cur_ax = ax
+
+        plot_trisurf(data=data, ax=cur_ax, show=False, title=_agg, **kwargs)
+
+    if show:
+        if 'label' in kwargs:
+            ax.legend()
+        plt.show()
 
 
 def reject_outliers(data, m=2.0):
@@ -577,3 +593,24 @@ def plot_esn_weight_hist(params, n_bins, ax=None, show=False, **kwargs):
 
     if show:
         plt.show()
+
+
+def get_3d_subplot_axs(n):
+    aspect_ratio = 0.4 if n > 1 else 1.0
+    fig = plt.figure(figsize=plt.figaspect(aspect_ratio))
+    axs = []
+
+    for i in range(1, n+1):
+        ax = plt.subplot(1, n, i, projection='3d')
+        axs.append(ax)
+
+    return axs
+
+
+def get_figsize():
+    return plt.rcParams["figure.figsize"]
+
+
+def set_figsize(width, height):
+    old_figsize = plt.rcParams["figure.figsize"]
+    plt.rcParams["figure.figsize"] = (width, height)
