@@ -574,13 +574,13 @@ def reject_outliers(data, m=2.0):
     return data[s<m]
 
 
-def plot_esn_weight_hist(params, n_bins, ax=None, show=False, **kwargs):
+def plot_esn_weight_hist(params, n_bins, m=20.0, ax=None, show=False, **kwargs):
     esn = ESN(**params)
     weights = esn.w_res.data.numpy().flatten()
 
     # Clip outliers.
-    wout_outliers = reject_outliers(weights, m=20.0)
-    min_clip, max_clip = np.min(wout_outliers), np.max(wout_outliers)
+    wres_outliers = reject_outliers(weights, m=m)
+    min_clip, max_clip = np.min(wres_outliers), np.max(wres_outliers)
     np.clip(weights, min_clip, max_clip, out=weights)
 
     _plt = plt
