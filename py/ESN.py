@@ -52,6 +52,7 @@ class ESN(nn.Module):
             sqrt = np.sqrt(self.hidden_nodes)
             if sqrt - int(sqrt) != 0:
                 raise ValueError("Non square number of nodes given for lattice")
+
             if self.w_res_type == 'tetragonal':
                 G = matrix.tetragonal([int(sqrt), int(sqrt)], **kwargs)
             elif self.w_res_type == 'hexagonal':

@@ -574,14 +574,11 @@ def reject_outliers(data, m=2.0):
     return data[s<m]
 
 
-def plot_esn_weight_hist(params, n_bins, m=20.0, ax=None, show=False, **kwargs):
-    esn = ESN(**params)
-    weights = esn.w_res.data.numpy().flatten()
-
+def plot_vector_hist(vector, n_bins, m=20.0, ax=None, show=False, **kwargs):
     # Clip outliers.
-    wres_outliers = reject_outliers(weights, m=m)
+    wres_outliers = reject_outliers(vector, m=m)
     min_clip, max_clip = np.min(wres_outliers), np.max(wres_outliers)
-    np.clip(weights, min_clip, max_clip, out=weights)
+    np.clip(vector, min_clip, max_clip, out=vector)
 
     _plt = plt
     if ax is not None:
@@ -589,10 +586,17 @@ def plot_esn_weight_hist(params, n_bins, m=20.0, ax=None, show=False, **kwargs):
 
     bin_width = (max_clip - min_clip) / n_bins
     bins = np.arange(min_clip, max_clip + bin_width, bin_width)
-    _plt.hist(weights, bins=bins, edgecolor='black', **kwargs)
+    _plt.hist(vector, bins=bins, edgecolor='black', **kwargs)
 
     if show:
         plt.show()
+
+
+def plot_esn_weight_hist(params, **kwargs):
+    esn = ESN(**params)
+    weights = esn.w_res.data.numpy().flatten()
+    plot_vector_hist(weights, **kwargs)
+
 
 
 def get_3d_subplot_axs(n):
