@@ -486,7 +486,7 @@ def plot_trisurf(data, labels=None, ax=None, title=None, xlim=None, ylim=None,
         plt.show()
 
 
-def plot_lattice(G, title='', ax=None, neigh_color=False, show=True):
+def plot_lattice(G, title='', ax=None, neigh_color=False, cols=None, show=True):
     pos = nx.get_node_attributes(G, 'pos')
 
     if ax is None:
@@ -498,10 +498,12 @@ def plot_lattice(G, title='', ax=None, neigh_color=False, show=True):
         A = nx.to_numpy_matrix(G)
         A = torch.FloatTensor(A).data.numpy()
         colors = A[0]
+    elif cols is not None:
+        colors = cols
     else:
         colors = 'black'
 
-    nx.draw(G, pos=pos, ax=ax, with_labels=False, node_size=30, node_color=colors)
+    nx.draw(G, pos=pos, ax=ax, with_labels=False, node_size=30, node_color=colors, cmap='binary')
 
     x1, x2, y1, y2 = ax.axis()
     ax.axis((x1-0.5, x2+0.5, y1-0.5, y2+0.5))
@@ -527,7 +529,8 @@ def plot_df(df, groupby, axes, labels=None):
     plt.show()
 
 
-def plot_df_trisurf(df, groupby, axes, agg=['mean'], show=True, title='', ax=None, **kwargs):
+def plot_df_trisurf(df, groupby, axes, agg=['mean'], show=True, title='', ax=None,
+                    azim=None, elev=None, zlim=None, **kwargs):
     if ax is None:
         axs = get_3d_subplot_axs(len(agg))
 
@@ -559,7 +562,12 @@ def plot_df_trisurf(df, groupby, axes, agg=['mean'], show=True, title='', ax=Non
         else:
             cur_ax = ax
 
-        plot_trisurf(data=data, ax=cur_ax, show=False, title=_agg, **kwargs)
+        _azim = azim if type(azim) != list else azim[i]
+        _elev = elev if type(elev) != list else elev[i]
+        _zlim = zlim if type(zlim) != list else zlim[i]
+
+        plot_trisurf(data=data, ax=cur_ax, show=False, title=_agg,
+                     azim=_azim, elev=_elev, zlim=_zlim, **kwargs)
 
     if show:
         if 'label' in kwargs:

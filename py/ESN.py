@@ -17,26 +17,21 @@ class Distribution(enum.Enum):
 
 class ESN(nn.Module):
     def __init__(self, hidden_nodes=200, spectral_radius=0.9, washout=200,
-                 w_in_density=1.0, w_res_density=1.0, w_out_density=1.0,
-                 input_scaling=1.0, w_in_distrib=Distribution.uniform,
-                 w_res_distrib=Distribution.uniform, awgn_train_std=0.0,
-                 awgn_test_std=0.0, adc_quantization=None, readout='pinv',
-                 w_ridge=0.00, w_res_type=None, grow_neigh=0, **kwargs):
+                 w_in_density=1.0, w_res_density=1.0, input_scaling=1.0,
+                 w_in_distrib=Distribution.uniform, w_res_distrib=Distribution.uniform,
+                 readout='pinv', w_ridge=0.00, w_res_type=None, grow_neigh=0,
+                 **kwargs):
         super().__init__()
 
         self.hidden_nodes = hidden_nodes
         self.spectral_radius = spectral_radius
         self.f = torch.tanh
         self.w_in_density = w_in_density
-        self.w_out_density = w_out_density
         self.w_res_density = w_res_density
         self.washout = washout
         self.input_scaling = input_scaling
         self.w_in_distrib = w_in_distrib
         self.w_res_distrib = w_res_distrib
-        self.awgn_train_std = awgn_train_std
-        self.awgn_test_std = awgn_test_std
-        self.adc_quantization = adc_quantization
         self.readout = readout
         self.rr = Ridge(alpha=w_ridge)
         self.w_res_type = w_res_type
@@ -81,13 +76,6 @@ class ESN(nn.Module):
             w_res[torch.rand(self.hidden_nodes, self.hidden_nodes) > self.w_res_density] = 0.0
             w_res *= self.spectral_radius / _spectral_radius(w_res)
 
-        # We can't just mask w_out with the density, as the masked out nodes
-        # must be hidden during training as well.
-        mask_size = int(self.hidden_nodes*self.w_out_density)
-        self.w_out_mask = np.random.choice(self.hidden_nodes, mask_size, replace=False)
-        self.w_out_mask = torch.from_numpy(self.w_out_mask)
-        self.output_dim = self.w_out_mask.shape[0]
-
         if self.w_in_distrib == Distribution.gaussian:
             w_in = torch.empty(self.hidden_nodes).normal_(mean=0.0, std=1.0)
         elif self.w_in_distrib == Distribution.uniform:
@@ -98,7 +86,7 @@ class ESN(nn.Module):
         w_in[torch.rand(self.hidden_nodes) > self.w_in_density] = 0.0
         w_in *= self.input_scaling
 
-        w_out = torch.ones(self.hidden_nodes)
+        w_out = torch.zeros(self.hidden_nodes)
 
         self.register_buffer('w_res', w_res)
         self.register_buffer('w_in', w_in)
@@ -107,37 +95,25 @@ class ESN(nn.Module):
 
     def forward(self, u, y=None, u_mc=None, plot=False):
         timeseries_len = u.size()[0]
-        X = torch.zeros(timeseries_len, self.output_dim)
+        X = torch.zeros(timeseries_len, self.hidden_nodes)
         x = torch.zeros(self.hidden_nodes)
         v = torch.zeros(timeseries_len)
 
         for t in range(timeseries_len):
-            # Add AWGN to the input signal.
-            v_t = torch.zeros(1)
-            if y is not None and self.awgn_train_std > 0.0:
-                v_t = v_t.normal_(mean=0.0, std=self.awgn_train_std)
-            elif y is None and self.awgn_test_std > 0.0:
-                v_t = v_t.normal_(mean=0.0, std=self.awgn_test_std)
-            v[t] = v_t
-
             # Calculate the next state of each node as an integration of
             # incoming connections.
-            u_t = self.w_in * (u[t] + v_t)
+            u_t = self.w_in * u[t]
             x_t = self.w_res.mv(x)
             x = self.f(u_t + x_t)
-            X[t] = x[self.w_out_mask]
 
-            if self.adc_quantization is not None:
-                q = 1/self.adc_quantization
-                X[t] = q * torch.round(X[t]/q)
+            X[t] = x
 
         # Record the previous time series passed through the reservoir.
         self.X = X
-        self.v = v
 
         if plot:
             import matplotlib.pyplot as plt
-            plt.plot(self.X)
+            plt.plot(self.X[self.noisy_mask])
             plt.show()
 
         X = X[self.washout:]
@@ -148,11 +124,17 @@ class ESN(nn.Module):
                 self.rr.fit(X, y)
                 self.w_out = torch.from_numpy(self.rr.coef_).float()
             elif self.readout == 'pinv':
-                self.w_out = torch.mv(torch.pinverse(X), y)
+                pinv = torch.from_numpy(np.linalg.pinv(X))
+                self.w_out = torch.mv(pinv, y)
             else:
-                raise NotImplementedError('Unknown readout regression method')
+                raise ValueError(f'No such readout: {self.readout}')
         else:
-            return torch.mv(X, self.w_out)
+            if self.readout == 'rr':
+                return self.rr.predict(X)
+            elif self.readout == 'pinv':
+                return torch.mv(X, self.w_out)
+            else:
+                raise ValueError(f'No such readout: {self.readout}')
 
 
     def memory_capacity(self, washout, u_train, u_test, plot=False):
@@ -164,6 +146,7 @@ class ESN(nn.Module):
         train_len = u_train.shape[0]
 
         self(torch.cat((washout, u_train, u_test), 0))
+        self.X_train = self.X[washout_len:washout_len+train_len]
 
         self.w_outs = torch.zeros(output_nodes, self.hidden_nodes)
         if self.readout == 'pinv':
@@ -187,9 +170,12 @@ class ESN(nn.Module):
             plt.show()
 
         mc = 0
+        self.mcs = []
         for k in range(output_nodes):
             u_tk = u_test[:-(k+1)]
             numerator = (np.cov(u_tk, ys[k][k+1:], bias=True)[0][1])**2
             denominator = torch.var(u_tk)*torch.var(ys[k][k+1:])
-            mc += numerator/denominator
+            _mc = numerator/denominator
+            mc += _mc
+            self.mcs.append(_mc)
         return float(mc)
