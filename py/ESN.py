@@ -48,6 +48,16 @@ class ESN(nn.Module):
             if sqrt - int(sqrt) != 0:
                 raise ValueError("Non square number of nodes given for lattice")
 
+            sign_frac = None
+            if 'sign_frac' in kwargs:
+                sign_frac = kwargs['sign_frac']
+                del kwargs['sign_frac']
+
+            dir_frac = None
+            if 'dir_frac' in kwargs:
+                dir_frac = kwargs['dir_frac']
+                del kwargs['dir_frac']
+
             if self.w_res_type == 'tetragonal':
                 G = matrix.tetragonal([int(sqrt), int(sqrt)], **kwargs)
             elif self.w_res_type == 'hexagonal':
@@ -59,12 +69,20 @@ class ESN(nn.Module):
             self.G = G
 
             if self.grow_neigh > 0:
-                matrix.grow_neighborhoods(G, l=grow_neigh, **kwargs)
+                matrix.grow_neighborhoods(self.G, l=grow_neigh, **kwargs)
 
-            A = nx.to_numpy_matrix(G)
+            if sign_frac is not None:
+                matrix.make_weights_negative(self.G, sign_frac)
+
+            if dir_frac is not None:
+                self.G = matrix.make_graph_directed(self.G, dir_frac)
+
+            A = nx.to_numpy_matrix(self.G)
             self.hidden_nodes = len(A)
             w_res = torch.FloatTensor(A)
-            w_res *= self.spectral_radius / _spectral_radius(w_res)
+            cur_sr = _spectral_radius(w_res)
+            if cur_sr != 0:
+                w_res *= self.spectral_radius / cur_sr
         else:
             if self.w_res_distrib == Distribution.gaussian:
                 w_res = torch.empty(self.hidden_nodes, hidden_nodes).normal_(mean=0.0, std=1.0)

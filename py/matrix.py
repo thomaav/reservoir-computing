@@ -121,6 +121,24 @@ def grow_neighborhoods(G, dist_function=euclidean, l=1):
             add_edge(G, u, v, dist_function)
 
 
+def make_weights_negative(G, sign_frac):
+    for u, v, d in G.edges(data=True):
+        sign = -1 if np.random.random() < sign_frac else 1
+        d['weight'] = d['weight']*sign if 'weight' in d else sign
+
+
+def make_graph_directed(G, dir_frac):
+    bidir_edges = G.edges()
+    dir_G =  G.to_directed()
+
+    for u,v in bidir_edges:
+        if np.random.random() < dir_frac:
+            del_u, del_v = (u,v) if np.random.random() < 0.5 else (v,u)
+            dir_G.remove_edge(del_u, del_v)
+
+    return dir_G
+
+
 if __name__ == '__main__':
     G = triangular(5, 5)
 
