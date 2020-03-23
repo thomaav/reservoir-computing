@@ -41,8 +41,12 @@ class ESN(nn.Module):
             G = matrix.waxman(n=self.hidden_nodes, alpha=1.0, beta=1.0, connectivity='global', **kwargs)
             self.G = G
             A = nx.to_numpy_matrix(G)
+
             w_res = torch.FloatTensor(A)
-            w_res *= self.spectral_radius / _spectral_radius(w_res)
+            cur_sr = _spectral_radius(w_res)
+            self.org_spectral_radius = cur_sr
+            if cur_sr != 0:
+                w_res *= self.spectral_radius / cur_sr
         elif self.w_res_type in ['tetragonal', 'hexagonal', 'triangular', 'rectangular']:
             sqrt = np.sqrt(self.hidden_nodes)
             if sqrt - int(sqrt) != 0:
