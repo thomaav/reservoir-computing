@@ -595,9 +595,12 @@ def reject_outliers(data, m=2.0):
 
 def plot_vector_hist(vector, n_bins, m=20.0, ax=None, show=False, **kwargs):
     # Clip outliers.
-    wres_outliers = reject_outliers(vector, m=m)
-    min_clip, max_clip = np.min(wres_outliers), np.max(wres_outliers)
-    np.clip(vector, min_clip, max_clip, out=vector)
+    if m is not None:
+        wres_outliers = reject_outliers(vector, m=m)
+        min_clip, max_clip = np.min(wres_outliers), np.max(wres_outliers)
+        np.clip(vector, min_clip, max_clip, out=vector)
+    else:
+        min_clip, max_clip = np.min(vector), np.max(vector)
 
     _plt = plt
     if ax is not None:
