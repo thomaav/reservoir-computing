@@ -487,7 +487,7 @@ def plot_trisurf(data, labels=None, ax=None, title=None, xlim=None, ylim=None,
 
 
 def plot_lattice(G, title='', ax=None, neigh_color=False, edge_color=False,
-                 cols=None, show=True, directed=False):
+                 cols=None, show=True, directed=False, cmap_r=False):
     pos = nx.get_node_attributes(G, 'pos')
 
     if ax is None:
@@ -510,9 +510,11 @@ def plot_lattice(G, title='', ax=None, neigh_color=False, edge_color=False,
     else:
         edge_colors = 'black'
 
+    cmap = 'binary_r' if cmap_r else 'binary'
+
     G = G if not directed else G.to_directed()
     nx.draw(G, pos=pos, ax=ax, with_labels=False, node_size=30,
-            node_color=node_colors, edge_color=edge_colors, cmap='binary')
+            node_color=node_colors, edge_color=edge_colors, cmap=cmap)
 
     x1, x2, y1, y2 = ax.axis()
     ax.axis((x1-0.5, x2+0.5, y1-0.5, y2+0.5))

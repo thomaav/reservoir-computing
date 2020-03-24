@@ -52,14 +52,14 @@ class ESN(nn.Module):
             if sqrt - int(sqrt) != 0:
                 raise ValueError("Non square number of nodes given for lattice")
 
-            sign_frac = None
+            self.sign_frac = None
             if 'sign_frac' in kwargs:
-                sign_frac = kwargs['sign_frac']
+                self.sign_frac = kwargs['sign_frac']
                 del kwargs['sign_frac']
 
-            dir_frac = None
+            self.dir_frac = None
             if 'dir_frac' in kwargs:
-                dir_frac = kwargs['dir_frac']
+                self.dir_frac = kwargs['dir_frac']
                 del kwargs['dir_frac']
 
             if self.w_res_type == 'tetragonal':
@@ -75,11 +75,11 @@ class ESN(nn.Module):
             if self.grow_neigh > 0:
                 matrix.grow_neighborhoods(self.G, l=grow_neigh, **kwargs)
 
-            if sign_frac is not None:
-                matrix.make_weights_negative(self.G, sign_frac)
+            if self.sign_frac is not None:
+                matrix.make_weights_negative(self.G, self.sign_frac)
 
-            if dir_frac is not None:
-                self.G = matrix.make_graph_directed(self.G, dir_frac)
+            if self.dir_frac is not None:
+                self.G = matrix.make_graph_directed(self.G, self.dir_frac)
 
             A = nx.to_numpy_matrix(self.G)
             self.hidden_nodes = len(A)
@@ -203,3 +203,21 @@ class ESN(nn.Module):
             mc += _mc
             self.mcs.append(_mc)
         return float(mc)
+
+
+    def remove_hidden_node(self, n):
+        nodes = list(self.G.nodes)
+        self.G.remove_node(nodes[n])
+
+        A = nx.to_numpy_matrix(self.G)
+        self.hidden_nodes = len(A)
+
+        w_res = torch.FloatTensor(A)
+        cur_sr = _spectral_radius(w_res)
+        self.org_spectral_radius = cur_sr
+        if cur_sr != 0:
+            w_res *= self.spectral_radius / cur_sr
+
+        self.w_in = torch.cat([self.w_in[0:n], self.w_in[n+1:]])
+        self.w_res = w_res
+        self.w_out = torch.cat([self.w_out[0:n], self.w_out[n+1:]])
