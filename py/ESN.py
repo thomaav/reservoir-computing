@@ -6,7 +6,9 @@ import networkx as nx
 from sklearn.linear_model import Ridge
 
 from util import spectral_radius as _spectral_radius
+from exception import ESNException
 import matrix
+import metric
 
 
 class Distribution(enum.Enum):
@@ -206,18 +208,39 @@ class ESN(nn.Module):
 
 
     def remove_hidden_node(self, n):
-        nodes = list(self.G.nodes)
-        self.G.remove_node(nodes[n])
+        if self.w_res_type in ['tetragonal', 'hexagonal', 'triangular']:
+            nodes = list(self.G.nodes)
+            self.G.remove_node(nodes[n])
 
-        A = nx.to_numpy_matrix(self.G)
-        self.hidden_nodes = len(A)
+            A = nx.to_numpy_matrix(self.G)
+            self.hidden_nodes = len(A)
 
-        w_res = torch.FloatTensor(A)
-        cur_sr = _spectral_radius(w_res)
-        self.org_spectral_radius = cur_sr
-        if cur_sr != 0:
-            w_res *= self.spectral_radius / cur_sr
+            w_res = torch.FloatTensor(A)
+            cur_sr = _spectral_radius(w_res)
+            self.org_spectral_radius = cur_sr
+            if cur_sr != 0:
+                w_res *= self.spectral_radius / cur_sr
 
-        self.w_in = torch.cat([self.w_in[0:n], self.w_in[n+1:]])
-        self.w_res = w_res
-        self.w_out = torch.cat([self.w_out[0:n], self.w_out[n+1:]])
+            self.w_in = torch.cat([self.w_in[0:n], self.w_in[n+1:]])
+            self.w_res = w_res
+            self.w_out = torch.cat([self.w_out[0:n], self.w_out[n+1:]])
+        elif self.w_res_type is None:
+            self.w_in = np.delete(self.w_in, n)
+            self.w_out = np.delete(self.w_out, n)
+            self.w_res = np.delete(self.w_res, n, axis=1)
+            self.w_res = np.delete(self.w_res, n, axis=0)
+            self.hidden_nodes = len(self.w_in)
+        else:
+            raise ESNException(f'Cannot remove hidden node for w_res_type={self.w_res_type}')
+
+
+def find_esn(dataset, required_nrmse, **kwargs):
+    attempts = 1000
+
+    for i in range(attempts):
+        esn = ESN(**kwargs)
+        nrmse = metric.evaluate_esn(dataset, esn)
+        if nrmse < required_nrmse:
+            return esn
+
+    raise ESNException(f'Could not find suitable ESN within {attempts} attempts')

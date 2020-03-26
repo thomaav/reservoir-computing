@@ -3,7 +3,7 @@ import torch
 import numpy as np
 
 import dataset as ds
-from ESN import ESN
+import ESN
 
 
 def nrmse(y_predicted, y):
@@ -45,12 +45,12 @@ def memory_capacity(esn):
 
 def esn_nrmse(params):
     dataset = ds.dataset
-    esn = ESN(**params)
+    esn = ESN.ESN(**params)
     return evaluate_esn(dataset, esn)
 
 
 def esn_mc(params):
-    esn = ESN(**params)
+    esn = ESN.ESN(**params)
     return memory_capacity(esn)
 
 
