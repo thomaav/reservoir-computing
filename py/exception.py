@@ -1,0 +1,2 @@
+class ESNException(Exception):
+    pass
