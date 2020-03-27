@@ -88,3 +88,22 @@ def make_undirected_incrementally(dataset, esn, changed_edges_file):
         print(f'it: removed-{best_edge}, nrmse-{best_nrmse}, total-{len(changed_edges)//2}')
 
         pickle.dump(changed_edges, open(changed_edges_file, 'wb'))
+
+
+def evaluate_incremental_undirection(dataset, esn_file, changed_edges_file, esns=False):
+    esn = pickle.load(open(esn_file, 'rb'))
+    changed_edges = pickle.load(open(changed_edges_file, 'rb'))
+    changed_edges = [e for i, e in enumerate(changed_edges) if i%2 == 0]
+
+    nrmses = []
+    esns = []
+
+    for edge in tqdm.tqdm(changed_edges):
+        esn.make_edge_undirected(edge)
+        nrmses.append(evaluate_esn(dataset, esn))
+        esns.append(copy.deepcopy(esn))
+
+    if esns:
+        return nrmses, esns
+    else:
+        return nrmses

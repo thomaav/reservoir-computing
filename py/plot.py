@@ -487,7 +487,8 @@ def plot_trisurf(data, labels=None, ax=None, title=None, xlim=None, ylim=None,
 
 
 def plot_lattice(G, title='', ax=None, neigh_color=False, edge_color=False,
-                 cols=None, show=True, directed=False, cmap_r=False, alpha=1.0):
+                 cols=None, show=True, directed=False, cmap_r=False, alpha=1.0,
+                 color_directed=False):
     pos = nx.get_node_attributes(G, 'pos')
 
     if ax is None:
@@ -507,6 +508,9 @@ def plot_lattice(G, title='', ax=None, neigh_color=False, edge_color=False,
     if edge_color:
         edge_weights = [d['weight'] for u,v,d in G.edges(data=True)]
         edge_colors = ['red' if w == -1 else 'black' for w in edge_weights]
+    elif color_directed:
+        edges = set(G.edges())
+        edge_colors = ['black' if (e[1], e[0]) not in edges else 'white' for e in G.edges()]
     else:
         edge_colors = 'black'
 
