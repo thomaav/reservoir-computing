@@ -2,6 +2,7 @@ import tqdm
 import copy
 import pickle
 import numpy as np
+from collections import OrderedDict
 
 from metric import evaluate_esn
 
@@ -29,9 +30,6 @@ def remove_nodes_incrementally(dataset, esn, removed_nodes_file):
         esn.remove_hidden_node(best_node)
         removed_nodes.append(best_node)
 
-        print()
-        print(f'it: removed-{best_node}, nrmse-{nrmse}')
-
         pickle.dump(removed_nodes, open(removed_nodes_file, 'wb'))
 
 
@@ -51,3 +49,42 @@ def evaluate_incremental_node_removal(dataset, esn_file, removed_nodes_file, esn
         return nrmses, esns
     else:
         return nrmses
+
+
+def make_undirected_incrementally(dataset, esn, changed_edges_file):
+    try:
+        changed_edges = pickle.load(open(changed_edges_file, 'rb'))
+    except FileNotFoundError:
+        changed_edges = OrderedDict()
+
+    original_edges = [edge for edge in esn.G.edges]
+
+    for edge in changed_edges:
+        esn.make_edge_undirected(edge)
+
+    while len(changed_edges) < len(original_edges)*2:
+        default_nrmse = evaluate_esn(dataset, esn)
+        nrmse_diffs = []
+
+        for i, edge in enumerate(tqdm.tqdm(original_edges)):
+            if edge in changed_edges:
+                nrmse_diffs.append(np.inf)
+                continue
+
+            _esn = copy.deepcopy(esn)
+            _esn.make_edge_undirected(edge)
+            nrmse = evaluate_esn(dataset, _esn)
+            nrmse_diffs.append(nrmse - default_nrmse)
+
+        best_edge = np.argmin(nrmse_diffs)
+        edge_to_change = list(original_edges)[best_edge]
+        esn.make_edge_undirected(edge_to_change)
+
+        changed_edges[edge_to_change] = None
+        changed_edges[(edge_to_change[1], edge_to_change[0])] = None
+
+        print()
+        best_nrmse = default_nrmse + nrmse_diffs[best_edge]
+        print(f'it: removed-{best_edge}, nrmse-{best_nrmse}, total-{len(changed_edges)//2}')
+
+        pickle.dump(changed_edges, open(changed_edges_file, 'wb'))
