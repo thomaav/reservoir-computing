@@ -1,8 +1,9 @@
 import networkx as nx
 import numpy as np
 import torch
-from itertools import combinations
+from itertools import combinations, product
 from math import sqrt, exp
+from collections import OrderedDict
 
 
 def euclidean(x, y):
@@ -137,6 +138,45 @@ def make_graph_directed(G, dir_frac):
             dir_G.remove_edge(del_u, del_v)
 
     return dir_G
+
+
+def find_tetragonal_frontier(G):
+    dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+    existing_nodes = set([n[1]['pos'] for n in G.nodes(data=True)])
+    frontier = set()
+
+    for node in existing_nodes:
+        for dir in dirs:
+            pos = (node[0]+dir[0], node[1]+dir[1])
+            if pos in existing_nodes:
+                continue
+            frontier.add(pos)
+
+    return frontier
+
+
+def find_ways_to_add_node(G, node):
+    dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+    existing_nodes = set([n[1]['pos'] for n in G.nodes(data=True)])
+    neighbors = OrderedDict()
+
+    for dir in dirs:
+        pos = (node[0]+dir[0], node[1]+dir[1])
+        if pos in existing_nodes:
+            neighbors[pos] = None
+
+    to_edges = [(node, neigh) for neigh in neighbors]
+    from_edges = [(neigh, node) for neigh in neighbors]
+    dir = [to_edges, from_edges]
+
+    # ...
+    ways_to_add = []
+    edge_combinations = ["".join(seq) for seq in product("01", repeat=len(neighbors))]
+    for choice in edge_combinations:
+        edges_to_add = [dir[int(c)][i] for i, c in enumerate(choice)]
+        ways_to_add.append(edges_to_add)
+
+    return ways_to_add
 
 
 if __name__ == '__main__':

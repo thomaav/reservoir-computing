@@ -5,6 +5,7 @@ import numpy as np
 from collections import OrderedDict
 
 from metric import evaluate_esn
+from matrix import find_tetragonal_frontier, find_ways_to_add_node
 
 
 def remove_nodes_incrementally(dataset, esn, removed_nodes_file):
@@ -30,10 +31,14 @@ def remove_nodes_incrementally(dataset, esn, removed_nodes_file):
         esn.remove_hidden_node(best_node)
         removed_nodes.append(best_node)
 
+        print()
+        best_nrmse = default_nrmse + nrmse_diffs[best_node]
+        print(f'it: nrmse-{best_nrmse}')
+
         pickle.dump(removed_nodes, open(removed_nodes_file, 'wb'))
 
 
-def evaluate_incremental_node_removal(dataset, esn_file, removed_nodes_file, esns=False):
+def evaluate_incremental_node_removal(dataset, esn_file, removed_nodes_file, return_esns=False):
     esn = pickle.load(open(esn_file, 'rb'))
     removed_nodes = pickle.load(open(removed_nodes_file, 'rb'))
 
@@ -45,7 +50,7 @@ def evaluate_incremental_node_removal(dataset, esn_file, removed_nodes_file, esn
         nrmses.append(evaluate_esn(dataset, esn))
         esns.append(copy.deepcopy(esn))
 
-    if esns:
+    if return_esns:
         return nrmses, esns
     else:
         return nrmses
@@ -107,3 +112,26 @@ def evaluate_incremental_undirection(dataset, esn_file, changed_edges_file, esns
         return nrmses, esns
     else:
         return nrmses
+
+
+def find_best_node_to_add(dataset, esn):
+    frontier = find_tetragonal_frontier(esn.G)
+    possible_edges = {}
+
+    for node in frontier:
+        possible_edges[node] = find_ways_to_add_node(esn.G, node)
+
+    best_nrmse = np.inf
+    best_node_and_edges = None
+
+    for node in tqdm.tqdm(possible_edges.keys()):
+        for edges in possible_edges[node]:
+            _esn = copy.deepcopy(esn)
+            _esn.add_hidden_node(node, edges)
+            nrmse = evaluate_esn(dataset, _esn)
+
+            if nrmse < best_nrmse:
+                best_nrmse = nrmse
+                best_node_and_edges = (node, edges)
+
+    return best_node_and_edges

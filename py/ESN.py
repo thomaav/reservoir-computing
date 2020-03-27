@@ -234,6 +234,13 @@ class ESN(nn.Module):
             raise ESNException(f'Cannot remove hidden node for w_res_type={self.w_res_type}')
 
 
+    def add_hidden_node(self, node, edges):
+        self.G.add_node(node, pos=node)
+        for edge in edges:
+            self.G.add_edge(edge[0], edge[1])
+        self.set_G(self.G)
+
+
     def make_edge_undirected(self, edge):
         if self.w_res_type in ['tetragonal', 'hexagonal', 'triangular']:
             u, v = edge[0], edge[1]
@@ -251,6 +258,24 @@ class ESN(nn.Module):
             raise ESNException(f'Cannot remove edge for w_res_type={self.w_res_type}')
 
 
+    def set_G(self, G):
+        if self.w_res_type in ['tetragonal', 'hexagonal', 'triangular']:
+            A = nx.to_numpy_matrix(G)
+            self.hidden_nodes = len(A)
+            self.G = G
+
+            self.w_res = torch.FloatTensor(A)
+            cur_sr = _spectral_radius(self.w_res)
+            if cur_sr != 0:
+                self.w_res *= self.spectral_radius / cur_sr
+
+            self.w_in = torch.ones(self.hidden_nodes)
+            self.w_in *= self.input_scaling
+            self.w_out = torch.zeros(self.hidden_nodes)
+        else:
+            raise ESNException(f'Cannot set G for w_res_type={self.w_res_type}')
+
+
 def find_esn(dataset, required_nrmse, **kwargs):
     attempts = 1000
 
@@ -261,3 +286,9 @@ def find_esn(dataset, required_nrmse, **kwargs):
             return esn
 
     raise ESNException(f'Could not find suitable ESN within {attempts} attempts')
+
+
+def create_ESN(G, **kwargs):
+    esn = ESN(**kwargs)
+    esn.set_G(G)
+    return esn
