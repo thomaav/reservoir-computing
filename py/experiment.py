@@ -114,6 +114,22 @@ def evaluate_incremental_undirection(dataset, esn_file, changed_edges_file, esns
         return nrmses
 
 
+def find_best_node_to_remove(dataset, esn):
+    best_nrmse = np.inf
+    best_node = None
+
+    for i in tqdm.tqdm(range(esn.hidden_nodes)):
+        _esn = copy.deepcopy(esn)
+        _esn.remove_hidden_node(i)
+        nrmse = evaluate_esn(dataset, _esn)
+
+        if nrmse < best_nrmse:
+            best_nrmse = nrmse
+            best_node = i
+
+    return i
+
+
 def find_best_node_to_add(dataset, esn):
     frontier = find_tetragonal_frontier(esn.G)
     possible_edges = {}
