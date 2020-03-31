@@ -292,3 +292,15 @@ def create_ESN(G, **kwargs):
     esn = ESN(**kwargs)
     esn.set_G(G)
     return esn
+
+
+def from_square_G(G):
+    params = dict()
+    params['hidden_nodes'] = 144
+    params['input_scaling'] = 0.1
+    params['w_in_distrib'] = Distribution.fixed
+    params['w_res_type'] = 'tetragonal'
+
+    esn = ESN(**params)
+    esn.set_G(G)
+    return esn

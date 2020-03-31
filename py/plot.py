@@ -9,6 +9,7 @@ import matrix
 import networkx as nx
 import torch
 
+import ESN
 from ESN import Distribution
 from metric import *
 from util import snr
@@ -620,7 +621,7 @@ def plot_vector_hist(vector, n_bins, m=20.0, ax=None, show=False, **kwargs):
 
 
 def plot_esn_weight_hist(params, **kwargs):
-    esn = ESN(**params)
+    esn = ESN.ESN(**params)
     weights = esn.w_res.data.numpy().flatten()
     plot_vector_hist(weights, **kwargs)
 
