@@ -119,11 +119,10 @@ class ESN(nn.Module):
         self.register_buffer('w_out', w_out)
 
 
-    def forward(self, u, y=None, u_mc=None, plot=False):
+    def forward(self, u, y=None, u_mc=None, plot=False, kq=False):
         timeseries_len = u.size()[0]
         X = torch.zeros(timeseries_len, self.hidden_nodes)
         x = torch.zeros(self.hidden_nodes)
-        v = torch.zeros(timeseries_len)
 
         for t in range(timeseries_len):
             # Calculate the next state of each node as an integration of
@@ -137,11 +136,6 @@ class ESN(nn.Module):
         # Record the previous time series passed through the reservoir.
         self.X = X
 
-        if plot:
-            import matplotlib.pyplot as plt
-            plt.plot(self.X[self.noisy_mask])
-            plt.show()
-
         X = X[self.washout:]
         y = y[self.washout:] if y is not None else y
 
@@ -154,6 +148,10 @@ class ESN(nn.Module):
                 self.w_out = torch.mv(pinv, y)
             else:
                 raise ValueError(f'No such readout: {self.readout}')
+        elif kq:
+            # Ugly way of doing kernel quality without caring about the actually
+            # predicted output.
+            return
         else:
             if self.readout == 'rr':
                 return self.rr.predict(X)
@@ -176,7 +174,7 @@ class ESN(nn.Module):
 
         self.w_outs = torch.zeros(output_nodes, self.hidden_nodes)
         if self.readout == 'pinv':
-            Xplus = torch.pinverse(self.X[washout_len:washout_len+train_len])
+            Xplus = torch.pinverse(self.X_train)
         for k in range(1, output_nodes+1):
             if self.readout == 'rr':
                 X = self.X[washout_len:washout_len+train_len]
@@ -185,8 +183,8 @@ class ESN(nn.Module):
             elif self.readout == 'pinv':
                 self.w_outs[k-1] = torch.mv(Xplus[:, k:], u_train[:-k])
 
-        X_test = self.X[washout_len+train_len:]
-        ys = torch.mm(self.w_outs, X_test.T)
+        self.X_test = self.X[washout_len+train_len:]
+        ys = torch.mm(self.w_outs, self.X_test.T)
 
         if plot:
             import matplotlib.pyplot as plt
@@ -268,6 +266,8 @@ class ESN(nn.Module):
             cur_sr = _spectral_radius(self.w_res)
             if cur_sr != 0:
                 self.w_res *= self.spectral_radius / cur_sr
+            else:
+                print('[WARN]: Original spectral radius was 0')
 
             self.w_in = torch.ones(self.hidden_nodes)
             self.w_in *= self.input_scaling

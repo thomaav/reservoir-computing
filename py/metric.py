@@ -18,7 +18,15 @@ def nmse(y_predicted, y):
     return float(torch.mean(error) / var)
 
 
-def kernel_quality(inputs, esn, ks):
+# Also used: Advances in Unconvential Computing: Volume 1: Theory. Andrew
+# Adamatzky, 22.6.1.1.
+
+
+def kernel_quality(i, esn, ks):
+    # «Connectivity, Dynamics and Memory in Reservoir Computing with Binary and
+    # Analog Neurons».
+    inputs = torch.rand(i*ks)
+
     split_overflow = len(inputs) % ks
     if split_overflow != 0:
         inputs = inputs[:-split_overflow]
@@ -26,16 +34,18 @@ def kernel_quality(inputs, esn, ks):
 
     M = [0]*ks
     for i, u in enumerate(us):
-        esn(u)
+        esn(u, kq=True)
         M[i] = np.array(esn.X[-1])
 
-    return np.linalg.matrix_rank(M)
+    kq = np.linalg.matrix_rank(M)
+    return kq
 
 
 def memory_capacity(esn):
     # Generated according to «Computational analysis of memory capacity in echo
     # state networks», discarding 100 for transients (washout), using 1100 for
     # training and 1000 for testing the memory capacity.
+    torch.manual_seed(0)
     inputs = torch.FloatTensor(2200).uniform_(-1, 1)
     washout = inputs[:100]
     u_train = inputs[100:1200]
