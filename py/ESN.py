@@ -180,7 +180,6 @@ class ESN(nn.Module):
         if self.readout == 'rr':
             self.w_outs = [0]*output_nodes
         elif self.readout == 'pinv':
-            Xplus = torch.pinverse(self.X_train)
             self.w_outs = torch.zeros(output_nodes, self.hidden_nodes)
 
         for k in range(1, output_nodes+1):
@@ -188,7 +187,8 @@ class ESN(nn.Module):
                 self.w_outs[k-1] = Ridge(alpha=self.w_ridge)
                 self.w_outs[k-1].fit(self.X_train[k:, :], u_train[:-k])
             elif self.readout == 'pinv':
-                self.w_outs[k-1] = torch.mv(Xplus[:, k:], u_train[:-k])
+                Xplus = torch.pinverse(self.X_train[k:, :])
+                self.w_outs[k-1] = torch.mv(Xplus, u_train[:-k])
 
         self.X_test = self.X[washout_len+train_len:]
 
