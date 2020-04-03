@@ -312,6 +312,7 @@ def from_square_G(G):
     params['w_in_distrib'] = Distribution.fixed
     params['w_res_type'] = 'tetragonal'
     params['readout'] = 'rr'
+    params['dir_frac'] = 1.0
 
     esn = ESN(**params)
     esn.set_G(G)
