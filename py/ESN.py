@@ -11,11 +11,12 @@ import matrix
 import metric
 
 
+valid_readouts = ['pinv', 'rr']
+
 class Distribution(enum.Enum):
     gaussian = 1
     uniform = 2
     fixed = 3
-
 
 class ESN(nn.Module):
     def __init__(self, hidden_nodes=200, spectral_radius=0.9, washout=200,
@@ -35,6 +36,7 @@ class ESN(nn.Module):
         self.w_in_distrib = w_in_distrib
         self.w_res_distrib = w_res_distrib
         self.readout = readout
+        self.w_ridge = w_ridge
         self.rr = Ridge(alpha=w_ridge)
         self.w_res_type = w_res_type
         self.grow_neigh = grow_neigh
@@ -162,6 +164,9 @@ class ESN(nn.Module):
 
 
     def memory_capacity(self, washout, u_train, u_test, plot=False):
+        if self.readout not in valid_readouts:
+            raise ESNException(f'Invalid readout: {self.readout}')
+
         # To evaluate memory capacity, 1.4*N is suggested as number of output
         # nodes in «Computational analysis of memory capacity in echo state
         # networks».
@@ -169,22 +174,28 @@ class ESN(nn.Module):
         washout_len = washout.shape[0]
         train_len = u_train.shape[0]
 
-        self(torch.cat((washout, u_train, u_test), 0))
+        self(torch.cat((washout, u_train, u_test), 0), kq=True)
         self.X_train = self.X[washout_len:washout_len+train_len]
 
-        self.w_outs = torch.zeros(output_nodes, self.hidden_nodes)
-        if self.readout == 'pinv':
+        if self.readout == 'rr':
+            self.w_outs = [0]*output_nodes
+        elif self.readout == 'pinv':
             Xplus = torch.pinverse(self.X_train)
+            self.w_outs = torch.zeros(output_nodes, self.hidden_nodes)
+
         for k in range(1, output_nodes+1):
             if self.readout == 'rr':
-                X = self.X[washout_len:washout_len+train_len]
-                self.rr.fit(X[k:, :], u_train[:-k])
-                self.w_outs[k-1] = torch.from_numpy(self.rr.coef_).float()
+                self.w_outs[k-1] = Ridge(alpha=self.w_ridge)
+                self.w_outs[k-1].fit(self.X_train[k:, :], u_train[:-k])
             elif self.readout == 'pinv':
                 self.w_outs[k-1] = torch.mv(Xplus[:, k:], u_train[:-k])
 
         self.X_test = self.X[washout_len+train_len:]
-        ys = torch.mm(self.w_outs, self.X_test.T)
+
+        if self.readout == 'rr':
+            ys = torch.FloatTensor([rr.predict(self.X_test) for rr in self.w_outs])
+        elif self.readout == 'pinv':
+            ys = torch.mm(self.w_outs, self.X_test.T)
 
         if plot:
             import matplotlib.pyplot as plt
@@ -300,6 +311,7 @@ def from_square_G(G):
     params['input_scaling'] = 0.1
     params['w_in_distrib'] = Distribution.fixed
     params['w_res_type'] = 'tetragonal'
+    params['readout'] = 'rr'
 
     esn = ESN(**params)
     esn.set_G(G)
