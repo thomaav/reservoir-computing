@@ -278,7 +278,8 @@ class ESN(nn.Module):
             if cur_sr != 0:
                 self.w_res *= self.spectral_radius / cur_sr
             else:
-                print('[WARN]: Original spectral radius was 0')
+                # print('[WARN]: Original spectral radius was 0')
+                pass
 
             self.w_in = torch.ones(self.hidden_nodes)
             self.w_in *= self.input_scaling
@@ -317,3 +318,15 @@ def from_square_G(G):
     esn = ESN(**params)
     esn.set_G(G)
     return esn
+
+
+def create_delay_line(length):
+    lattice = nx.DiGraph()
+
+    for i in range(length):
+        node = (0, i)
+        lattice.add_node(node, pos=node)
+        if i > 0:
+            lattice.add_edge(node, (0, i-1))
+
+    return from_square_G(lattice)
