@@ -41,6 +41,33 @@ def kernel_quality(i, esn, ks):
     return kq
 
 
+def generalization(i, esn, ks):
+    # «Connectivity, Dynamics and Memory in Reservoir Computing with Binary and
+    # Analog Neurons». Footnote 5.
+    inputs = np.random.rand(i*ks)
+
+    split_overflow = len(inputs) % ks
+    if split_overflow != 0:
+        inputs = inputs[:-split_overflow]
+    us = np.split(inputs, ks)
+
+    # Generalization part: set the last fifth of the input stream to always be
+    # the same.
+    gen_length = i // 5
+    gen_seq = us[0][-gen_length:]
+    for u in us:
+        np.put(u, np.arange(-gen_length, 0), gen_seq)
+    us = torch.FloatTensor(us)
+
+    M = [0]*ks
+    for i, u in enumerate(us):
+        esn(u, kq=True)
+        M[i] = np.array(esn.X[-1])
+
+    kq = np.linalg.matrix_rank(M)
+    return kq
+
+
 def memory_capacity(esn):
     # Generated according to «Computational analysis of memory capacity in echo
     # state networks», discarding 100 for transients (washout), using 1100 for
