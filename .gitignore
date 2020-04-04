@@ -17,3 +17,7 @@ tmp/
 *.pyc
 master.html
 *.ipynb_checkpoints*
+*.lol
+*.toc
+*.lof
+*.lot
