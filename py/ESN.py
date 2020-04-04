@@ -163,6 +163,12 @@ class ESN(nn.Module):
                 raise ValueError(f'No such readout: {self.readout}')
 
 
+    def scale_spectral_radius(self, new_sr):
+        cur_sr = _spectral_radius(self.w_res)
+        if cur_sr != 0:
+            self.w_res *= new_sr / cur_sr
+
+
     def memory_capacity(self, washout, u_train, u_test, plot=False):
         if self.readout not in valid_readouts:
             raise ESNException(f'Invalid readout: {self.readout}')
