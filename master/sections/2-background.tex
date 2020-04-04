@@ -1,0 +1,89 @@
+\chapter{Background}
+
+\section{Order and Chaos}
+
+A section on the main interesting points about order and chaos in the context of
+reservoir computing could maybe serve as a gentle introduction of the underlying
+principles?
+
+I.e.: should a section be included that briefly explains the relevance of the
+line of criticality? Perhaps illustrating the subject with the Lyapunov
+exponent. The degree of sensitivity to initial conditions might not be
+completely relevant, but the theory as a whole is important.
+
+\section{Reservoir Computing}
+
+\subsection{Recurrent Neural Networks}
+
+Their use, and why backward edges makes it notoriously difficult to train such
+networks.
+
+\subsection{Echo State Networks}
+
+The inception of reservoir computing as a methodology with Jaeger's Echo State
+Network and Maass's Liquid State Machine.
+
+A section that specifically explains how the default Echo State Networks
+function. Some minor details about work that has been done to improve upon the
+model, such as intrinsic plasticity, leaking neurons, and so on.
+
+\subsection{Real World Applications}
+
+Present some real world applications, like equalizing wireless communication
+channel, short-term traffic load, short-term electric load, stock forecasting.
+
+\subsection{Comparison to State of the Art}
+
+Perhaps a short comparison to RNN training methods, LSTM, and GRU.
+
+\section{Physical Reservoir Computing}
+
+The emergence of physical substrates as a medium for the reservoir computing
+paradigm. Illustrate some of the main topics, like photonics, optoeletronics,
+mechanical (coupled oscillators), biologically inspired, magnetism.
+
+It is importance to stress that we are considering alternatives to the
+traditional reservoirs in this section. Drive home the point that we are
+exploring physical mediums that are wildly different from traditional computers,
+where memory and computation and fundamentally separate.
+
+
+\subsection{Spatial Networks}
+
+Use a previous section on physical reservoir computing to lead into background
+on networks that are manifested into a physical space. Talk about previous work,
+such as the Minimum Complexity Echo State Network.
+
+Discuss existing theory on spatial networks. Relevant topics may include the
+Erdős–Rényi model as a basis for Echo State Networks, then the Waxman model with
+its physical restraints, and then a dive further into completely regular
+structures such as lattices.
+
+\section{Reservoir Quality Evaluation}
+
+\subsection{Independent Metrics}
+
+Present the commonly used kernel quality, generalization and short-term memory
+(memory capacity) that is commonly used in literature. How nonlinear dynamics
+degrades memory (but provides nonlinear transformations), while linear dynamics
+preserves it.
+
+Also shortly present alternative metrics that are sometimes used, such as
+Lyapunov spectrum, Lyapunov exponent,
+
+\subsection{Benchmarks}
+
+Present a handful of common benchmarks. For example: NARMA, Mackey-Glass, Santa
+Fe Laser, Henon Map, IPIX Radar. May be presented for other types of systems,
+such as the very simple XOR, parity, approximating (Legendre) polynomials
+(i.e. Information Processing Capacity), etc.
+
+Elaborate further on the ones that are actually used in the work, for example
+NARMA for memory capacity, and some other benchmark that is perhaps more focused
+on the nonlinearity part (as it has been found that NARMA can often be done with
+little nonlinearity).
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../thesis"
+%%% End:

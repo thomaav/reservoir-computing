@@ -1,0 +1,36 @@
+\documentclass[pdftex,10pt,b5paper,twoside]{book}
+\usepackage[lmargin=25mm,rmargin=25mm,tmargin=27mm,bmargin=30mm]{geometry}
+
+\input{setup}
+
+\begin{document}
+
+% Assume that the title page is generated automatically, thus jumping straight
+% into the abstract.
+
+\input{sections/0-abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\listoflistings
+
+\input{sections/1-introduction}
+\input{sections/2-background}
+\input{sections/3-methodology}
+\input{sections/4-results}
+\input{sections/5-discussion}
+\input{sections/6-conclusion}
+
+\bibliographystyle{ieeetr}
+\bibliography{ref}
+
+\appendix
+\input{sections/a-appendix}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
