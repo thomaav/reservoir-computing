@@ -71,7 +71,7 @@ class ESN(nn.Module):
             elif self.w_res_type == 'hexagonal':
                 G = matrix.hexagonal(int(sqrt) // 2, int(np.ceil(sqrt/2)*2), **kwargs)
             elif self.w_res_type == 'triangular':
-                G = matrix.triangular(int(sqrt) * 2, int(sqrt), **kwargs)
+                G = matrix.triangular(int(sqrt)+3, int(sqrt)+3, **kwargs)
             elif self.w_res_type == 'rectangular':
                 G = matrix.rectangular(int(sqrt), int(sqrt), **kwargs)
             self.G = G
