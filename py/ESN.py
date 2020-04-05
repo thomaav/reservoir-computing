@@ -144,7 +144,6 @@ class ESN(nn.Module):
         if y is not None:
             if self.readout == 'rr':
                 self.rr.fit(X, y)
-                self.w_out = torch.from_numpy(self.rr.coef_).float()
             elif self.readout == 'pinv':
                 pinv = torch.from_numpy(np.linalg.pinv(X))
                 self.w_out = torch.mv(pinv, y)

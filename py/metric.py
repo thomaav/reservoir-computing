@@ -91,7 +91,9 @@ def esn_mc(params):
     return memory_capacity(esn)
 
 
-def evaluate_esn(dataset, esn, washout=200, plot=False):
+def evaluate_esn(dataset, esn, plot=False):
+    washout = esn.washout
+
     u_train, y_train, u_test, y_test = dataset
     esn(u_train, y_train)
 
