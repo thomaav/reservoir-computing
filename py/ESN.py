@@ -22,7 +22,7 @@ class ESN(nn.Module):
     def __init__(self, hidden_nodes=200, spectral_radius=0.9, washout=200,
                  w_in_density=1.0, w_res_density=1.0, input_scaling=1.0,
                  w_in_distrib=Distribution.uniform, w_res_distrib=Distribution.uniform,
-                 readout='pinv', w_ridge=0.00, w_res_type=None, grow_neigh=0,
+                 readout='rr', w_ridge=0.00, w_res_type=None, grow_neigh=0,
                  **kwargs):
         super().__init__()
 
@@ -37,7 +37,7 @@ class ESN(nn.Module):
         self.w_res_distrib = w_res_distrib
         self.readout = readout
         self.w_ridge = w_ridge
-        self.rr = Ridge(alpha=w_ridge)
+        self.rr = Ridge(alpha=w_ridge, solver='svd')
         self.w_res_type = w_res_type
         self.grow_neigh = grow_neigh
 

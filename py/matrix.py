@@ -13,6 +13,11 @@ def euclidean(x, y):
     return sqrt(sum((a - b) ** 2 for a, b in zip(x, y)))
 
 
+def inv(x, y): return 1/euclidean(x, y)
+def inv_squared(x, y): return 1/euclidean(x, y)**2
+def inv_cubed(x, y): return 1/euclidean(x, y)**3
+
+
 def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
            directed=False, sign_frac=0.0, dist_function=euclidean, l=0):
     """

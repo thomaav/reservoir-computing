@@ -91,7 +91,7 @@ def esn_mc(params):
     return memory_capacity(esn)
 
 
-def evaluate_esn(dataset, esn, plot=False):
+def evaluate_esn(dataset, esn, plot=False, plot_range=None):
     washout = esn.washout
 
     u_train, y_train, u_test, y_test = dataset
@@ -102,8 +102,13 @@ def evaluate_esn(dataset, esn, plot=False):
     _nrmse = nrmse(y_predicted, y_test[washout:])
 
     if plot:
-        target = y_test[washout:]
-        predicted = y_predicted
+        if plot_range is not None:
+            i, j = plot_range[0], plot_range[1]
+            target = y_test[washout+i:washout+j]
+            predicted = y_predicted[i:j]
+        else:
+            target = y_test[washout:]
+            predicted = y_predicted
 
         plt.plot(target, 'black', label='Target output')
         plt.plot(predicted, 'red', label='Predicted output', alpha=0.5)
