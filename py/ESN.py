@@ -293,6 +293,12 @@ class ESN(nn.Module):
             raise ESNException(f'Cannot set G for w_res_type={self.w_res_type}')
 
 
+    def set_readout(self, readout, w_ridge=0.0):
+        self.readout = readout
+        self.w_ridge = w_ridge
+        self.rr = Ridge(alpha=w_ridge, solver='svd')
+
+
 def find_esn(dataset, required_nrmse, **kwargs):
     attempts = 1000
 
