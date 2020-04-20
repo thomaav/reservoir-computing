@@ -20,7 +20,7 @@ default_w, default_h = get_figsize()
 
 def esn_general_performance():
     params = OrderedDict()
-    params['hidden_nodes'] = np.arange(20, 260, 10)
+    params['hidden_nodes'] = np.arange(20, 660, 10)
     params['w_res_density'] = [0.1]
     params['readout'] = ['rr']
 
@@ -122,6 +122,36 @@ def plot_regular_tilings_performance():
     plt.ylabel('NRMSE')
     plt.xlabel('Hidden nodes')
 
+    plt.show()
+
+
+def directed_lattice_performance():
+    params = OrderedDict()
+    params['w_res_type'] = ['tetragonal']
+    params['hidden_nodes'] = [n*n for n in range(5, 26)]
+    params['input_scaling'] = [0.1]
+    params['w_in_distrib'] = [Distribution.fixed]
+    params['dir_frac'] = [1.0]
+
+    df = experiment(esn_nrmse, params, runs=20)
+    df.to_pickle('experiments/directed_lattice_performance.pkl')
+
+
+def plot_directed_lattice_performance():
+    df = load_experiment('experiments/directed_lattice_performance.pkl')
+    esn_df = load_experiment('experiments/esn_general_performance.pkl')
+
+    grouped_df = df.groupby(['hidden_nodes']).mean().reset_index()
+    esn_grouped_df = esn_df.groupby(['hidden_nodes']).mean().reset_index()
+
+    plt.xlabel('Hidden nodes')
+    plt.ylabel('NRMSE')
+    plt.title('NRMSE vs. reservoir size')
+
+    plt.plot(grouped_df['hidden_nodes'], grouped_df['esn_nrmse'], label='Lattice')
+    plt.plot(esn_grouped_df['hidden_nodes'], esn_grouped_df['esn_nrmse'], label='ESN')
+
+    plt.legend()
     plt.show()
 
 
