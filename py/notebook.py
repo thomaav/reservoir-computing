@@ -6,11 +6,12 @@ import networkx as nx
 from collections import OrderedDict
 
 import dataset as ds
-from ESN import ESN, Distribution, from_square_G
+from ESN import ESN, Distribution, from_square_G, create_delay_line
 from metric import esn_nrmse, evaluate_esn
 from gridsearch import experiment, load_experiment
 from plot import plot_df_trisurf, set_figsize, get_figsize, plot_lattice, plot_vector_hist
 from matrix import euclidean, inv, inv_squared, inv_cubed
+from experiment import find_best_node_to_add
 
 default_w, default_h = get_figsize()
 
@@ -132,6 +133,7 @@ def directed_lattice_performance():
     params['input_scaling'] = [0.1]
     params['w_in_distrib'] = [Distribution.fixed]
     params['dir_frac'] = [1.0]
+    params['w_in_density'] = [1.0, 0.5]
 
     df = experiment(esn_nrmse, params, runs=20)
     df.to_pickle('experiments/directed_lattice_performance.pkl')
@@ -141,14 +143,19 @@ def plot_directed_lattice_performance():
     df = load_experiment('experiments/directed_lattice_performance.pkl')
     esn_df = load_experiment('experiments/esn_general_performance.pkl')
 
-    grouped_df = df.groupby(['hidden_nodes']).mean().reset_index()
+    dense_df = df.loc[df['w_in_density'] == 1.0]
+    sparse_df = df.loc[df['w_in_density'] == 0.5]
+
+    dense_grouped_df = dense_df.groupby(['hidden_nodes']).mean().reset_index()
+    sparse_grouped_df = sparse_df.groupby(['hidden_nodes']).mean().reset_index()
     esn_grouped_df = esn_df.groupby(['hidden_nodes']).mean().reset_index()
 
     plt.xlabel('Hidden nodes')
     plt.ylabel('NRMSE')
     plt.title('NRMSE vs. reservoir size')
 
-    plt.plot(grouped_df['hidden_nodes'], grouped_df['esn_nrmse'], label='Lattice')
+    plt.plot(dense_grouped_df['hidden_nodes'], dense_grouped_df['esn_nrmse'], label='Dense input lattice')
+    plt.plot(sparse_grouped_df['hidden_nodes'], sparse_grouped_df['esn_nrmse'], label='Sparse input lattice')
     plt.plot(esn_grouped_df['hidden_nodes'], esn_grouped_df['esn_nrmse'], label='ESN')
 
     plt.legend()
@@ -414,3 +421,94 @@ def plot_good_performance():
     esn = from_square_G(lattices[-1])
     plt.title(f'Prediction of a grown network with {esn.hidden_nodes} hidden nodes', y=-0.25)
     evaluate_esn(ds.dataset, esn, plot=True, plot_range=[0, 100])
+
+
+def harder_benchmarks_performance():
+    import dataset as ds
+
+    u_train, y_train = ds.NARMA(sample_len = 2000, system_order=20)
+    u_test, y_test = ds.NARMA(sample_len = 3000, system_order=20)
+    dataset = [u_train, y_train, u_test, y_test]
+    ds.dataset = dataset
+
+    params = OrderedDict()
+    params['w_res_type'] = ['tetragonal']
+    params['hidden_nodes'] = [15*15]
+    params['input_scaling'] = np.linspace(1/10000, 1, 150)
+    params['w_in_distrib'] = [Distribution.fixed]
+    params['dir_frac'] = [1.0]
+
+    df = experiment(esn_nrmse, params, runs=10)
+    df.to_pickle('experiments/narma20_performance.pkl')
+
+    u_train, y_train = ds.NARMA(sample_len = 2000, system_order=30)
+    u_test, y_test = ds.NARMA(sample_len = 3000, system_order=30)
+    dataset = [u_train, y_train, u_test, y_test]
+    ds.dataset = dataset
+
+    params = OrderedDict()
+    params['w_res_type'] = ['tetragonal']
+    params['hidden_nodes'] = [15*15]
+    params['input_scaling'] = np.linspace(1/10000, 1, 150)
+    params['w_in_distrib'] = [Distribution.fixed]
+    params['dir_frac'] = [1.0]
+
+    df = experiment(esn_nrmse, params, runs=10)
+    df.to_pickle('experiments/narma30_performance.pkl')
+
+
+def plot_harder_benchmarks_performance():
+    n20_df = load_experiment('experiments/narma20_performance.pkl')
+    n20_df = n20_df.groupby(['input_scaling']).mean().reset_index()
+
+    n30_df = load_experiment('experiments/narma30_performance.pkl')
+    n30_df = n30_df.groupby(['input_scaling']).mean().reset_index()
+
+    plt.xlabel('Input scaling')
+    plt.ylabel('NRMSE')
+    plt.title('NARMA performance vs. input scaling')
+
+    plt.plot(n20_df['input_scaling'], n20_df['esn_nrmse'], label='NARMA20')
+    plt.plot(n30_df['input_scaling'], n30_df['esn_nrmse'], label='NARMA30')
+
+    plt.legend()
+    plt.show()
+
+
+def grow_shift_register_narma30():
+    u_train, y_train = ds.NARMA(sample_len = 2000, system_order=30)
+    u_test, y_test = ds.NARMA(sample_len = 3000, system_order=30)
+    dataset = [u_train, y_train, u_test, y_test]
+    ds.dataset = dataset
+
+    lattices = []
+
+    esn = create_delay_line(40)
+    while True:
+        node, edges = find_best_node_to_add(ds.dataset, esn)
+        esn.add_hidden_node(node, edges)
+        lattices.append(esn.G.copy())
+        nrmse = evaluate_esn(ds.dataset, esn)
+
+        print()
+        print(f'nrmse after adding {len(lattices)} nodes ({esn.hidden_nodes} hidden): {nrmse}')
+        pickle.dump(lattices, open('experiments/grow_dl_narma30.pkl', 'wb'))
+
+        if esn.hidden_nodes >= 250:
+            break
+
+
+def plot_shift_register_lattices():
+    # Lattices.
+    lattices = pickle.load(open('experiments/grow_dl_narma30.pkl', 'rb'))
+
+    set_figsize(10, 6)
+
+    for i in [0, 1, 5, 15, -1]:
+        lattice = lattices[i]
+        esn = from_square_G(lattice)
+        nrmse = evaluate_esn(ds.dataset, esn)
+        title = f'{len(lattice.nodes)} hidden nodes, NRMSE: {nrmse}'
+        plot_lattice(lattice, title=title)
+
+    set_figsize(default_w, default_h)

@@ -24,11 +24,21 @@ def load_dataset():
 dataset = None
 
 def NARMA(sample_len, system_order=10):
-    alpha = 0.3
-    beta = 0.05
-    gamma = 1.5
-    delta = 0.1
     n = system_order
+
+    if n == 10 or n == 20:
+        alpha = 0.3
+        beta = 0.05
+        gamma = 1.5
+        delta = 0.1
+    elif n == 30:
+        # Unchanged for now.
+        alpha = 0.3
+        beta = 0.05
+        gamma = 1.5
+        delta = 0.1
+    else:
+        raise ValueError('Invalid system order for NARMA time series')
 
     u = torch.rand(sample_len) * 0.5
     y = torch.zeros(sample_len)
