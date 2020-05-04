@@ -39,7 +39,7 @@ def default_plot_settings():
 
 
 def save_plot(f):
-    plt.savefig(FIG_DIR + f)
+    plt.savefig(FIG_DIR + f, dpi=200)
 
 
 # BACKGROUND: Background.
@@ -57,8 +57,8 @@ def plot_NARMA10(range=[0, -1]):
     default_plot_settings()
     plt.margins(0.0)
 
-    plt.xlabel('Time step')
-    plt.ylabel('NARMA10 output')
+    plt.xlabel('Time step', labelpad=10)
+    plt.ylabel('NARMA10 output', labelpad=10)
 
     plt.ylim((0.1, 0.7))
     plt.hlines(ax.get_yticks(), ax.get_xlim()[0], ax.get_xlim()[1], linewidth=0.2)

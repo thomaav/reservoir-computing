@@ -8,12 +8,15 @@
 % Assume that the title page is generated automatically, thus jumping straight
 % into the abstract.
 
+\pagenumbering{roman}
 \input{sections/0-abstract}
 
 \tableofcontents
 \listoffigures
 \listoftables
 
+\clearpage
+\pagenumbering{arabic}
 \input{sections/1-introduction}
 \input{sections/2-background}
 \input{sections/3-methodology}

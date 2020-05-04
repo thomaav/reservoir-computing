@@ -23,10 +23,19 @@ completely relevant, but the theory as a whole is important.
 
 \section{Reservoir Computing}
 
+``Instead it proposes that the trajectory of internal states of a recurrent
+neural circuit provides a raw, unbiased, and universal source of temporally
+integrated information, from which specific readout elements can extract
+specific information about past inputs for their individual task.'' maass paper
+
 \subsection{Recurrent Neural Networks}
 
 Their use, and why backward edges makes it notoriously difficult to train such
 networks.
+
+Problems with RNN and LSTM: page 5 of ``Short Term Memory in ESNs'', by Jaeger
+has some info on LSTM problem with chaos, and RNN training problem on long
+temporal dependencies.
 
 \subsection{Echo State Networks}
 
@@ -40,6 +49,10 @@ model, such as intrinsic plasticity, leaking neurons, and so on.
 ``schrauwen_improving_2008''
 
 Common tunings, such as input scaling, spectral radius, leakage and sparsity.
+
+Extensions to base model. Bias, output feedback, teacher forced etc.
+
+Echo State Property.
 
 \subsection{Real World Applications}
 
@@ -61,6 +74,16 @@ traditional reservoirs in this section. Drive home the point that we are
 exploring physical mediums that are wildly different from traditional computers,
 where memory and computation and fundamentally separate.
 
+``Reservoir Computing as a Model for In-Materio Computing''
+
+``Lattice networks/models are common in computational physics, condensed matter
+physics and beyond, modelling physical interactions, phase transitions and
+structure [15]. Examples include: discrete lattices like the Ising model with
+variables representing magnetic dipole moments of atomic spins, and the Gray-
+Scott reaction-diffusion model to simulate chemical systems [22]. Also, physical
+substrates often have a regular grid of connections. Lattice networks are
+therefore more realistic representations of many physical systems that would be
+considered for reservoir computing.'' from role of structure and complexity
 
 \subsection{Spatial Networks}
 
@@ -73,30 +96,110 @@ Erdős–Rényi model as a basis for Echo State Networks, then the Waxman model 
 its physical restraints, and then a dive further into completely regular
 structures such as lattices.
 
-\section{Reservoir Quality Evaluation}
+\section{Assessing Reservoir Quality}
+
+Designing \textit{good} reservoirs, possessing some set of desired properties,
+naturally requires some metric by which we can evaluate and compare. Parameter
+sweeps, i.e. our trial and error methods, must be accompanied by sufficient
+methods of assessing computational performance.
+
+Evaluation of reservoir quality is split into two different
+approaches. Intuitively, measuring the performance of the model on a given
+benchmark task is a simple, direct way of assessment. However, to gain an
+intuition for a more general, expected performance across multiple benchmarks,
+one may measure independent properties of the system, e.g. the spectral radius
+of the internal weight matrix. The two approaches are often used in conjunction,
+combined to propose an overall quality.
 
 \subsection{Independent Metrics}
 
-Present the commonly used kernel quality, generalization and short-term memory
-(memory capacity) that is commonly used in literature. How nonlinear dynamics
-degrades memory (but provides nonlinear transformations), while linear dynamics
-preserves it.
+\subsubsection{Kernel Quality and Generalization}
 
+Within the RC paradigm we are concerned with producing a complex mapping from
+the input stream to some spatial, internal representation, such that a
+memory-less, linear readout map may be employed for classification.
+
+The \textit{linear separation property}, or \textit{kernel quality}, measures
+ability to separate different inputs \cite{legenstein_edge_2007}. It is an
+empirical measure of this complex mapping, denoting the potential diversity of
+nonlinear operations carried out by a reservoir. Kernel quality is evaluated by
+presenting a reservoir of size $n$ with $m$ different input sequences, and
+computing the rank of the resulting $m\times n$ matrix consisting of the
+reservoir states resulting at some time step $t$ for the input stream
+\cite{busing_connectivity_2010}.
+
+Another metric accompanying the kernel quality is the \textit{generalization
+capability} of the reservoir \cite{legenstein_edge_2007}. This metric addresses
+ability to generalize already learned functions or filters to new, unseen input,
+and is used as an estimation of the VC-dimension of the
+reservoir. Generalization capability is evaluated with the same method as kernel
+quality, but instead requires input streams that are similar, or belong to the
+same class \cite{busing_connectivity_2010}.
+
+A reservoir in the ordered regime will naturally exhibit low values on both
+metrics, while both metrics will be high in a network in the chaotic
+regime. Thus, in general, reservoirs exhibiting a high kernel quality and a low
+generalization rank are desirable, and the difference between the two is
+sometimes used as its own metric \cite{busing_connectivity_2010}.
+
+\subsubsection{Short-Term Memory}
+
+Short-term memory capacity was introduced as a quantitative measurement of
+linear memory capacity in reservoirs \cite{jaeger_short_2002}. It is a way to
+examine the fading memory present in the system, and is measured by attaching
+output units to the reservoir, which each are trained to recall some time
+delayed version of the input sequence. By measuring how much of the input each
+output unit can recover, we can estimate the memory capacity $MC$ by summing
+over all time delays. Jaeger defined this as
+
+\begin{equation}
+  MC =
+  \sum_{k}^{\infty}MC_{k} =
+  \frac
+  {cov^2(u(t-k), y_k(t))}
+  {\sigma^{2}(u(t))\sigma^{2}(y_{k}(t))}
+  ,
+  \label{stm-eq}
+\end{equation}
+
+where $MC$ in general is limited by the reservoir size $N$, such that $MC \leq
+N$. High input retention is a desirable property, but an increase in memory
+capacity through parameter tuning is often met with a decrease in complex
+information processing, due to a universal trade-off between memory and
+nonlinearity \cite{dambre_information_2012}.
+
+% (TODO): Cite "Computational analysis of memory capacity in echo state
+% networks" in the methodology section of this specifically for ESNs.
+
+\subsubsection{Memory-Nonlinearity Trade-off}
+
+``identifying the boundaries between static structure that provides memory, and
+the point of complex dynamics that gives us processing. As such, one might
+expect a chaotic system to lose information regarding previous inputs at a
+faster rate and a more ordered regime to increase (to some extent) input
+retention.'' from Reservoir Computing as a Model for In-Materio..
+
+``büsing et al, connectivity dynamics'' has some.
 ``Memory versus Non-Linearity in Reservoirs'' Vaerstraten.
 ``Information Processing Capacity of Dynamical Systems''.
 
 Dynamical trade-off in dynamical systems used in reservoir settings.
 
-\subsubsection{Short-Term Memory}
-
-\subsubsection{Kernel Quality and Generalization}
-
 \subsubsection{Misc.}
 
+Lots about this in ``Reservoir Computing as a Model for In-Materio Computing''.
+
 Also shortly present alternative metrics that are sometimes used, such as
-Lyapunov spectrum, Lyapunov exponent, memory-nonlinearity line thing etc.
+Lyapunov spectrum, Lyapunov exponent, separation ratio line thing etc.
+
+We may go the opposite way of ESN: i.e. instead of scaling by spectral radius,
+it is instead an actual property we can measure to predict performance.
 
 ``On the quantification of dynamics in Reservoir Computing''.
+
+lyapunov exponent and kernel quality correlate ``On the correlation between
+reservoir metrics and performance for time series classification under the
+influence of synaptic plasticity.''
 
 \subsection{Benchmarks}
 
@@ -135,7 +238,8 @@ steps, and is given by
   y_{t} = \alpha y_{t-1} +
   \beta y_{t-1} \sum_{i=1}^{n}y_{t-i} +
   \gamma u_{t-1}u_{t-n} +
-  \delta.
+  \delta
+  .
   \label{narma-eq}
 \end{equation}
 
@@ -152,7 +256,8 @@ saturation function to produce a bounded sequence:
   \beta y_{t-1} \sum_{i=1}^{n}y_{t-i} +
   \gamma u_{t-1}u_{t-n} +
   \delta
-  ).
+  )
+  .
   \label{narma-tanh-eq}
 \end{equation}
 
