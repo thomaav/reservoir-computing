@@ -14,6 +14,7 @@ from matrix import euclidean, inv, inv_squared, inv_cubed
 from experiment import find_best_node_to_add
 
 default_w, default_h = get_figsize()
+FIG_DIR = '../master/figures/'
 
 
 # GENERAL.
@@ -28,6 +29,43 @@ def esn_general_performance():
     df = experiment(esn_nrmse, params, runs=20)
     df.to_pickle('experiments/esn_general_performance.pkl')
     pass
+
+
+def default_plot_settings():
+    plt.rc('legend', fontsize=14)
+    plt.rc('xtick', labelsize=14)
+    plt.rc('ytick', labelsize=14)
+    plt.rc('axes', labelsize=16)
+
+
+def save_plot(f):
+    plt.savefig(FIG_DIR + f)
+
+
+# BACKGROUND: Background.
+
+
+def plot_NARMA10(range=[0, -1]):
+    ax = plt.gca()
+
+    _, y_train, _, _ = ds.dataset
+    i, j = range[0], range[1]
+    y = y_train[i:j]
+
+    plt.plot(y, color='black')
+
+    default_plot_settings()
+    plt.margins(0.0)
+
+    plt.xlabel('Time step')
+    plt.ylabel('NARMA10 output')
+
+    plt.ylim((0.1, 0.7))
+    plt.hlines(ax.get_yticks(), ax.get_xlim()[0], ax.get_xlim()[1], linewidth=0.2)
+
+    plt.tight_layout()
+    save_plot('NARMA10.png')
+    plt.show()
 
 
 # EXPERIMENTS: Random Geometric Graphs.
