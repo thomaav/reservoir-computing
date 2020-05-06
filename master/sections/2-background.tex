@@ -21,6 +21,8 @@ completely relevant, but the theory as a whole is important.
 
 ``Dynamic Systems and Computing at the Edge of Chaos''?
 
+``Reservoirs and criticality'' section of in-materio paper.
+
 \section{Reservoir Computing}
 
 ``Instead it proposes that the trajectory of internal states of a recurrent
@@ -215,19 +217,17 @@ considerably \cite{inubushi_reservoir_2017}.
 
 \subsubsection{Further Metrics}
 
-Lots about this in ``Reservoir Computing as a Model for In-Materio Computing''.
+A handful of other methods to assess quality and criticality of reservoirs have
+been adapted, including the Lyapunov exponent
+\cite{verstraeten_experimental_2007}, the Jacobian of the reservoir
+\cite{alippi_quantification_2009}, Fisher information
+\cite{livi_determination_2018}, and a separation ratio
+\cite{gibbons_unifying_2010}.
 
-Also shortly present alternative metrics that are sometimes used, such as
-Lyapunov spectrum, Lyapunov exponent, separation ratio line thing etc.
-
-We may go the opposite way of ESN: i.e. instead of scaling by spectral radius,
-it is instead an actual property we can measure to predict performance.
-
-``On the quantification of dynamics in Reservoir Computing''.
-
-lyapunov exponent and kernel quality correlate ``On the correlation between
-reservoir metrics and performance for time series classification under the
-influence of synaptic plasticity.''
+In summary, given the vast amount of methods for evaluation, choosing a set of
+suitable metrics is a surmountable task. This is especially so, given that few
+metrics are entirely orthogonal, and are can be found to strongly correlate in
+the prediction of performance \cite{chrol-cannon_correlation_2014}.
 
 \subsection{Benchmarks}
 
