@@ -59,15 +59,25 @@ Echo State Property.
 Present some real world applications, like equalizing wireless communication
 channel, short-term traffic load, short-term electric load, stock forecasting.
 
+Robot navigation mentioned in model for-in materio by dale, also interesting
+overall
+
+Find the funny one about printers that break (lol)
+
+some presented in pre-thesis
+
 \subsection{Comparison to State of the Art}
 
 Perhaps a short comparison to RNN training methods, LSTM, and GRU.
 
 \section{Physical Reservoir Computing}
 
+anything exhibiting complex dynamic behavior.
+
 The emergence of physical substrates as a medium for the reservoir computing
 paradigm. Illustrate some of the main topics, like photonics, optoeletronics,
-mechanical (coupled oscillators), biologically inspired, magnetism.
+mechanical (coupled oscillators), biologically inspired (ecoli, invitro),
+magnetism. Use the survey paper.
 
 It is importance to stress that we are considering alternatives to the
 traditional reservoirs in this section. Drive home the point that we are
@@ -84,6 +94,13 @@ Scott reaction-diffusion model to simulate chemical systems [22]. Also, physical
 substrates often have a regular grid of connections. Lattice networks are
 therefore more realistic representations of many physical systems that would be
 considered for reservoir computing.'' from role of structure and complexity
+
+``There are many physical properties and considerations that require discussion
+when talking about using any novel material for computation. Here we focus on four
+key factors that possess some relevance to substrate-based reservoirs: (i) a means
+by which to observe network connectivity and activity, (ii) assuring non-linearity is
+present in the system, (iii) methods for modelling activity and behaviour, and (iv)
+the impact of environmental factors.'' from in-materio paper dale.
 
 \subsection{Spatial Networks}
 
@@ -214,15 +231,21 @@ influence of synaptic plasticity.''
 
 \subsection{Benchmarks}
 
-Present a handful of common benchmarks. For example: NARMA, Mackey-Glass, Santa
-Fe Laser, Henon Map, IPIX Radar. May be presented for other types of systems,
-such as the very simple XOR, parity, approximating (Legendre) polynomials
-(i.e. Information Processing Capacity), etc.
+Employing benchmarks to measure the performance of reservoirs is a means to
+directly capture performance on specific tasks. Myriads of benchmarks exist
+within the field of time series prediction, generation, and classification. The
+benchmark spectrum range from simple tasks, to complicated, highly dynamic and
+autoregressive time series.
 
-Elaborate further on the ones that are actually used in the work, for example
-NARMA for memory capacity, and some other benchmark that is perhaps more focused
-on the nonlinearity part (as it has been found that NARMA can often be done with
-little nonlinearity).
+Simpler tasks include the XOR problem of which is not linearly separable
+\cite{goos_pattern_2003}, and n-bit temporal density and parity
+\cite{bertschinger_real-time_2004}. More complex tasks may range from
+recognizing isolated digits in speech \cite{verstraeten_isolated_2005}, to
+predicting time series, of which the most popular are the Mackey-Glass time
+delay differential equation \cite{mackey_oscillation_1977}, and the nonlinear
+autoregressive moving average, NARMA \cite{atiya_new_2000}. Further datasets,
+such as the Santa Fe Laser, Hénon Map, IPIX Radar, and Sunspot series datasets
+have also been used \cite{rodan_minimum_2011}.
 
 \subsubsection{NARMA - Nonlinear Autoregressive Moving Average}
 
@@ -285,11 +308,11 @@ $n$, and should preferably adhere to suitable dynamics on top of this. A
 Evaluation of ESN performance on the NARMA10 system is a thoroughly explored
 area in the field of RC. Reported NRMSE performances for traditional ESN
 reservoirs of size $N = 200$ lie in the range [0.20, 0.25]
-\cite{verstraeten_experimental_2007, goudarzi_comparative_2014,
-rodan_minimum_2011, jaeger_adaptive_2003}. For some context, using a shift
-register containing the input as a reservoir will achieve a minimal NRMSE of
-0.4. To achieve NRMSE values below this threshold it is necessary to introduce
-nonlinearity in the reservoir.
+\cite{rodan_minimum_2011, verstraeten_experimental_2007,
+goudarzi_comparative_2014, jaeger_adaptive_2003}. For some context, using a
+shift register containing the input as a reservoir will achieve a minimal NRMSE
+of 0.4. To achieve NRMSE values below this threshold it is necessary to
+introduce nonlinearity in the reservoir.
 
 %%% Local Variables:
 %%% mode: latex
