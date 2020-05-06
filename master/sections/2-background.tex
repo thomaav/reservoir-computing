@@ -168,24 +168,35 @@ capacity through parameter tuning is often met with a decrease in complex
 information processing, due to a universal trade-off between memory and
 nonlinearity \cite{dambre_information_2012}.
 
+% (TODO): Not entirely orthogonal from generalization (see Burkow).
+
 % (TODO): Cite "Computational analysis of memory capacity in echo state
 % networks" in the methodology section of this specifically for ESNs.
 
 \subsubsection{Memory-Nonlinearity Trade-off}
 
-``identifying the boundaries between static structure that provides memory, and
-the point of complex dynamics that gives us processing. As such, one might
-expect a chaotic system to lose information regarding previous inputs at a
-faster rate and a more ordered regime to increase (to some extent) input
-retention.'' from Reservoir Computing as a Model for In-Materio..
+Experimentation with a wide range of reservoirs has indicated a crucial
+interplay between the memory and nonlinearity properties in reservoir operation
+\cite{verstraeten_memory_2010}. In fact, the interplay has been uncovered to be
+a universal trade-off between depth of memory and nonlinear computation
+performed by a dynamical system \cite{dambre_information_2012}.
 
-``büsing et al, connectivity dynamics'' has some.
-``Memory versus Non-Linearity in Reservoirs'' Vaerstraten.
-``Information Processing Capacity of Dynamical Systems''.
+Thus, analyzing the boundary between an ordered, static regime that provides
+memory, and a chaotic, dynamic regime that provides processing, is of vital
+importance in the design of reservoirs. Determining the required nonlinearity
+for a task is not a simple task, and often benefits from intuition about
+nonlinear dynamics. Empirically, it has been shown that the input scaling,
+determining the nonlinearity of reservoir responses, and the spectral radius,
+scaling the importance of previous states, are the main parameters for
+optimization in ESNs, illustrating the significance of the trade-off
+\cite{montavon_practical_2012}.
 
-Dynamical trade-off in dynamical systems used in reservoir settings.
+Further formalization of the trade-off has been conducted, accompanied by a
+proposition of a mixture reservoir combining both linear and nonlinear
+dynamics. Adding a ``pinch of linearity'' is cited to improve performance
+considerably \cite{inubushi_reservoir_2017}.
 
-\subsubsection{Misc.}
+\subsubsection{Further Metrics}
 
 Lots about this in ``Reservoir Computing as a Model for In-Materio Computing''.
 
@@ -261,11 +272,15 @@ saturation function to produce a bounded sequence:
   \label{narma-tanh-eq}
 \end{equation}
 
+% (TODO): Perhaps plot nonlinearity of multiplying values in [0.0, 0.5]? See
+% Verstraeten on memory-nonlinearity trade-off.
+
 Predicting a NARMA time series, given an input sequence $u$, presents a
 challenge of both memory and nonlinearity. This makes NARMA well-suited for
 evaluating both the memory capacity and computational power of reservoirs with a
 single metric. Reservoirs must necessarily remember input sequences of length
-$n$, and should preferably adhere to suitable dynamics on top of this. A 10th-order system is depicted in Figure \ref{narma10-fig}
+$n$, and should preferably adhere to suitable dynamics on top of this. A
+10th-order system is depicted in Figure \ref{narma10-fig}
 
 Evaluation of ESN performance on the NARMA10 system is a thoroughly explored
 area in the field of RC. Reported NRMSE performances for traditional ESN
