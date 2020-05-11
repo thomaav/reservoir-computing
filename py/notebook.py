@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import pickle
 import torch
@@ -65,6 +66,51 @@ def plot_NARMA10(range=[0, -1]):
 
     plt.tight_layout()
     save_plot('NARMA10.png')
+    plt.show()
+
+
+def plot_NARMA_nonlinearity():
+    xs = []
+    ys = []
+    xys = []
+    for x in np.linspace(0.0, 0.5, 10):
+        for y in np.linspace(0.0, 0.5, 10):
+            xs.append(x)
+            ys.append(y)
+            xys.append(x*y)
+
+    ax = plt.gca(projection='3d')
+    norm = matplotlib.colors.Normalize(vmin=-0.05, vmax=0.35)
+    ax.plot_trisurf(xs, ys, xys, cmap='gray', norm=norm)
+
+    #todo: remove diagonals
+
+    ax.view_init(azim=200, elev=30)
+    ax.set_zlim(min(xys), max(xys))
+    plt.margins(0.0)
+
+    ax.xaxis.pane.fill = False
+    ax.yaxis.pane.fill = False
+    ax.zaxis.pane.fill = False
+
+    ax.set_xticks([min(xs), max(xs)])
+    ax.set_yticks([min(ys), max(ys)])
+    ax.set_zticks([min(xys), max(xys)])
+
+    ax.set_xlabel(r'y', fontsize=18, labelpad=-5)
+    ax.set_ylabel(r'x', fontsize=18, labelpad=-5)
+    zlabel = ax.set_zlabel(r'x $\cdot$ y', rotation=90, fontsize=18, labelpad=-10)
+
+    ax.xaxis.set_rotate_label(False)
+    ax.yaxis.set_rotate_label(False)
+    ax.zaxis.set_rotate_label(False)
+
+    for x in ax.xaxis.get_major_ticks(): x.label.set_fontsize(14)
+    for y in ax.yaxis.get_major_ticks(): y.label.set_fontsize(14)
+    for z in ax.zaxis.get_major_ticks(): z.label.set_fontsize(14)
+
+    plt.tight_layout()
+    save_plot('NARMA-nonlinearity.png')
     plt.show()
 
 
