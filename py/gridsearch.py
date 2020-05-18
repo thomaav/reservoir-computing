@@ -35,7 +35,7 @@ def list_chunks(lst, n):
     return chunks
 
 
-def _experiment(f, param_names, param_values, affinity=0, runs=10):
+def _experiment(f, param_names, param_values, esn_attributes=[], affinity=0, runs=10):
     os.sched_setaffinity(0, {affinity})
 
     results = []
@@ -44,13 +44,13 @@ def _experiment(f, param_names, param_values, affinity=0, runs=10):
         print(_params)
 
         for i in range(runs):
-            result = f(_params)
-            results.append([result] + list(_params.values()))
+            result, attr = f(_params, esn_attributes)
+            results.append([result] + list(_params.values()) + attr)
 
     return results
 
 
-def experiment(f, params, runs=10):
+def experiment(f, params, runs=10, esn_attributes=[]):
     param_names = [l[0] for l in params.items()]
     param_values = list(product(*[l[1] for l in params.items()]))
 
@@ -61,7 +61,9 @@ def experiment(f, params, runs=10):
         results = []
         chunked_param_values = list_chunks(param_values, cpus)
         for affinity, chunk in enumerate(chunked_param_values):
-            results.append(pool.apply_async(_experiment, (f, param_names, chunk, affinity, runs)))
+            results.append(pool.apply_async(
+                _experiment, (f, param_names, chunk, esn_attributes, affinity, runs)
+            ))
     except KeyboardInterrupt:
         pool.terminate()
         exit("KeyboardInterrupt received, shut down experiment processes")
@@ -70,7 +72,7 @@ def experiment(f, params, runs=10):
     pool.join()
 
     results = list(chain(*[r.get() for r in results]))
-    column_names = [f.__name__, *param_names]
+    column_names = [f.__name__, *param_names, *esn_attributes]
     df = pd.DataFrame(results, columns=column_names)
     return df
 

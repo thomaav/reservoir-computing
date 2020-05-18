@@ -19,7 +19,8 @@ def inv_cubed(x, y): return 1/euclidean(x, y)**3
 
 
 def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
-           directed=False, sign_frac=0.0, dist_function=euclidean, l=0):
+           directed=False, sign_frac=0.0, dist_function=euclidean, l=0,
+           dim_size=1):
     """
     B. M. Waxman, Routing of multipoint connections.
 
@@ -28,7 +29,7 @@ def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
     G = nx.DiGraph() if directed else nx.Graph()
     G.add_nodes_from(range(n))
 
-    domain = (0, 0, 0, 1, 1, 1)
+    domain = (0, 0, 0, dim_size, dim_size, dim_size)
     xmin, ymin, zmin, xmax, ymax, zmax = domain
 
     uniform = np.random.uniform

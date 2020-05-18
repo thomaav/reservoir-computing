@@ -48,7 +48,10 @@ class ESN(nn.Module):
 
             w_res = torch.FloatTensor(A)
             cur_sr = _spectral_radius(w_res)
+            self.org_w_res = w_res.clone()
             self.org_spectral_radius = cur_sr
+            if self.spectral_radius is None:
+                self.spectral_radius = self.org_spectral_radius
             if cur_sr != 0:
                 w_res *= self.spectral_radius / cur_sr
         elif self.w_res_type in ['tetragonal', 'hexagonal', 'triangular', 'rectangular']:

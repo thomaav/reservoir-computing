@@ -80,15 +80,17 @@ def memory_capacity(esn):
     return esn.memory_capacity(washout, u_train, u_test, plot=False)
 
 
-def esn_nrmse(params):
+def esn_nrmse(params, attr=[]):
     dataset = ds.dataset
     esn = ESN.ESN(**params)
-    return evaluate_esn(dataset, esn)
+    esn_attributes = [getattr(esn, _attr) for _attr in attr]
+    return evaluate_esn(dataset, esn), esn_attributes
 
 
-def esn_mc(params):
+def esn_mc(params, attr=[]):
     esn = ESN.ESN(**params)
-    return memory_capacity(esn)
+    esn_attributes = [getattr(esn, _attr) for _attr in attr]
+    return memory_capacity(esn), esn_attributes
 
 
 def evaluate_esn(dataset, esn, plot=False, plot_range=None):

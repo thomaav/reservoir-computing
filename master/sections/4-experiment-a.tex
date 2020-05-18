@@ -1,8 +1,188 @@
 \chapter{Experiments: Random Geometric Graphs}
 
-Experiment with RGGs.
+\textcolor{red}{
+  Perhaps the first word that springs to mind when thinking about spatial
+constraints to graph, is ``space''. It is only natural that we begin with the
+simplest spatial network there is -- the random geometric graph, of which the
+only spatial constraint is that the vertices of the graph are placed in some
+underlying metric space.
+}
 
-\section{Dimensionality}
+\textcolor{red}{
+  Random geometric graph is the simplest spatial network, where $N$ nodes are
+placed randomly in some metric space. The specific probability distribution is
+just a uniform distribution in an underlying Euclidean space $[0, N)^d$, where
+$d$ is the dimensionality of the volume. Nodes have some neighborhood within a
+radius of $r$, of which nodes inside this radius will be connected by an edge.
+}
+
+\textcolor{red}{
+  Perhaps talk about similar models, such as Waxman and Erdos-Renyi. They should
+have been introduced in the background chapter, so we can refer to them
+here. The Erdos-Renyi is perhaps the closest spatial model to the echo state
+network, and the Waxman network is a generalized random geometric graph with a
+slight modification for node connectivity, i.e. a probabilistic connection
+function.
+}
+
+% (TODO): t!
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=3.5in]{figures/RGG-example.png}
+  \caption{
+    Example vertices drawn to generate a random geometric graph embedded in a
+two-dimensional Euclidean space. The neighborhood radius $r$ of a single node is
+shown.
+  }
+  \label{fig:rgg-example}
+\end{figure}
+
+\section{Methodology}
+
+\textcolor{red}{
+  \textbf{Methodology:} We use fully connected graphs. I.e. distance r of
+infinity. We use 3d networks by default, but this is investigated further. We
+introduce distance functions to the model, of which used ones are $1/d$, $1/d^2$
+and $1/d^3$. So they are connected if $d(x, y, z) < r$, where $d(x, y, z) =
+\norm{x-y}_{2} = \sqrt{\sum_{i=1}^{d}{(x_{i}-y_{i})^2}}$, and $r = \infty$.
+}
+
+\section{Size of the Graph Volume}
+
+\subsection{Synopsis}
+
+\textcolor{red}{
+  A natural first question when considering random geometric graphs is that of
+the underlying space. The behavior of the ``echo state network'' that we create
+will obviously be affected by the magnitude of the weights we create between the
+hidden nodes.
+}
+
+\textcolor{red}{
+  The most interesting metric for the resulting matrices is of course the
+spectral radius, i.e. the largest eigenvalue, as this governs dynamics, and a
+very high one may cause unbounded deviation from initial states, even though the
+tanh activation bounds the actual activations. How does the spectral radius
+relate to the performance of our network, and can this be related to previous
+work?
+}
+
+\subsection{Results and Discussion}
+
+% (TODO): t!
+\begin{figure*}[t!]
+  \centering
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/RGG-volume-size-inv.png}
+    \caption{}
+    \label{fig:size-graph-volume-b}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/RGG-volume-size-inv-squared.png}
+    \caption{}
+    \label{fig:size-graph-volume-b}
+  \end{subfigure}
+  \caption{
+    Spectral radius and performance of generated random geometric graphs as a
+function of the size of the underlying volume. Illustrated is node coupling
+using two different distance functions: (a) $1/d$ and (b) $1/d^2$.
+  }
+  \label{fig:size-graph-volume}
+\end{figure*}
+
+\textcolor{red}{
+  We immediately see that using a volume of size 1x1x1 is useless, as this would
+produce nodes that are very close. Nodes that are too close will drive the 1/d
+function through the roof (as the weights will potentially be quite large), and
+we will immediately saturate $tanh$ activations in the network.
+}
+
+\textcolor{red}{
+  Figure \ref{fig:size-graph-volume} illustrates the point by scaling the size
+of the underlying volume. The volume goes from 1x1x1 through the sizes in the
+plot as NxNxN where N is the ``volume size''. We plot both the NRMSE and
+spectral radius of the resulting w_res of the echo state network, and can
+clearly pinpoint a similar result to that of the literature: a spectral radius
+$\rho < 1$, but not too small, is favored. We should also specify that the
+spectral radius is the absolute value of the largest eigenvector, which controls
+the dynamics of the system, see ``On the quantifications..'' paper, see
+Verstraeten et al.
+}
+
+\textcolor{red}{
+  Performance-wise we see that both distance functions achieve an NRMSE a little
+bit below 0.6, which is worse than what a shift register would achieve. Thus, we
+are nowhere close to the echo state network, and a spatial constraint like this
+by itself seems to induce a big performance penalty/increase in error.
+}
+
+\textcolor{red}{
+  For further experiments, we can remedy this initial issue by scaling directly
+by the spectral radius, which fixes the problem. Scaling by the spectral radius
+is done by multiplying the weight by a scalar, which would be equivalent to
+scaling underlying volume with a scalar. This is relevant for physical mediums,
+as what we are seeing in practice is that distance function in conjunction with
+the size of the space is quite relevant, otherwise we dip to either side of
+Figure \ref{fig:size-graph-volume}.
+}
+
+\subsection{Summary}
+
+\textcolor{red}{
+  The summary of what we see is that if we were to design a reservoir by
+modeling it after a random geometric graph, we would have to think about the
+size of the space we are using, especially if the distance function that must be
+used is fixed by the laws of physics.
+}
+
+\section{Choice of Distance Function}
+
+\subsection{Synopsis}
+
+Different systems may exhibit different characteristics. For example flatspin,
+find the paper to cite, uses couplings of $1/d^3$. Not necessarily comparable,
+but interesting from a theoretic standpoint.
+
+\subsection{Results and Discussion}
+
+- Show difference between $1/d$, $1/d^2$ and $1/d^3$.
+
+- Show NARMA, KQ/G and MC?
+
+\subsection{Summary}
+
+\section{Reservoir Weight Distributions}
+
+\subsection{Synopsis}
+
+Reciprocal normal distribution. Cite common ones in practice from practical
+applications paper.
+
+\subsection{Results and Discussion}
+
+\subsection{Summary}
+
+\section{Restoring Echo State Network Performance}
+
+\subsection{Synopsis}
+
+\subsection{Results and Discussion}
+
+\subsection{Summary}
+
+\section{Dimensionality of the Underlying Space}
+
+\subsection{Synopsis}
+
+Does it matter if we choose xy, xyz, xyzw?
+
+\subsection{Results and Discussion}
+
+\subsection{Summary}
+
+\section{Conclusions}
 
 
 %%% Local Variables:

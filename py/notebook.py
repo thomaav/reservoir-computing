@@ -117,6 +117,97 @@ def plot_NARMA_nonlinearity():
 # EXPERIMENTS: Random Geometric Graphs.
 
 
+def plot_rgg_example(save=True):
+    from matrix import waxman
+    from plot import scatter_3d
+
+    G = waxman(200, alpha=1.0, beta=1.0)
+
+    xs, ys = [], []
+    for n in G.nodes:
+        xs.append(G.nodes[n]['pos'][0])
+        ys.append(G.nodes[n]['pos'][1])
+
+    ax = plt.gca()
+
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+
+    ax.set_xlim(-0.05, 1.05)
+    ax.set_ylim(-0.05, 1.05)
+
+    ax.set_xticks([0, 0.5, 1])
+    ax.set_yticks([0, 0.5, 1])
+
+    ax.scatter(xs, ys, color='black')
+
+    plt.tight_layout()
+    if save:
+        save_plot('RGG-example.png')
+    plt.show()
+
+
+def rgg_volume_size():
+    from metric import memory_capacity, evaluate_esn
+
+    params = OrderedDict()
+    params['w_res_type'] = ['waxman']
+    params['hidden_nodes'] = [100]
+    params['spectral_radius'] = [None]
+    params['dist_function'] = [inv, inv_squared]
+    params['dim_size'] = [1] + list(np.arange(10, 510, 10))
+
+    df = experiment(esn_nrmse, params, runs=10, esn_attributes=['org_spectral_radius'])
+    df.to_pickle('experiments/rgg_volume_size.pkl')
+
+
+def plot_rgg_volume_size():
+    df = load_experiment('experiments/rgg_volume_size.pkl')
+
+    df['dist_function'] = df['dist_function'].apply(
+        lambda f: f.__name__ if not isinstance(f, str) else f
+    )
+
+    inv_df = df.loc[df['dist_function'] == inv.__name__]
+    inv_squared_df = df.loc[df['dist_function'] == inv_squared.__name__]
+
+    inv_df = inv_df.groupby(['dim_size']).min().reset_index()
+    inv_squared_df = inv_squared_df.groupby(['dim_size']).min().reset_index()
+
+    file_names = ['RGG-volume-size-inv.png', 'RGG-volume-size-inv-squared.png']
+    for i, df in enumerate([inv_df, inv_squared_df]):
+        default_plot_settings()
+        ax1 = plt.gca()
+        ax2 = ax1.twinx()
+
+        ax1.plot(df['dim_size'], df['esn_nrmse'], color='black', linestyle='solid', label='NRMSE')
+        ax2.plot(df['dim_size'], df['org_spectral_radius'], color='black', linestyle='dashed', label='Spectral radius')
+        ax2.plot(df['dim_size'], [1]*len(df['dim_size']), color='grey', linestyle='dotted')
+
+        ax1.set_xlabel('Volume size')
+        ax1.set_ylabel('NARMA-10 NRMSE')
+        ax2.set_xlabel('Volume size')
+        ax2.set_ylabel('Spectral radius')
+
+        if df.equals(inv_df):
+            ax2.set_ylim(0.0, 2.0)
+        elif df.equals(inv_squared_df):
+            ax1.set_ylim(0.0, 1.0)
+            ax1.set_xlim(0, 150)
+            ax2.set_ylim(0.0, 2.0)
+            ax2.set_xlim(0, 150)
+
+        lines, labels = ax1.get_legend_handles_labels()
+        lines2, labels2 = ax2.get_legend_handles_labels()
+        ax2.legend(lines + lines2, labels + labels2, loc=0)
+        plt.legend(lines + lines2, labels + labels2, bbox_to_anchor=(0., 1.02, 1., .102),
+                   loc='lower left', ncol=2, mode="expand", borderaxespad=0., fancybox=False)
+
+        plt.tight_layout()
+        save_plot(file_names[i])
+        plt.show()
+
+
 def rgg_dist_performance():
     params = OrderedDict()
     params['w_res_type'] = ['waxman']
