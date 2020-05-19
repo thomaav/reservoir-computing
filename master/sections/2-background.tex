@@ -10,110 +10,159 @@ morphology and topology.
 
 \section{Order and Chaos}
 
-A section on the main interesting points about order and chaos in the context of
-reservoir computing could maybe serve as a gentle introduction of the underlying
-principles?
+\textcolor{red}{
+  A section on the main interesting points about order and chaos in the context
+of reservoir computing could maybe serve as a gentle introduction of the
+underlying principles?
+}
 
-I.e.: should a section be included that briefly explains the relevance of the
+\textcolor{red}{
+  I.e.: should a section be included that briefly explains the relevance of the
 line of criticality? Perhaps illustrating the subject with the Lyapunov
 exponent. The degree of sensitivity to initial conditions might not be
 completely relevant, but the theory as a whole is important.
+}
 
-``Dynamic Systems and Computing at the Edge of Chaos''?
+\textcolor{red}{
+  ``Dynamic Systems and Computing at the Edge of Chaos''?
+}
 
-``Reservoirs and criticality'' section of in-materio paper.
+\textcolor{red}{
+  ``Reservoirs and criticality'' section of in-materio paper.
+}
 
 \section{Reservoir Computing}
 
-``Instead it proposes that the trajectory of internal states of a recurrent
+\textcolor{blue}{
+  ``Instead it proposes that the trajectory of internal states of a recurrent
 neural circuit provides a raw, unbiased, and universal source of temporally
 integrated information, from which specific readout elements can extract
-specific information about past inputs for their individual task.'' maass paper
+specific information about past inputs for their individual task.'', from Maass
+et al. paper.
+}
 
 \subsection{Recurrent Neural Networks}
 
-Their use, and why backward edges makes it notoriously difficult to train such
+\textcolor{red}{
+  Their use, and why backward edges makes it notoriously difficult to train such
 networks.
+}
 
-Problems with RNN and LSTM: page 5 of ``Short Term Memory in ESNs'', by Jaeger
+\textcolor{blue}{
+  Problems with RNN and LSTM: page 5 of ``Short Term Memory in ESNs'', by Jaeger
 has some info on LSTM problem with chaos, and RNN training problem on long
 temporal dependencies.
+}
 
 \subsection{Echo State Networks}
 
-The inception of reservoir computing as a methodology with Jaeger's Echo State
+\textcolor{red}{
+  The inception of reservoir computing as a methodology with Jaeger's Echo State
 Network and Maass's Liquid State Machine.
+}
 
-A section that specifically explains how the default Echo State Networks
+\textcolor{red}{
+  A section that specifically explains how the default Echo State Networks
 function. Some minor details about work that has been done to improve upon the
-model, such as intrinsic plasticity, leaking neurons, and so on.
+model, such as intrinsic plasticity, leaking neurons, and so on. Can/should be
+adapted from pre-thesis.
+}
 
-``schrauwen_improving_2008''
+\textcolor{red}{
+  Common tunings, such as input scaling, spectral radius, leakage and
+sparsity. Extensions to base model. Bias, output feedback, teacher forced etc.
+}
 
-Common tunings, such as input scaling, spectral radius, leakage and sparsity.
-
-Extensions to base model. Bias, output feedback, teacher forced etc.
-
-Echo State Property.
+\textcolor{red}{
+  Echo State Property and short-term memory.
+}
 
 \subsection{Real World Applications}
 
-Present some real world applications, like equalizing wireless communication
-channel, short-term traffic load, short-term electric load, stock forecasting.
+\textcolor{red}{
+  Present some real world applications, like equalizing wireless communication
+  channel, short-term traffic load, short-term electric load, stock forecasting.
+}
 
-Robot navigation mentioned in model for-in materio by dale, also interesting
-overall
+\textcolor{blue}{
+  Robot navigation mentioned in model for-in materio by dale, also interesting
+overall. Find some robot navigation examples.
+}
 
-Find the funny one about printers that break (lol)
+\textcolor{red}{
+  Find the funny one about predicting printers that will break, which was an
+interesting one, perhaps not very useful or interesting. Shows the wider area of
+application.
+}
 
-some presented in pre-thesis
+\textcolor{blue}{
+  Some/most of these can be adapted from the small paragraph about this in the
+pre-thesis.
+}
 
 \subsection{Comparison to State of the Art}
 
-Perhaps a short comparison to RNN training methods, LSTM, and GRU.
+\textcolor{red}{
+  Perhaps a short comparison to RNN training methods, LSTM, and GRU. If not a
+complete subsection, at least introduce this in some of the other subsections,
+as to mention that there are other areas of research concerned with the same
+types of tasks.
+}
 
 \section{Physical Reservoir Computing}
 
-anything exhibiting complex dynamic behavior.
+\textcolor{red}{
+  Anything exhibiting complex dynamic behavior may be used. Explain this, and
+why this is, and what implications this carries.
+}
 
-The emergence of physical substrates as a medium for the reservoir computing
+\textcolor{red}{
+  The emergence of physical substrates as a medium for the reservoir computing
 paradigm. Illustrate some of the main topics, like photonics, optoeletronics,
 mechanical (coupled oscillators), biologically inspired (ecoli, invitro),
-magnetism. Use the survey paper.
+magnetism. Use the survey paper by Tanaka et al.
+}
 
-It is importance to stress that we are considering alternatives to the
+\textcolor{red}{
+  It is importance to stress that we are considering alternatives to the
 traditional reservoirs in this section. Drive home the point that we are
 exploring physical mediums that are wildly different from traditional computers,
 where memory and computation and fundamentally separate.
+}
 
-``Reservoir Computing as a Model for In-Materio Computing''
-
-``Lattice networks/models are common in computational physics, condensed matter
-physics and beyond, modelling physical interactions, phase transitions and
-structure [15]. Examples include: discrete lattices like the Ising model with
-variables representing magnetic dipole moments of atomic spins, and the Gray-
-Scott reaction-diffusion model to simulate chemical systems [22]. Also, physical
-substrates often have a regular grid of connections. Lattice networks are
-therefore more realistic representations of many physical systems that would be
-considered for reservoir computing.'' from role of structure and complexity
-
-``There are many physical properties and considerations that require discussion
-when talking about using any novel material for computation. Here we focus on four
-key factors that possess some relevance to substrate-based reservoirs: (i) a means
-by which to observe network connectivity and activity, (ii) assuring non-linearity is
-present in the system, (iii) methods for modelling activity and behaviour, and (iv)
-the impact of environmental factors.'' from in-materio paper dale.
+\textcolor{blue}{
+  ``There are many physical properties and considerations that require
+discussion when talking about using any novel material for computation. Here we
+focus on four key factors that possess some relevance to substrate-based
+reservoirs: (i) a means by which to observe network connectivity and activity,
+(ii) assuring non-linearity is present in the system, (iii) methods for
+modelling activity and behaviour, and (iv) the impact of environmental
+factors.'', in-materio paper, Dale et al.
+}
 
 \subsection{Spatial Networks}
 
-Use a previous section on physical reservoir computing to lead into background
+\textcolor{red}{
+  Use a previous section on physical reservoir computing to lead into background
 on networks that are manifested into a physical space. Talk about previous work,
-such as the Minimum Complexity Echo State Network.
+such as the Minimum Complexity Echo State Network, which has research goals that
+very closely resemble that of this thesis.
+}
 
-Discuss existing theory on spatial networks. Relevant topics may include the
+\textcolor{red}{
+  Discuss existing theory on spatial networks. Relevant topics may include the
 Erdős–Rényi model as a basis for Echo State Networks, then the Waxman model with
 its physical restraints, and then a dive further into completely regular
-structures such as lattices.
+structures such as lattices. Watts-Strogatz.
+}
+
+\textcolor{blue}{
+  Previous work on topology. For example ``Reservoir Topology in Deep Echo State
+Networks'' by Gallicchio et al., ``Optimal modularity and memory capacity of
+neural reservoirs'', Rodriguez et al., ``Role of Structure..'', Dale et al.,
+``Stability and Topology in Reservoir Computing'', Manevitz et al., and lastly
+all of Rodan's thesis on CRJ and deterministically constructed networks.
+}
 
 \section{Assessing Reservoir Quality}
 

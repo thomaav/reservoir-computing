@@ -11,7 +11,9 @@
 \pagenumbering{roman}
 \input{sections/0-abstract}
 
+% (TODO): Ensure toc matches other theses.
 \tableofcontents
+% (TODO): List of figures should have shorter captions.
 \listoffigures
 \listoftables
 
@@ -24,10 +26,12 @@
 \input{sections/4-experiment-b}
 \input{sections/5-conclusion}
 
+\addcontentsline{toc}{chapter}{Bibliography}
 \bibliographystyle{ieeetr}
 \bibliography{ref}
 
 \appendix
+\setcounter{secnumdepth}{-1}
 \input{sections/a-appendix}
 
 \end{document}

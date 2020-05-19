@@ -39,15 +39,19 @@ shown.
 
 \section{Methodology}
 
+% (TODO): Section references should be added as sections are added and
+% completed.
 \textcolor{red}{
   \textbf{Methodology:} We use fully connected graphs. I.e. distance r of
 infinity. We use 3d networks by default, but this is investigated further. We
 introduce distance functions to the model, of which used ones are $1/d$, $1/d^2$
 and $1/d^3$. So they are connected if $d(x, y, z) < r$, where $d(x, y, z) =
-\norm{x-y}_{2} = \sqrt{\sum_{i=1}^{d}{(x_{i}-y_{i})^2}}$, and $r = \infty$.
+\norm{x-y}_{2} = \sqrt{\sum_{i=1}^{d}{(x_{i}-y_{i})^2}}$, and $r = \infty$. The
+implementation is a standard echo state network from the methodology chapter
+where weights are determined by the scheme above.
 }
 
-\section{Size of the Graph Volume}
+\section{Size of the Underlying Volume}
 
 \subsection{Synopsis}
 
