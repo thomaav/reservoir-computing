@@ -194,7 +194,7 @@ class ESN(nn.Module):
 
         for k in range(1, output_nodes+1):
             if self.readout == 'rr':
-                self.w_outs[k-1] = Ridge(alpha=self.w_ridge)
+                self.w_outs[k-1] = Ridge(alpha=self.w_ridge, solver='svd')
                 self.w_outs[k-1].fit(self.X_train[k:, :], u_train[:-k])
             elif self.readout == 'pinv':
                 Xplus = torch.pinverse(self.X_train[k:, :])

@@ -85,9 +85,9 @@ work?
     \label{fig:size-graph-volume-b}
   \end{subfigure}
   \caption{
-    Spectral radius and performance of generated random geometric graphs as a
-function of the size of the underlying volume. Illustrated is node coupling
-using two different distance functions: (a) $1/d$ and (b) $1/d^2$.
+    Spectral radius and performance of generated random geometric graphs of size
+$N = 100$, as a function of the size of the underlying volume. Illustrated is
+node coupling using two different distance functions: (a) $1/d$ and (b) $1/d^2$.
   }
   \label{fig:size-graph-volume}
 \end{figure*}
@@ -141,15 +141,130 @@ used is fixed by the laws of physics.
 
 \subsection{Synopsis}
 
-Different systems may exhibit different characteristics. For example flatspin,
-find the paper to cite, uses couplings of $1/d^3$. Not necessarily comparable,
-but interesting from a theoretic standpoint.
+\textcolor{red}{
+  Different systems may exhibit different characteristics. For example flatspin
+uses couplings of $1/d^3$. Not necessarily directly comparable, but it is an
+interesting problem from a theoretical standpoint.
+}
+
+\textcolor{red}{
+  In this section we compare the distance functions $1/d$, $1/d^2$ and $1/d^3$,
+and also see how they compare to the standard echo state network. We also look a
+little deeper into why these functions seem to be unable to reach the level of
+the ESN by looking at short-term memory capacity.
+}
+
+\textcolor{red}{
+  \textbf{Methodology}: Here we are using what we figured out in the previous
+section, and scale the spectral radius directly. We set the spectral radius to
+0.9, and use the same input scheme again, which is uniform sampling in the
+interval [-0.5, 0.5].
+}
 
 \subsection{Results and Discussion}
 
-- Show difference between $1/d$, $1/d^2$ and $1/d^3$.
+% (TODO): t!
+\begin{figure*}[t]
+  \centering
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/RGG-dist-performance-mean.png}
+    \caption{}
+    \label{fig:dist-performance-a}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/RGG-dist-performance-min.png}
+    \caption{}
+    \label{fig:dist-performance-b}
+  \end{subfigure}
+  \caption{
+    NRMSE on the NARMA-10 task with use of different distance functions to
+generate connection weights. Plots shown are the mean (a) and minimum (b) error
+aggregations over 10 runs per individual parameter setup. Distance functions are
+compared to the standard echo state network.
+  }
+  \label{fig:dist-performance}
+\end{figure*}
 
-- Show NARMA, KQ/G and MC?
+% (TODO): t!
+\begin{figure*}[t]
+  \centering
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/RGG-dist-mc.png}
+    \caption{}
+    \label{fig:dist-performance-is-a}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/RGG-dist-performance-is.png}
+    \caption{}
+    \label{fig:dist-performance-is-b}
+  \end{subfigure}
+  \caption{
+    Effect of input scaling on reservoirs generated as random geometric
+graphs. There is a correlation between the short-term memory capacity of the
+reservoirs (a), and error rates for the NARMA-10 task (b).
+  }
+  \label{fig:dist-performance-is}
+\end{figure*}
+
+\textcolor{red}{
+  We see that all distance functions are quite far away from the echo state
+network, as was established earlier. We also notice that they seem to be quite
+unstable compared to the ESN in generation, especially $1/d^3$ has a bad mean
+over the runs, but a min that is on par with $1/d^2$. Why is not immediately
+clear, but will be resolved in the next section with additions of signed and
+directed edges.
+}
+
+\textcolor{red}{
+  We see that all the distance functions see a significant improvement from
+increasing the size of the reservoir, but not as great as that of the echo state
+network. Note that this is without exhausting the parameters that are usually
+swept: input scaling and spectral radius. In a further experiment, we look at
+why these networks are significantly worse than ESNs by choosing the $1/d^2$
+distance function, and looking and something that intuitively seems to be the
+cause: short-term memory, which is shown in Figure
+\ref{fig:dist-performance-is}.
+}
+
+\textcolor{red}{
+  A thought that may arise when looking at this, is that the random geometric
+graph reservoirs will never reach the performance of a delay line, even with
+bigger reservoirs. This indicates that their memory capacity is perhaps not up
+to par, which is further illustrated in Figure
+\ref{fig:dist-performance-is}. The setup for this experiment was 10 runs, where
+the short-term memory is the max value, and the NRMSE is the min value for the
+reservoirs generated.
+}
+
+\textcolor{red}{
+  Thus, we see that we may increase the performance of RGG reservoirs by using
+the commonly swept input scaling parameter to exchange nonlinear dynamics for
+memory. Reservoirs seem to get significantly better once we reach the required
+memory capacity of 10, but is still slightly behind the echo state network when
+comparing e.g. the 80 node network in Figure \ref{fig:dist-performance-is-b} to
+that of the echo state network of size 80 nodes in Figure
+\ref{fig:dist-performance}
+}
+
+\subsection{Summary}
+
+\textcolor{red}{
+  We see that some distance functions seem to perform better, namely $1/d^2$
+seems to be both the best performing, while also being quite stable. We also see
+that the default performance of the random geometric graphs for $1/d^2$ suffer
+from a low short-term memory capacity, which, in the case of NARMA-10, may be
+remedied by lowering the input scaling to wash older inputs out slower.
+}
+
+\section{Restoring Echo State Network Performance}
+
+\subsection{Synopsis}
+
+\subsection{Results and Discussion}
 
 \subsection{Summary}
 
@@ -159,14 +274,6 @@ but interesting from a theoretic standpoint.
 
 Reciprocal normal distribution. Cite common ones in practice from practical
 applications paper.
-
-\subsection{Results and Discussion}
-
-\subsection{Summary}
-
-\section{Restoring Echo State Network Performance}
-
-\subsection{Synopsis}
 
 \subsection{Results and Discussion}
 
@@ -183,6 +290,36 @@ Does it matter if we choose xy, xyz, xyzw?
 \subsection{Summary}
 
 \section{Conclusions}
+
+\textcolor{red}{
+  We have investigated imposing the simplest type of spatial restriction onto
+echo state networks, and found that they by default will worsen significantly by
+default. Care must be taken to ensure that the spacing between nodes will result
+in node interactions that induce reservoir dynamics that are suitable for the
+task at hand. This is especially important in physical reservoir computing where
+the distance between nodes decides their coupling, and it can not be changed
+after-the-fact.
+}
+
+% (TODO): Look more into this if found _why_ this causes this improvement,
+% concretely.
+\textcolor{red}{
+  Further we investigated why the spatial restrictions worsened the networks
+significantly, arriving at some interesting conclusions regarding flow of
+information.
+}
+
+\textcolor{red}{
+  Highlight the important discoveries in this chapter that lead well into the
+next chapter. We would like to highlight two key discoveries: \textbf{(1)} the
+fact that there are other weighting distribution schemes that work just as well
+as uniform and normal, here we have discovered something that resembles the
+reciprocal normal distribution using $1/d$, $1/d^2$ etc. And \textbf{(2)} that
+reservoirs worsen significantly if there is no inherent flow of information,
+which we in this case restored by introducing signedness and directedness to the
+reservoir edges. These discoveries are important springboards into the next
+chapter.
+}
 
 
 %%% Local Variables:

@@ -8,7 +8,7 @@ from collections import OrderedDict
 
 import dataset as ds
 from ESN import ESN, Distribution, from_square_G, create_delay_line
-from metric import esn_nrmse, evaluate_esn
+from metric import esn_nrmse, evaluate_esn, esn_mc
 from gridsearch import experiment, load_experiment
 from plot import plot_df_trisurf, set_figsize, get_figsize, plot_lattice, plot_vector_hist
 from matrix import euclidean, inv, inv_squared, inv_cubed
@@ -219,33 +219,109 @@ def rgg_dist_performance():
     df.to_pickle('experiments/rgg_dist_performance.pkl')
 
 
-def plot_rgg_dist_performance(agg='mean'):
+def plot_rgg_dist_performance(agg='mean', file_name=None):
     df = load_experiment('experiments/rgg_dist_performance.pkl')
+    esn = load_experiment('experiments/esn_general_performance.pkl')
+    esn['hidden_nodes'] = esn[esn['hidden_nodes'] <= 80]['hidden_nodes']
 
     df['dist_function'] = df['dist_function'].apply(
         lambda f: f.__name__ if not isinstance(f, str) else f
     )
 
-    euc_perf = df.loc[df['dist_function'] == euclidean.__name__]
     inv_perf = df.loc[df['dist_function'] == inv.__name__]
     inv_squared_perf = df.loc[df['dist_function'] == inv_squared.__name__]
     inv_cubed_perf = df.loc[df['dist_function'] == inv_cubed.__name__]
 
-    labels = ['d', '1/d', '1/d^2', '1/d^3']
+    labels = ['ESN', '1/d', '1/d^2', '1/d^3']
+    linestyles = ['dashdot', 'dotted', 'dashed', 'solid']
 
-    for i, df in enumerate([euc_perf, inv_perf, inv_squared_perf, inv_cubed_perf]):
+    default_plot_settings()
+    for i, df in enumerate([esn, inv_perf, inv_squared_perf, inv_cubed_perf]):
         if agg == 'mean':
             grouped_df = df.groupby(['hidden_nodes']).mean().reset_index()
         elif agg == 'min':
             grouped_df = df.groupby(['hidden_nodes']).min().reset_index()
 
-        plt.plot(grouped_df['hidden_nodes'], grouped_df['esn_nrmse'], label=labels[i])
+        plt.plot(grouped_df['hidden_nodes'], grouped_df['esn_nrmse'], label=labels[i],
+                 color='black', linestyle=linestyles[i])
 
-    plt.title(f'NRMSE for RGG with different distance functions, agg={agg}')
     plt.xlabel('Hidden nodes')
-    plt.ylabel('NRMSE')
+    plt.ylabel('NARMA-10 NRMSE')
 
-    plt.legend()
+    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left', ncol=2,
+               mode="expand", borderaxespad=0., fancybox=False)
+
+    plt.tight_layout()
+    if file_name is not None:
+        save_plot(file_name)
+    plt.show()
+
+
+def rgg_dist_mc():
+    params = OrderedDict()
+    params['w_res_type'] = ['waxman']
+    params['hidden_nodes'] = [40, 80, 150]
+    params['dist_function'] = [inv_squared]
+    params['input_scaling'] = np.arange(0.1, 1.6, 0.1)
+
+    df = experiment(esn_mc, params, runs=10)
+    df.to_pickle('experiments/rgg_dist_mc.pkl')
+
+
+def plot_rgg_dist_mc():
+    df = load_experiment('experiments/rgg_dist_mc.pkl')
+
+    df40 = df.loc[df['hidden_nodes'] == 40]
+    df80 = df.loc[df['hidden_nodes'] == 80]
+    df150 = df.loc[df['hidden_nodes'] == 150]
+
+    linestyles = ['solid', 'dashed', 'dotted']
+    labels = ['40 nodes', '80 nodes', '150 nodes']
+    for i, df in enumerate([df40, df80, df150]):
+        grouped_df = df.groupby(['input_scaling', 'hidden_nodes']).max().reset_index()
+        plt.plot(grouped_df['input_scaling'], grouped_df['esn_mc'], color='black',
+                 linestyle=linestyles[i], label=labels[i])
+
+    plt.xlabel('Input scaling')
+    plt.ylabel('Short term memory capacity')
+
+    plt.legend(fancybox=False)
+    plt.tight_layout()
+    save_plot('RGG-dist-mc.png')
+    plt.show()
+
+
+def rgg_dist_performance_is():
+    params = OrderedDict()
+    params['w_res_type'] = ['waxman']
+    params['hidden_nodes'] = [40, 80, 150]
+    params['dist_function'] = [inv_squared]
+    params['input_scaling'] = np.arange(0.1, 1.6, 0.1)
+
+    df = experiment(esn_nrmse, params, runs=10)
+    df.to_pickle('experiments/rgg_dist_performance_is.pkl')
+
+
+def plot_rgg_dist_performance_is():
+    df = load_experiment('experiments/rgg_dist_performance_is.pkl')
+
+    df40 = df.loc[df['hidden_nodes'] == 40]
+    df80 = df.loc[df['hidden_nodes'] == 80]
+    df150 = df.loc[df['hidden_nodes'] == 150]
+
+    linestyles = ['solid', 'dashed', 'dotted']
+    labels = ['40 nodes', '80 nodes', '150 nodes']
+    for i, df in enumerate([df40, df80, df150]):
+        grouped_df = df.groupby(['input_scaling', 'hidden_nodes']).min().reset_index()
+        plt.plot(grouped_df['input_scaling'], grouped_df['esn_nrmse'], color='black',
+                 linestyle=linestyles[i], label=labels[i])
+
+    plt.xlabel('Input scaling')
+    plt.ylabel('NARMA-10 NRMSE')
+
+    plt.legend(fancybox=False)
+    plt.tight_layout()
+    save_plot('RGG-dist-performance-is.png')
     plt.show()
 
 
