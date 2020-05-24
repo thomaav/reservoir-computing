@@ -328,30 +328,24 @@ def plot_rgg_dist_performance_is():
 # EXPERIMENTS: Regular Tilings.
 
 
-def plot_regular_tilings():
+def plot_regular_tilings(save=False):
     from ESN import ESN
     from plot import plot_lattice
 
-    set_figsize(14, 6)
-
     esn_square = ESN(hidden_nodes=25, w_res_type='tetragonal')
-    esn_hex = ESN(hidden_nodes=25, w_res_type='hexagonal')
-    esn_tri = ESN(hidden_nodes=25, w_res_type='triangular')
-    esn_rect = ESN(hidden_nodes=25, w_res_type='rectangular', rect_ratio=2.0)
+    esn_hex = ESN(hidden_nodes=9, w_res_type='hexagonal')
+    esn_tri = ESN(hidden_nodes=16, w_res_type='triangular')
 
     G_square = esn_square.G
     G_hex = esn_hex.G
     G_tri = esn_tri.G
-    G_rect = esn_rect.G
 
-    fig, axs = plt.subplots(2, 2)
-    ax1, ax2, ax3, ax4 = axs[0, 0], axs[0, 1], axs[1, 0], axs[1, 1]
-    plot_lattice(G_square, title='Square', ax=ax1, show=False)
-    plot_lattice(G_hex, title='Hexagonal', ax=ax2, show=False)
-    plot_lattice(G_tri, title='Triangular', ax=ax3, show=False)
-    plot_lattice(G_rect, title='Rectangular', ax=ax4, show=True)
-
-    set_figsize(default_w, default_h)
+    file_names = ['square.png', 'hex.png', 'triangular.png']
+    for i, G in enumerate([G_square, G_hex, G_tri]):
+        plot_lattice(G, hide_axes=True, show=False)
+        if save:
+            save_plot(file_names[i])
+        plt.show()
 
 
 def regular_tilings_performance():
