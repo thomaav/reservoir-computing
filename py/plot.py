@@ -1,6 +1,7 @@
 from datetime import datetime
 from functools import wraps
 from mpl_toolkits.mplot3d import Axes3D
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle
@@ -466,9 +467,9 @@ def plot_trisurf(data, labels=None, ax=None, title=None, xlim=None, ylim=None,
         ax.set_title(title)
 
     if labels is not None:
-        ax.set_xlabel(labels['x'])
-        ax.set_ylabel(labels['y'])
-        ax.set_zlabel(labels['z'])
+        ax.set_xlabel(labels['x'], labelpad=9)
+        ax.set_ylabel(labels['y'], labelpad=9)
+        ax.set_zlabel(labels['z'], labelpad=9)
 
     if xlim is not None:
         ax.set_xlim(xlim[0], xlim[1])
@@ -477,7 +478,12 @@ def plot_trisurf(data, labels=None, ax=None, title=None, xlim=None, ylim=None,
     if zlim is not None:
         ax.set_zlim(zlim[0], zlim[1])
 
-    _ax = ax.plot_trisurf(data['x'], data['y'], data['z'], label=label, **kwargs)
+    vmin, vmax = min(data['z'])-0.05, max(data['z'])+0.05
+    norm = matplotlib.colors.Normalize(vmin=vmin, vmax=vmax)
+    cmap = 'gray'
+
+    _ax = ax.plot_trisurf(data['x'], data['y'], data['z'], label=label,
+                          cmap=cmap, norm=norm, **kwargs)
     ax.view_init(azim=azim, elev=elev)
 
     if label is not None:
@@ -587,7 +593,7 @@ def plot_df_trisurf(df, groupby, axes, agg=['mean'], show=True, title='', ax=Non
         _elev = elev if type(elev) != list else elev[i]
         _zlim = zlim if type(zlim) != list else zlim[i]
 
-        plot_trisurf(data=data, ax=cur_ax, show=False, title=_agg,
+        plot_trisurf(data=data, ax=cur_ax, show=False, title=title,
                      azim=_azim, elev=_elev, zlim=_zlim, **kwargs)
 
     if show:

@@ -1,5 +1,7 @@
 \chapter{Experiments: Regular Tilings}
 
+% (TODO): Overall: standard deviations.
+
 \textcolor{red}{
   \textbf{Methodology:} We look at the three most common types of tilings by
 regular polygons: regular tilings. Grünbaum and Shephard (section 1.3) about
@@ -72,15 +74,79 @@ should be the same.
 
 \subsection{Results and Discussion}
 
+% (TODO): t!
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=3.5in]{figures/regular-tilings-performance.png}
+  \caption{
+    Performance of square, hexagonal, and triangular regular tilings as
+reservoir topologies without other modifications to the echo state network
+methodology.
+  }
+  \label{fig:rt-performance}
+\end{figure}
+
+\textcolor{red}{
+  Again, we see that restricting topologies with no other changes will result in
+a performance penalty, seen in Figure \ref{fig:rt-performance}.
+}
+
+% (TODO): t!
+\begin{figure*}[t]
+  \centering
+  \begin{subfigure}{.32\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/regular-tilings-performance-is-sq.png}
+    \caption{}
+    \label{fig:rt-is-square}
+  \end{subfigure}
+  \begin{subfigure}{.32\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/regular-tilings-performance-is-hex.png}
+    \caption{}
+    \label{fig:rt-is-hex}
+  \end{subfigure}
+  \begin{subfigure}{.32\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/regular-tilings-performance-is-tri.png}
+    \caption{}
+    \label{fi:rt-is-tri}
+  \end{subfigure}
+  \caption{
+    Regular tilings investigated for their quality as reservoir topologies, here
+as a function of reservoir size and input scaling. Investigated topologies
+include square (a), hexagonal (b), and triangular (c) regular tilings.
+  }
+  \label{fig:rt-performance-is}
+\end{figure*}
+
+% (TODO): ref.
+\textcolor{red}{
+  Further, we investigate the impact of input scaling using what we found in
+Chapter ?, as input plays a critical role in input retention. Here, the question
+is perhaps not ``exactly how good can we make the topologies with input
+scaling'', but we are instead interested in the fact that it does matter at all,
+as we can use this in further experiments. We see in Figure
+\ref{fig:rt-performance-is} that lowering the input scaling again improves
+performance significantly, perhaps again due to issues with memory capacities.
+}
+
 \subsection{Summary}
 
 \section{Regular Tilings with Directed Edges}
 
 \subsection{Synopsis}
 
+% (TODO): ref.
+\textcolor{red}{
+Using knowledge obtained in Chapter ?, we modify the resulting networks to have
+directed edges, and scale the input magnitude to find a suitable one.
+}
+
 \subsection{Results and Discussion}
 
-Should include both going to directed edges as well as changing to global input.
+Should include both going to directed edges as well as changing to global
+input.
 
 Should include an example of great performance vs. one of not so good
 performance.

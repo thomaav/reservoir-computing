@@ -349,26 +349,73 @@ def plot_regular_tilings(save=False):
 
 
 def regular_tilings_performance():
-    pass
+    params = OrderedDict()
+    params['hidden_nodes'] = [n*n for n in range(3, 21)]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    nrmse_df = experiment(esn_nrmse, params)
+    nrmse_df.to_pickle('experiments/lattice_nrmse.pkl')
 
 
 def plot_regular_tilings_performance():
     nrmse_df = load_experiment('experiments/lattice_nrmse.pkl')
+    esn = load_experiment('experiments/esn_general_performance.pkl')
+    esn['hidden_nodes'] = esn[esn['hidden_nodes'] <= 400]['hidden_nodes']
+
     grouped_df = nrmse_df.groupby(['hidden_nodes', 'w_res_type']).mean().reset_index()
+    esn = esn.groupby(['hidden_nodes']).mean().reset_index()
 
-    tetragonal = grouped_df.loc[grouped_df['w_res_type'] == 'tetragonal']
-    hexagonal = grouped_df.loc[grouped_df['w_res_type'] == 'hexagonal']
-    triangular = grouped_df.loc[grouped_df['w_res_type'] == 'triangular']
+    sq = grouped_df.loc[grouped_df['w_res_type'] == 'tetragonal']
+    hex = grouped_df.loc[grouped_df['w_res_type'] == 'hexagonal']
+    tri = grouped_df.loc[grouped_df['w_res_type'] == 'triangular']
 
-    plt.plot(tetragonal['hidden_nodes'], tetragonal['esn_nrmse'], label='sq')
-    plt.plot(hexagonal['hidden_nodes'], hexagonal['esn_nrmse'], label='hex')
-    plt.plot(triangular['hidden_nodes'], triangular['esn_nrmse'], label='tri')
+    plt.plot(sq['hidden_nodes'], sq['esn_nrmse'], label='Square', color='black', linestyle='solid')
+    plt.plot(hex['hidden_nodes'], hex['esn_nrmse'], label='Hexagonal', color='black', linestyle='dashed')
+    plt.plot(tri['hidden_nodes'], tri['esn_nrmse'], label='Triangular', color='black', linestyle='dotted')
+    plt.plot(esn['hidden_nodes'], esn['esn_nrmse'], label='ESN', color='black', linestyle='dashdot')
 
     plt.legend(fancybox=False, loc='upper right', bbox_to_anchor=(1.0, 1.0))
-    plt.ylabel('NRMSE')
+    plt.ylabel('NARMA-10 NRMSE')
     plt.xlabel('Hidden nodes')
 
+    plt.tight_layout()
+    save_plot('regular-tilings-performance.png')
     plt.show()
+
+
+def regular_tilings_performance_is():
+    params = OrderedDict()
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['hidden_nodes'] = [n*n for n in range(5, 16)]
+    params['input_scaling'] = np.arange(0.1, 1.6, 0.1)
+    nrmse_df = experiment(esn_nrmse, params)
+    nrmse_df.to_pickle('experiments/rt_performance_is.pkl')
+
+
+def plot_regular_tilings_performance_is():
+    df = load_experiment('experiments/rt_performance_is.pkl')
+
+    sq = df.loc[df['w_res_type'] == 'tetragonal']
+    hex = df.loc[df['w_res_type'] == 'hexagonal']
+    tri = df.loc[df['w_res_type'] == 'triangular']
+
+    groupby = ['hidden_nodes', 'input_scaling']
+    axes    = ['hidden_nodes', 'input_scaling', 'esn_nrmse']
+    agg     = ['mean']
+    labels  = {'x': 'Hidden nodes', 'y': 'Input scaling', 'z': 'NARMA-10 NRMSE'}
+    zlim    = (0.3, 0.65)
+    xlim    = (min(sq['hidden_nodes']), max(sq['hidden_nodes']))
+    ylim    = (min(sq['input_scaling']), max(sq['input_scaling']))
+    azim    = -45
+    elev    = 20
+
+    file_names = ['sq', 'hex', 'tri']
+    for i, df in enumerate([sq, hex, tri]):
+        plot_df_trisurf(df=df, groupby=groupby, axes=axes, azim=azim, elev=elev, agg=agg,
+                        zlim=zlim, show=False, labels=labels, xlim=xlim, ylim=ylim)
+        plt.tight_layout()
+        plt.subplots_adjust(bottom=0.10, right=0.9)
+        save_plot(f'regular-tilings-performance-is-{file_names[i]}.png')
+        plt.show()
 
 
 def directed_lattice_performance():
