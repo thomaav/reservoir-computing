@@ -105,7 +105,8 @@ class ESN(nn.Module):
                 w_res = torch.ones(self.hidden_nodes, self.hidden_nodes)
 
             w_res[torch.rand(self.hidden_nodes, self.hidden_nodes) > self.w_res_density] = 0.0
-            w_res *= self.spectral_radius / _spectral_radius(w_res)
+            if _spectral_radius(w_res) != 0:
+                w_res *= self.spectral_radius / _spectral_radius(w_res)
 
         if self.w_in_distrib == Distribution.gaussian:
             w_in = torch.empty(self.hidden_nodes).normal_(mean=0.0, std=1.0)
@@ -120,8 +121,6 @@ class ESN(nn.Module):
         w_in *= self.input_scaling
 
         w_out = torch.zeros(self.hidden_nodes)
-
-        print(np.unique(w_res[np.nonzero(w_res)]))
 
         self.register_buffer('w_res', w_res)
         self.register_buffer('w_in', w_in)

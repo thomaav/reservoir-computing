@@ -95,8 +95,7 @@ def make_undirected_incrementally(dataset, esn, changed_edges_file):
         pickle.dump(changed_edges, open(changed_edges_file, 'wb'))
 
 
-def evaluate_incremental_undirection(dataset, esn_file, changed_edges_file, esns=False):
-    esn = pickle.load(open(esn_file, 'rb'))
+def evaluate_incremental_undirection(dataset, esn, changed_edges_file, esns=False):
     changed_edges = pickle.load(open(changed_edges_file, 'rb'))
     changed_edges = [e for i, e in enumerate(changed_edges) if i%2 == 0]
 

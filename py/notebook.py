@@ -580,8 +580,8 @@ def unique_weights():
     params['hidden_nodes'] = [100, 225, 400]
     params['dir_frac'] = [1.0]
     df = experiment(esn_nrmse, params, runs=10, esn_attributes=['w_in', 'w_res'])
-    df['uwin'] = df['w_in'].apply(lambda m: len(np.unique(m[np.nonzero(m)])))
-    df['uwres'] = df['w_res'].apply(lambda m: len(np.unique(m[np.nonzero(m)])))
+    df['uwin'] = df['w_in'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
+    df['uwres'] = df['w_res'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
     del df['w_in']
     del df['w_res']
     df.to_pickle('experiments/unique_weights_square.pkl')
@@ -590,8 +590,8 @@ def unique_weights():
     params['hidden_nodes'] = [100, 225, 400]
     params['w_res_density'] = [0.1]
     df = experiment(esn_nrmse, params, runs=10, esn_attributes=['w_in', 'w_res'])
-    df['uwin'] = df['w_in'].apply(lambda m: len(np.unique(m[np.nonzero(m)])))
-    df['uwres'] = df['w_res'].apply(lambda m: len(np.unique(m[np.nonzero(m)])))
+    df['uwin'] = df['w_in'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
+    df['uwres'] = df['w_res'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
     del df['w_in']
     del df['w_res']
     df.to_pickle('experiments/unique_weights_esn.pkl')
@@ -601,60 +601,86 @@ def print_unique_weights():
     sq_df = load_experiment('experiments/unique_weights_square.pkl')
     esn_df = load_experiment('experiments/unique_weights_esn.pkl')
 
-    print(sq_df, esn_df)
+    agg = {
+        'esn_nrmse': ['mean', 'std'],
+        'uwin': ['mean', 'std'],
+        'uwres': ['mean', 'std'],
+    }
 
-    sq_df = sq_df.groupby(['hidden_nodes']).mean().reset_index()
-    esn_df = esn_df.groupby(['hidden_nodes']).mean().reset_index()
+    sq_df = sq_df.groupby(['hidden_nodes']).agg(agg).reset_index()
+    esn_df = esn_df.groupby(['hidden_nodes']).agg(agg).reset_index()
+
+    print(sq_df)
+    print(esn_df)
 
 
-def plot_global_input_activations():
-    set_figsize(14, 6)
+def plot_global_input_activations(save=False):
+    from ESN import Distribution
+
+    hidden_nodes = 144
 
     params = OrderedDict()
-    params['hidden_nodes'] = 144
+    params['hidden_nodes'] = hidden_nodes
     params['w_res_density'] = 0.1
     def_esn = ESN(**params)
 
-    dir_esn = pickle.load(open('models/dir_esn.pkl', 'rb'))
-    dir_esn.w_in = torch.ones(dir_esn.hidden_nodes)
-    dir_esn.w_in *= 0.1
+    params = OrderedDict()
+    params['w_in_distrib'] = Distribution.fixed
+    params['input_scaling'] = 0.1
+    params['w_res_type'] = 'tetragonal'
+    params['hidden_nodes'] = hidden_nodes
+    params['dir_frac'] = 1.0
+    dir_esn = ESN(**params)
 
     def_nrmse = evaluate_esn(ds.dataset, def_esn)
     dir_nrmse = evaluate_esn(ds.dataset, dir_esn)
 
-    l = 30
-    fig, (ax1, ax2) = plt.subplots(1, 2)
-    plt.suptitle('Activations for an ESN vs. square lattice')
+    l = 50
+    n = 10
 
-    ax1.plot(def_esn.X[def_esn.washout:def_esn.washout+l])
-    ax1.set_title('ESN')
+    file_names = ['esn-activations.png', 'sq-activations.png']
+    for i, esn in enumerate([def_esn, dir_esn]):
+        plt.xlabel('Time step')
+        plt.ylabel(r'$\tanh$ activation')
 
-    ax2.plot(dir_esn.X[dir_esn.washout:dir_esn.washout+l])
-    ax2.set_title('Lattice')
-
-    plt.show()
-
-    set_figsize(default_w, default_h)
+        plt.plot(esn.X[esn.washout:esn.washout+l, :n], color='black')
+        plt.tight_layout()
+        if save:
+            save_plot(file_names[i])
+        plt.show()
 
 
 def node_removal_impact():
-    dir_esn = pickle.load(open('models/dir_esn.pkl', 'rb'))
-    dir_esn.set_readout('rr')
-    nrmse_diffs = np.array(pickle.load(open('experiments/dir_diff_nrmses.pkl', 'rb')))
+    import copy
+
+    params = OrderedDict()
+    params['w_in_distrib'] = Distribution.fixed
+    params['input_scaling'] = 0.1
+    params['w_res_type'] = 'tetragonal'
+    params['hidden_nodes'] = 144
+    params['dir_frac'] = 1.0
+    dir_esn = ESN(**params)
 
     def_nrmse = evaluate_esn(ds.dataset, dir_esn)
-    max_clip = 1 - def_nrmse
-    np.clip(nrmse_diffs, -1, max_clip, out=nrmse_diffs)
+    nrmse_diffs = []
 
-    title = 'Importance when removing single node (black = low importance)'
-    plot_lattice(dir_esn.G, cols=nrmse_diffs, cmap_r=True, title=title)
+    for i in range(len(dir_esn.G.nodes)):
+        esn = copy.deepcopy(dir_esn)
+        esn.remove_hidden_node(i)
+        nrmse_diffs.append(evaluate_esn(ds.dataset, esn) - def_nrmse)
 
-    set_figsize(10, 6)
-    fig, (ax1, ax2) = plt.subplots(1, 2)
-    plt.suptitle('Distribution of absolut diff in NRMSE (right clips outliers)')
-    plot_vector_hist(nrmse_diffs, n_bins=50, m=None, ax=ax1, show=False)
-    plot_vector_hist(nrmse_diffs, n_bins=50, m=10.0, ax=ax2, show=True)
-    set_figsize(default_w, default_h)
+    pickle.dump(nrmse_diffs, open('experiments/dir_diff_nrmses.pkl', 'wb'))
+
+
+def plot_node_removal_impact():
+    nrmse_diffs = np.array(pickle.load(open('experiments/dir_diff_nrmses.pkl', 'rb')))
+    set_figsize(6.4, 4.8)
+    plot_vector_hist(nrmse_diffs, n_bins=20, m=None, ax=plt.gca(), show=False)
+    plt.xlabel('NARMA-10 NRMSE change')
+    plt.ylabel('Frequency')
+    plt.tight_layout()
+    save_plot('removal-hist.png')
+    plt.show()
 
 
 def remove_nodes_performance():
@@ -687,30 +713,41 @@ def remove_nodes_performance():
     plt.show()
 
 
+def general_esn_shrink():
+    params = OrderedDict()
+    params['hidden_nodes'] = [1, 3] + list(range(5, 150, 5))
+    params['w_res_density'] = [0.1]
+    lattice_dir_df = experiment(esn_nrmse, params, runs=10)
+    lattice_dir_df.to_pickle('experiments/esn_general_short.pkl')
+
+
 def remove_esn_nodes_performance():
-    esn_nrmses = pickle.load(open('experiments/esn_removed_nodes_nrmses.pkl', 'rb'))
-    lattice_nrmses = pickle.load(open('experiments/deg_lattice_nrmses.pkl', 'rb'))
+    esn_shrink_nrmses = pickle.load(open('experiments/esn_removed_nodes_nrmses.pkl', 'rb'))
+    lattice_shrink_nrmses = pickle.load(open('experiments/deg_lattice_nrmses.pkl', 'rb'))
 
-    max_nodes = len(lattice_nrmses)
+    esn_general = load_experiment('experiments/esn_general_short.pkl')
+    esn_general = esn_general.groupby(['hidden_nodes']).mean().reset_index()
 
-    print(f'Default min NRMSE: {max_nodes - np.argmin(esn_nrmses)} nodes with NRMSE {min(esn_nrmses)}')
-    print(f'Lattice min NRMSE: {max_nodes - np.argmin(lattice_nrmses)} nodes with NRMSE {min(lattice_nrmses)}')
+    max_nodes = len(lattice_shrink_nrmses)
 
-    x = list(range(len(esn_nrmses), 0, -1))
-    plt.plot(x, esn_nrmses, label='ESN')
-    plt.plot(x, lattice_nrmses, label='Lattice')
+    x = list(range(len(esn_shrink_nrmses), 0, -1))
+    plt.plot(esn_general['hidden_nodes'], esn_general['esn_nrmse'], label='Random ESN', color='black', linestyle='dashed')
+    plt.plot(x, esn_shrink_nrmses, label='ESN (shrinking)', color='black', linestyle='dotted')
+    plt.plot(x, lattice_shrink_nrmses, label='Square grid', color='black', linestyle='solid')
 
     plt.gca().invert_xaxis()
     plt.ylim((0.0, 1.0))
 
-    plt.xlabel('Hidden nodes')
-    plt.ylabel('NRMSE')
+    plt.xlabel('Hidden nodes remaining')
+    plt.ylabel('NARMA-10 NRMSE')
 
     plt.legend()
+    plt.tight_layout()
+    save_plot('shrink-performance.png')
     plt.show()
 
 
-def plot_node_removal():
+def plot_node_removal(save=False):
     dir_esn = pickle.load(open('models/dir_esn.pkl', 'rb'))
     lattice_nrmses = pickle.load(open('experiments/deg_lattice_nrmses.pkl', 'rb'))
     lattices = pickle.load(open('experiments/deg_lattices.pkl', 'rb'))
@@ -719,8 +756,13 @@ def plot_node_removal():
 
     for i in [130, 70, 35, 20]:
         title = f'Lattice, {i} nodes, NRMSE {lattice_nrmses[max_nodes-i]:.3f}'
-        plot_lattice(dir_esn.G.reverse(), alpha=0.5, show=False, ax=plt.gca())
-        plot_lattice(lattices[max_nodes - i].reverse(), ax=plt.gca(), title=title)
+        plot_lattice(dir_esn.G.reverse(), edge_color='0.7', cols='0.7', show=False, ax=plt.gca())
+        plot_lattice(lattices[max_nodes - i].reverse(), ax=plt.gca(), show=False)
+        plt.gca().set_axis_off()
+        plt.tight_layout()
+        if save:
+            save_plot(f'sq-grid-{i}.png')
+        plt.show()
 
 
 def plot_esn_node_removal():
@@ -733,7 +775,7 @@ def plot_esn_node_removal():
     plt.show()
 
 
-def plot_growth():
+def plot_growth(save=False):
     # Lattices.
     lattices = pickle.load(open('experiments/grow_actual_lattices.pkl', 'rb'))
     ds.dataset = pickle.load(open('dataset/ds_narma_grow.pkl', 'rb'))
@@ -744,21 +786,53 @@ def plot_growth():
         lattice = lattices[i]
         esn = from_square_G(lattice)
         nrmse = evaluate_esn(ds.dataset, esn)
-        title = f'{len(lattice.nodes)} hidden nodes, NRMSE: {nrmse}'
-        plot_lattice(lattice, title=title)
+        print(f'{len(lattice.nodes)} hidden nodes, NRMSE: {nrmse}')
+        plot_lattice(lattice, show=False)
+
+        plt.gca().set_axis_off()
+        plt.tight_layout()
+        if save:
+            save_plot(f'sq-grid-grow-{len(lattice.nodes)}.png')
+        plt.show()
 
     set_figsize(default_w, default_h)
 
-    # NRMSEs.
+
+def plot_growth_performance():
+    set_figsize(6.4, 4.8)
     nrmses = pickle.load(open('experiments/grow_mid_nrmses.pkl', 'rb'))
 
-    plt.title('Growing of original lattice of size 74')
+    plt.xlabel('Hidden nodes')
+    plt.ylabel('NARMA-10 NRMSE')
 
-    plt.xlabel('Nodes added')
-    plt.ylabel('NRMSE')
-
-    plt.plot(nrmses)
+    plt.plot(range(74, 74+len(nrmses)), nrmses, color='black')
+    plt.tight_layout()
+    save_plot('grow-performance.png')
     plt.show()
+
+
+def making_edges_undirected_performance():
+    from ESN import find_esn, Distribution
+    from experiment import make_undirected_incrementally
+    from experiment import evaluate_incremental_undirection
+
+    changed_edges_file = 'experiments/changed_edges.pkl'
+
+    # Remove edges.
+    params = OrderedDict()
+    params['w_res_type'] = 'tetragonal'
+    params['hidden_nodes'] = 144
+    params['dir_frac'] = 1.0
+    params['input_scaling'] = 0.1
+    params['w_in_distrib'] = Distribution.fixed
+    esn = find_esn(dataset=ds.dataset, required_nrmse=0.25, **params)
+    make_undirected_incrementally(ds.dataset, esn, changed_edges_file)
+
+    # Evaluate removals.
+    nrmses, esns = evaluate_incremental_undirection(ds.dataset, esn, changed_edges_file, esns=True)
+    lattices = [esn.G for esn in esns]
+    pickle.dump(nrmses, open('experiments/changed_edges_nrmses.pkl', 'wb'))
+    pickle.dump(lattices, open('experiments/changed_edges_lattices.pkl', 'wb'))
 
 
 def plot_making_edges_undirected_performance():

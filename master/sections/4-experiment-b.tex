@@ -227,31 +227,53 @@ means only 50\% of the hidden nodes see the input.
 \begin{table}[t]
   \centering
   \begin{center}
-    \caption{\textcolor{red}{No caption here yet.}}
+    \caption{
+      \textcolor{red}{
+        Simple weighting scheme of square grids. Displayed values are given as
+an average across 10 experiment runs (std. dev.). Reservoir connectivity density
+in ESNs is 10\%.
+      }
+    }
     \label{tab:sq-global-input}
     \begin{tabular}{c c c c c}
       \hline
       \thead{Reservoir type} & \thead{Hidden \\ nodes} & \thead{Unique \\ input weights} & \thead{Unique \\ reservoir weights} & \thead{NARMA-10 \\ NRMSE} \\
       \hline
-      \rule{0pt}{2.5ex} Square grid & 100 & 1 & 1 & 0.0 \\
-      ESN & 100 & 1 & 1 & 0.0 \\
-      Square grid & 225 & 1 & 1 & 0.0 \\
-      ESN & 225 & 1 & 1 & 0.0 \\
-      Square grid & 400 & 1 & 1 & 0.0 \\
-      ESN & 400 & 1 & 1 & 0.0\rule[-1ex]{0pt}{0pt} \\
+      \rule{0pt}{2.5ex}Square grid & 100 & 1 & 1 & 0.346 (0.019) \\
+      Square grid & 225 & 1 & 1 & 0.245 (0.022) \\
+      Square grid & 400 & 1 & 1 & 0.168 (0.009) \\
+      \rule{0pt}{3ex}ESN & 100 & 100 & 997 (26) & 0.388 (0.019) \\
+      ESN & 225 & 225 & 5098 (74) & 0.282 (0.019) \\
+      ESN & 400 & 400 & 16070 (113) & 0.215 (0.021)\rule[-1ex]{0pt}{0pt} \\
       \hline
     \end{tabular}
   \end{center}
 \end{table}
 
-\textcolor{red}{
-  Think about including activations of hidden nodes, as it is so clear that they
-all see the same input.
-}
-
-\textcolor{red}{
-  Should we also include an image of actual prediction, to show how good it is?
-}
+% (TODO): t!
+\begin{figure*}[t]
+  \centering
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/esn-activations.png}
+    \caption{}
+    \label{}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/sq-activations.png}
+    \caption{}
+    \label{}
+  \end{subfigure}
+  \caption{
+    \textcolor{red}{
+      This is only 10 of the nodes to give an example without cluttering too
+much. Square grid has only positive activations, and the input is clearly
+visible, while the ESN is sporadic, random.
+    }
+  }
+  \label{}
+\end{figure*}
 
 \textcolor{red}{
   We should maybe also compare MC and KQ/G to that of ESNs, as independent
@@ -265,13 +287,130 @@ quite a lot of information, so this might not really be necessary.
 
 \subsection{Summary}
 
-\section{Shrinking and Growing Directed Reservoirs}
+\section{Shrinking and Growing Square Grids}
 
 \subsection{Synopsis}
 
 \subsection{Results and Discussion}
 
-Should include both shrinking and growing reservoirs for a conjoined discussion.
+\begin{figure}
+  \centering
+  \includegraphics[width=3.5in]{figures/removal-hist.png}
+  \caption{
+    \textcolor{red}{
+      Impact on NARMA-10 NRMSE when removing nodes from a 12x12 square grid
+reservoir. No nodes are absolutely essential, while some removals actually
+improve overall performance.
+    }
+  }
+  \label{fig:rt-removal-hist}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=3.5in]{figures/shrink-performance.png}
+  \caption{
+    \textcolor{red}{
+      No caption yet.
+    }
+  }
+  \label{fig:sq-shrink-performance}
+\end{figure}
+
+% (TODO): t!
+\begin{figure*}[t]
+  \centering
+  \begin{subfigure}{.40\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/sq-grid-130.png}
+    \caption{}
+    \label{fig:sq-grid-130}
+  \end{subfigure}
+  \begin{subfigure}{.40\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/sq-grid-70.png}
+    \caption{}
+    \label{fig:sq-grid-70}
+  \end{subfigure}
+  \vskip\baselineskip
+
+  \begin{subfigure}{.40\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/sq-grid-35.png}
+    \caption{}
+    \label{fig:sq-grid-35}
+  \end{subfigure}
+  \begin{subfigure}{.40\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/sq-grid-20.png}
+    \caption{\textcolor{red}{Should have NRMSE and nodes left here.}}
+    \label{fig:sq-grid-20}
+  \end{subfigure}
+  \caption{
+    \textcolor{red}{
+      Progression when incrementally removing nodes from a 12x12 square grid.
+    }
+  }
+  \label{fig:sq-grid}
+\end{figure*}
+
+\textcolor{red}{
+  Add the example when we have removed nodes from ESN? The one that is just
+impossible to make sense of. This is common knowledge however, we could probably
+just mention that.
+}
+
+\textcolor{red}{
+  We need to stress that this is just one example, there is no variance here,
+which is a bit of a weakness in the argument.
+}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=3.5in]{figures/grow-performance.png}
+  \caption{
+    \textcolor{red}{
+      No caption yet.
+    }
+  }
+  \label{fig:sq-grow-performance}
+\end{figure}
+
+% (TODO): t!
+\begin{figure*}[t]
+  \centering
+  \begin{subfigure}{1.0\textwidth}
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/sq-grid-grow-74.png}
+    \caption{}
+    \label{fig:sq-grid-grow-74}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/sq-grid-grow-124.png}
+    \caption{}
+    \label{fig:sq-grid-grow-124}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/sq-grid-grow-250.png}
+    \caption{\textcolor{red}{Should have captions for NRMSE and size.}}
+    \label{fig:sq-grid-grow-250}
+  \end{subfigure}
+  \caption{
+    \textcolor{red}{
+      Caption. We see the initial reservoir from where we start growing in (a),
+and progress in (b, c).
+    }
+  }
+  \label{fig:sq-grid-grow}
+\end{figure*}
+
+\textcolor{red}{
+  We repeat the experiment, but this time \textit{adding} nodes along the
+frontier, as we can exhaust every possibility for every iteration without that
+much trouble. Harder to see what is happening now.
+}
 
 \subsection{Summary}
 
@@ -280,6 +419,8 @@ Should include both shrinking and growing reservoirs for a conjoined discussion.
 \subsection{Synopsis}
 
 \subsection{Results and Discussion}
+
+
 
 \subsection{Summary}
 

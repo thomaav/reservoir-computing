@@ -514,8 +514,11 @@ def plot_lattice(G, title='', ax=None, neigh_color=False, edge_color=False,
         node_colors = 'black'
 
     if edge_color:
-        edge_weights = [d['weight'] for u,v,d in G.edges(data=True)]
-        edge_colors = ['red' if w == -1 else 'black' for w in edge_weights]
+        if type(edge_color) != str:
+            edge_weights = [d['weight'] for u,v,d in G.edges(data=True)]
+            edge_colors = ['red' if w == -1 else 'black' for w in edge_weights]
+        else:
+            edge_colors = edge_color
     elif color_directed:
         edges = set(G.edges())
         edge_colors = ['black' if (e[1], e[0]) not in edges else '0.7' for e in G.edges()]
@@ -624,7 +627,7 @@ def plot_vector_hist(vector, n_bins, m=20.0, ax=None, show=False, **kwargs):
 
     bin_width = (max_clip - min_clip) / n_bins
     bins = np.arange(min_clip, max_clip + bin_width, bin_width)
-    _plt.hist(vector, bins=bins, edgecolor='black', **kwargs)
+    _plt.hist(vector, bins=bins, color='gray', edgecolor='black', **kwargs)
 
     if show:
         plt.show()
