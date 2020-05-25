@@ -121,6 +121,8 @@ class ESN(nn.Module):
 
         w_out = torch.zeros(self.hidden_nodes)
 
+        print(np.unique(w_res[np.nonzero(w_res)]))
+
         self.register_buffer('w_res', w_res)
         self.register_buffer('w_in', w_in)
         self.register_buffer('w_out', w_out)

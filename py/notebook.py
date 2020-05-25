@@ -418,6 +418,24 @@ def plot_regular_tilings_performance_is():
         plt.show()
 
 
+def plot_directed_lattice(save=False):
+    esn = ESN(hidden_nodes=25, w_res_type='tetragonal', dir_frac=0.25)
+    plot_lattice(esn.G.reverse(), color_directed=True, show=False)
+    ax = plt.gca()
+    ax.set_axis_off()
+    if save:
+        save_plot('dir_lattice_025.png')
+    plt.show()
+
+    esn = ESN(hidden_nodes=25, w_res_type='tetragonal', dir_frac=0.75)
+    plot_lattice(esn.G.reverse(), color_directed=True, show=False)
+    ax = plt.gca()
+    ax.set_axis_off()
+    if save:
+        save_plot('dir_lattice_075.png')
+    plt.show()
+
+
 def directed_lattice_performance():
     params = OrderedDict()
     params['w_res_type'] = ['tetragonal']
@@ -443,70 +461,96 @@ def plot_directed_lattice_performance():
     esn_grouped_df = esn_df.groupby(['hidden_nodes']).mean().reset_index()
 
     plt.xlabel('Hidden nodes')
-    plt.ylabel('NRMSE')
-    plt.title('NRMSE vs. reservoir size')
+    plt.ylabel('NARMA-10 NRMSE')
 
-    plt.plot(dense_grouped_df['hidden_nodes'], dense_grouped_df['esn_nrmse'], label='Dense input lattice')
-    plt.plot(sparse_grouped_df['hidden_nodes'], sparse_grouped_df['esn_nrmse'], label='Sparse input lattice')
-    plt.plot(esn_grouped_df['hidden_nodes'], esn_grouped_df['esn_nrmse'], label='ESN')
+    plt.plot(dense_grouped_df['hidden_nodes'], dense_grouped_df['esn_nrmse'], label='Square (dense input)', color='black', linestyle='solid')
+    plt.plot(sparse_grouped_df['hidden_nodes'], sparse_grouped_df['esn_nrmse'], label='Square (sparse input)', color='black', linestyle='dashed')
+    plt.plot(esn_grouped_df['hidden_nodes'], esn_grouped_df['esn_nrmse'], label='ESN', color='black', linestyle='dashdot')
 
     plt.legend()
+    plt.tight_layout()
+    save_plot('rt-performance-big.png')
     plt.show()
 
 
 def directed_regular_tilings_performance():
-    pass
+    params = OrderedDict()
+    params['input_scaling'] = [0.1]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['hidden_nodes'] = [25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225]
+    params['dir_frac'] = np.arange(0.0, 1.1, 0.1)
+    lattice_dir_df = experiment(esn_nrmse, params, runs=10)
+    lattice_dir_df.to_pickle('experiments/lattice_dir.pkl')
 
 
 def plot_directed_regular_tilings_performance():
     lattice_dir_df = load_experiment('experiments/lattice_dir.pkl')
     esn_df = load_experiment('experiments/esn_general_performance.pkl')
 
-    tetragonal = lattice_dir_df.loc[lattice_dir_df['w_res_type'] == 'tetragonal']
-    hexagonal = lattice_dir_df.loc[lattice_dir_df['w_res_type'] == 'hexagonal']
-    triangular = lattice_dir_df.loc[lattice_dir_df['w_res_type'] == 'triangular']
+    sq = lattice_dir_df.loc[lattice_dir_df['w_res_type'] == 'tetragonal']
+    hex = lattice_dir_df.loc[lattice_dir_df['w_res_type'] == 'hexagonal']
+    tri = lattice_dir_df.loc[lattice_dir_df['w_res_type'] == 'triangular']
 
     groupby = ['hidden_nodes', 'dir_frac']
     axes    = ['hidden_nodes', 'dir_frac', 'esn_nrmse']
-    agg     = ['mean', 'min']
-    zlim    = (0.25, 0.7)
-    azim    = 45
-    titles  = ['tetragonal', 'hexagonal', 'triangular']
+    agg     = ['mean']
+    zlims   = [(0.25, 0.6), (0.28, 0.6), (0.28, 0.45)]
+    azim    = 40
+    labels  = {'x': 'Hidden nodes', 'y': 'Directed edges', 'z': 'NARMA-10 NRMSE'}
 
-    for i, df in enumerate([tetragonal, hexagonal, triangular]):
+    file_names = ['rt-dir-perf-sq.png', 'rt-dir-perf-hex.png', 'rt-dir-perf-tri.png']
+    for i, df in enumerate([sq, hex, tri]):
         plot_df_trisurf(df=df, groupby=groupby, axes=axes, azim=azim, agg=agg,
-                        zlim=zlim, title=titles[i])
+                        zlim=zlims[i], labels=labels, show=False)
+        plt.tight_layout()
+        plt.subplots_adjust(bottom=0.12, left=0.1)
 
-    tetragonal = tetragonal.loc[tetragonal['dir_frac'] == 1.0]
-    tetragonal = tetragonal.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
-    hexagonal = hexagonal.loc[hexagonal['dir_frac'] == 1.0]
-    hexagonal = hexagonal.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
-    triangular = triangular.loc[triangular['dir_frac'] == 1.0]
-    triangular = triangular.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
+        ax = plt.gca()
+        ax.set_zlabel(ax.get_zlabel(), rotation=90)
+        ax.zaxis.set_rotate_label(False)
+
+        save_plot(file_names[i])
+        plt.show()
+
+    sq = sq.loc[sq['dir_frac'] == 1.0]
+    sq = sq.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
+    hex = hex.loc[hex['dir_frac'] == 1.0]
+    hex = hex.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
+    tri = tri.loc[tri['dir_frac'] == 1.0]
+    tri = tri.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
     esn = esn_df.groupby(['hidden_nodes']).mean().reset_index()
+    esn = esn.loc[esn['hidden_nodes'] <= 230]
 
-    plt.plot(tetragonal['hidden_nodes'], tetragonal['esn_nrmse'], label='sq')
-    plt.plot(hexagonal['hidden_nodes'], hexagonal['esn_nrmse'], label='hex')
-    plt.plot(triangular['hidden_nodes'], triangular['esn_nrmse'], label='tri')
-    plt.plot(esn['hidden_nodes'], esn['esn_nrmse'], label='esn')
+    plt.plot(sq['hidden_nodes'], sq['esn_nrmse'], color='black', label='Square', linestyle='solid')
+    plt.plot(hex['hidden_nodes'], hex['esn_nrmse'], color='black', label='Hexagonal', linestyle='dashed')
+    plt.plot(tri['hidden_nodes'], tri['esn_nrmse'], color='black', label='Triagonal', linestyle='dotted')
+    plt.plot(esn['hidden_nodes'], esn['esn_nrmse'], color='black', label='ESN', linestyle='dashdot')
 
     plt.legend(fancybox=False, loc='upper right', bbox_to_anchor=(1.0, 1.0))
-    plt.title('NRMSE of regular tilings with all edges directed, agg=mean')
-    plt.ylabel('NRMSE')
+    plt.ylabel('NARMA-10 NRMSE')
     plt.xlabel('Hidden nodes')
 
+    plt.xlim(0, max(sq['hidden_nodes'])+15)
+
+    plt.tight_layout()
+    save_plot('rt-dir-perf.png')
     plt.show()
 
 
 def global_input_scheme_performance():
+    from ESN import Distribution
+
     params = OrderedDict()
-    params['hidden_nodes'] = 144
-    params['w_res_density'] = 0.1
+    params['hidden_nodes'] = 25*25
+    params['w_res_density'] = 0.2
     def_esn = ESN(**params)
 
-    dir_esn = pickle.load(open('models/dir_esn.pkl', 'rb'))
-    dir_esn.w_in = torch.ones(dir_esn.hidden_nodes)
-    dir_esn.w_in *= 0.1
+    params['w_res_type'] = 'tetragonal'
+    params['hidden_nodes'] = 25*25
+    params['w_in_distrib'] = Distribution.fixed
+    params['input_scaling'] = 0.1
+    params['dir_frac'] = 1.0
+    dir_esn = ESN(**params)
 
     def_nrmse = evaluate_esn(ds.dataset, def_esn)
     dir_nrmse = evaluate_esn(ds.dataset, dir_esn)
@@ -525,7 +569,42 @@ def global_input_scheme_performance():
     print(f' w_in:  unique-{np.unique(dir_esn.w_in)}')
     print(f' w_res: unique-{np.unique(dir_esn.w_res)}')
 
-    plot_lattice(dir_esn.G.reverse())
+
+def unique_weights():
+    from ESN import Distribution
+
+    params = OrderedDict()
+    params['w_in_distrib'] = [Distribution.fixed]
+    params['input_scaling'] = [0.1]
+    params['w_res_type'] = ['tetragonal']
+    params['hidden_nodes'] = [100, 225, 400]
+    params['dir_frac'] = [1.0]
+    df = experiment(esn_nrmse, params, runs=10, esn_attributes=['w_in', 'w_res'])
+    df['uwin'] = df['w_in'].apply(lambda m: len(np.unique(m[np.nonzero(m)])))
+    df['uwres'] = df['w_res'].apply(lambda m: len(np.unique(m[np.nonzero(m)])))
+    del df['w_in']
+    del df['w_res']
+    df.to_pickle('experiments/unique_weights_square.pkl')
+
+    params = OrderedDict()
+    params['hidden_nodes'] = [100, 225, 400]
+    params['w_res_density'] = [0.1]
+    df = experiment(esn_nrmse, params, runs=10, esn_attributes=['w_in', 'w_res'])
+    df['uwin'] = df['w_in'].apply(lambda m: len(np.unique(m[np.nonzero(m)])))
+    df['uwres'] = df['w_res'].apply(lambda m: len(np.unique(m[np.nonzero(m)])))
+    del df['w_in']
+    del df['w_res']
+    df.to_pickle('experiments/unique_weights_esn.pkl')
+
+
+def print_unique_weights():
+    sq_df = load_experiment('experiments/unique_weights_square.pkl')
+    esn_df = load_experiment('experiments/unique_weights_esn.pkl')
+
+    print(sq_df, esn_df)
+
+    sq_df = sq_df.groupby(['hidden_nodes']).mean().reset_index()
+    esn_df = esn_df.groupby(['hidden_nodes']).mean().reset_index()
 
 
 def plot_global_input_activations():

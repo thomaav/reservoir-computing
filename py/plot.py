@@ -518,7 +518,7 @@ def plot_lattice(G, title='', ax=None, neigh_color=False, edge_color=False,
         edge_colors = ['red' if w == -1 else 'black' for w in edge_weights]
     elif color_directed:
         edges = set(G.edges())
-        edge_colors = ['black' if (e[1], e[0]) not in edges else 'white' for e in G.edges()]
+        edge_colors = ['black' if (e[1], e[0]) not in edges else '0.7' for e in G.edges()]
     else:
         edge_colors = 'black'
 
