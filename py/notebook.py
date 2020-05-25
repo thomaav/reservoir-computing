@@ -812,6 +812,7 @@ def plot_growth_performance():
 
 
 def making_edges_undirected_performance():
+    import copy
     from ESN import find_esn, Distribution
     from experiment import make_undirected_incrementally
     from experiment import evaluate_incremental_undirection
@@ -825,8 +826,8 @@ def making_edges_undirected_performance():
     params['dir_frac'] = 1.0
     params['input_scaling'] = 0.1
     params['w_in_distrib'] = Distribution.fixed
-    esn = find_esn(dataset=ds.dataset, required_nrmse=0.25, **params)
-    make_undirected_incrementally(ds.dataset, esn, changed_edges_file)
+    esn = find_esn(dataset=ds.dataset, required_nrmse=0.26, **params)
+    make_undirected_incrementally(ds.dataset, copy.deepcopy(esn), changed_edges_file)
 
     # Evaluate removals.
     nrmses, esns = evaluate_incremental_undirection(ds.dataset, esn, changed_edges_file, esns=True)
