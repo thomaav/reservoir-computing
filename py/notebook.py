@@ -842,13 +842,14 @@ def plot_making_edges_undirected_performance():
     edges = len(nrmses)
     print(f'To undirected min NRMSE: {np.argmin(nrmses)} edges removed with NRMSE {min(nrmses)}')
 
-    plt.plot(nrmses)
-
+    plt.plot([n/264 for n in range(1, 265)], nrmses, color='black')
     plt.ylim((0.0, 1.0))
 
     plt.xlabel('Edges made undirected')
-    plt.ylabel('NRMSE')
+    plt.ylabel('NARMA-10 NRMSE')
 
+    plt.tight_layout()
+    save_plot('undir-performance.png')
     plt.show()
 
 

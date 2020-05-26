@@ -114,8 +114,6 @@ class ESN(nn.Module):
             w_in = torch.rand(self.hidden_nodes) - 0.5
         elif self.w_in_distrib == Distribution.fixed:
             w_in = torch.ones(self.hidden_nodes)
-            if self.dir_frac == 0.0:
-                w_in *= torch.FloatTensor(np.random.choice([-1, 1], w_in.shape[0]))
 
         w_in[torch.rand(self.hidden_nodes) > self.w_in_density] = 0.0
         w_in *= self.input_scaling
