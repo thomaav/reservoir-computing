@@ -330,8 +330,9 @@ def performance_restoration():
     params['w_res_type'] = ['waxman']
     params['dist_function'] = [inv]
     params['z_frac'] = [1.0]
-    params['hidden_nodes'] = np.arange(20, 150, 10)
+    params['input_scaling'] = [0.1]
     params['sign_frac'] = np.arange(0.0, 0.55, 0.05)
+    params['hidden_nodes'] = np.arange(20, 260, 10)
     params['directed'] = [True, False]
     df = experiment(esn_nrmse, params, runs=20)
     df.to_pickle('experiments/performance_restoration.pkl')
@@ -347,7 +348,7 @@ def plot_performance_restoration():
     axes    = ['hidden_nodes', 'sign_frac', 'esn_nrmse']
     agg     = ['mean']
     labels  = {'x': 'Hidden nodes', 'y': 'Fraction of negative weights', 'z': 'NARMA-10 NRMSE'}
-    zlim    = (0.3, 0.7)
+    zlim    = (0.20, 0.6)
     azim    = 40
 
     plot_df_trisurf(df=undirected_df, groupby=groupby, axes=axes, agg=agg, azim=azim,
@@ -373,7 +374,7 @@ def plot_performance_restoration_comparison():
 
     undirected_df = df.loc[df['directed'] == False]
     directed_df = df.loc[df['directed'] == True]
-    esn_df['hidden_nodes'] = esn_df[esn_df['hidden_nodes'] <= 140]['hidden_nodes']
+    esn_df['hidden_nodes'] = esn_df[esn_df['hidden_nodes'] <= 250]['hidden_nodes']
 
     undirected_df = undirected_df.loc[undirected_df['sign_frac'] == 0.5]
     directed_df = directed_df.loc[directed_df['sign_frac'] == 0.5]
@@ -391,6 +392,38 @@ def plot_performance_restoration_comparison():
 
     plt.tight_layout()
     save_plot('perf-rest-comp.png')
+    plt.show()
+
+
+def plot_new_weight_distribution():
+    from plot import plot_vector_hist, plot_esn_weight_hist
+    from ESN import Distribution
+
+    default_plot_settings()
+
+    bins = 80
+    hidden_nodes = 400
+
+    params = OrderedDict()
+    params['w_res_type'] = 'waxman'
+    params['dist_function'] = inv
+    params['z_frac'] = 1.0
+    params['hidden_nodes'] = hidden_nodes
+    params['sign_frac'] = 0.5
+    params['directed'] = True
+    esn = ESN(**params)
+    M = esn.w_res.data.numpy()
+
+    # Masking to remove diagonal (i.e. 0-elements) of reservoir weights.
+    M = M[~np.eye(M.shape[0], dtype=bool)].reshape(M.shape[0], -1)
+
+    weights = M.flatten()
+    weights = np.delete(weights, np.argwhere(abs(weights) <= 0.00001))
+    plot_vector_hist(weights, n_bins=bins, low=-0.15, high=0.15, show=False)
+    plt.xlabel('Weight')
+    plt.ylabel('Frequency')
+    plt.tight_layout()
+    save_plot('rgg-dist.png')
     plt.show()
 
 

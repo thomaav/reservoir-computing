@@ -269,6 +269,14 @@ remedied by lowering the input scaling to wash older inputs out slower.
 
 \subsection{Synopsis}
 
+\textcolor{red}{
+  \textit{Why} we are doing this deviates quite a bit from the goal of being
+related to physical reservoir computing, as this is not something one can do
+willy-nilly in such cases. However, this is a measure to gain some insight into
+what has happened, such that we can reason about why this physical restriction
+is an issue.
+}
+
 \subsection{Results and Discussion}
 
 % (TODO): t!
@@ -332,10 +340,24 @@ as that of the ESN.
 
 \subsection{Synopsis}
 
-Reciprocal normal distribution. Cite common ones in practice from practical
-applications paper.
+Cite common ones in practice from practical applications paper.
 
 \subsection{Results and Discussion}
+
+% (TODO): t!
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=3.5in]{figures/rgg-dist.png}
+  \caption{
+    \textcolor{red}{
+      Weight distribution of a network from the findings in the previous
+section. We have removed all zero-elements, as half of the entries will be zero
+when directed. The distribution resembles $1/d$, which is the distance function,
+and also resembles the reciprocal normal distribution.
+    }
+  }
+  \label{fig:rgg-dist}
+\end{figure}
 
 \textcolor{red}{
   Mention that changing from xyz to xy or xyzw does not change the distribution
