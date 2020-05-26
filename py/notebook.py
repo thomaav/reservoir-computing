@@ -325,6 +325,75 @@ def plot_rgg_dist_performance_is():
     plt.show()
 
 
+def performance_restoration():
+    params = OrderedDict()
+    params['w_res_type'] = ['waxman']
+    params['dist_function'] = [inv]
+    params['z_frac'] = [1.0]
+    params['hidden_nodes'] = np.arange(20, 150, 10)
+    params['sign_frac'] = np.arange(0.0, 0.55, 0.05)
+    params['directed'] = [True, False]
+    df = experiment(esn_nrmse, params, runs=20)
+    df.to_pickle('experiments/performance_restoration.pkl')
+
+
+def plot_performance_restoration():
+    df = load_experiment('experiments/performance_restoration.pkl')
+
+    undirected_df = df.loc[df['directed'] == False]
+    directed_df = df.loc[df['directed'] == True]
+
+    groupby = ['hidden_nodes', 'sign_frac']
+    axes    = ['hidden_nodes', 'sign_frac', 'esn_nrmse']
+    agg     = ['mean']
+    labels  = {'x': 'Hidden nodes', 'y': 'Fraction of negative weights', 'z': 'NARMA-10 NRMSE'}
+    zlim    = (0.3, 0.7)
+    azim    = 40
+
+    plot_df_trisurf(df=undirected_df, groupby=groupby, axes=axes, agg=agg, azim=azim,
+                    zlim=zlim, show=False, labels=labels)
+    plt.gca().set_zlabel(plt.gca().get_zlabel(), rotation=90)
+    plt.gca().zaxis.set_rotate_label(False)
+    plt.tight_layout()
+    plt.subplots_adjust(bottom=0.18, left=0.1)
+    save_plot('perf-rest-undir.png')
+
+    plot_df_trisurf(df=directed_df, groupby=groupby, axes=axes, agg=agg, azim=azim,
+                    zlim=zlim, show=False, labels=labels)
+    plt.gca().set_zlabel(plt.gca().get_zlabel(), rotation=90)
+    plt.gca().zaxis.set_rotate_label(False)
+    plt.tight_layout()
+    plt.subplots_adjust(bottom=0.18, left=0.1)
+    save_plot('perf-rest-dir.png')
+
+
+def plot_performance_restoration_comparison():
+    df = load_experiment('experiments/performance_restoration.pkl')
+    esn_df = load_experiment('experiments/esn_general_performance.pkl')
+
+    undirected_df = df.loc[df['directed'] == False]
+    directed_df = df.loc[df['directed'] == True]
+    esn_df['hidden_nodes'] = esn_df[esn_df['hidden_nodes'] <= 140]['hidden_nodes']
+
+    undirected_df = undirected_df.loc[undirected_df['sign_frac'] == 0.5]
+    directed_df = directed_df.loc[directed_df['sign_frac'] == 0.5]
+    esn_df['sign_frac'] = 0.5
+
+    linestyles = ['dashed', 'dotted', 'solid']
+    labels = ['Undirected', 'Directed', 'ESN']
+    for i, df in enumerate([undirected_df, directed_df, esn_df]):
+        df = df.groupby(['hidden_nodes', 'sign_frac']).mean().reset_index()
+        plt.plot(df['hidden_nodes'], df['esn_nrmse'], label=labels[i], color='black', linestyle=linestyles[i])
+
+    plt.legend()
+    plt.xlabel('Hidden nodes')
+    plt.ylabel('NARMA-10 NRMSE')
+
+    plt.tight_layout()
+    save_plot('perf-rest-comp.png')
+    plt.show()
+
+
 # EXPERIMENTS: Regular Tilings.
 
 

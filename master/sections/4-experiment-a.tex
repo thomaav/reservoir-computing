@@ -271,6 +271,61 @@ remedied by lowering the input scaling to wash older inputs out slower.
 
 \subsection{Results and Discussion}
 
+% (TODO): t!
+\begin{figure*}[t]
+  \centering
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/perf-rest-undir.png}
+    \caption{}
+    \label{fig:perf-restore-a}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/perf-rest-dir.png}
+    \caption{}
+    \label{fig:perf-restore-b}
+  \end{subfigure}
+  \caption{
+    \textcolor{red}{
+      Adding signed weights and directedness. Undirected (a) and directed
+(b). Directed means all nodes are directed, 50/50 which direction.
+    }
+  }
+  \label{fig:perf-restore}
+\end{figure*}
+
+\textcolor{red}{
+  Figure \ref{fig:perf-restore} shows the importance of adding signedness and
+directedness.
+}
+
+textcolor{blue}{
+  Dale et al. investigates this a bit in their paper: ``It then becomes clear
+that how weights are structured and directed, controlling information flow, has
+a greater affect on quality of the network. This supports similar results using
+hierarchical networks, where structure and number of parameters also
+significantly impact performance [6].''
+}
+
+% (TODO): t!
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=3.5in]{figures/perf-rest-comp.png}
+  \caption{
+    \textcolor{red}{
+      No caption yet.
+    }
+  }
+  \label{fig:perf-rest-comp}
+\end{figure}
+
+\textcolor{red}{
+  In Figure \ref{fig:perf-rest-comp} we see that once signedness and
+directedness are both introduced together, the performance is close to the same
+as that of the ESN.
+}
+
 \subsection{Summary}
 
 \section{Reservoir Weight Distributions}
@@ -282,15 +337,12 @@ applications paper.
 
 \subsection{Results and Discussion}
 
-\subsection{Summary}
-
-\section{Dimensionality of the Underlying Space}
-
-\subsection{Synopsis}
-
-Does it matter if we choose xy, xyz, xyzw?
-
-\subsection{Results and Discussion}
+\textcolor{red}{
+  Mention that changing from xyz to xy or xyzw does not change the distribution
+much, and thus not the reservoir either. So the dimensionality is not really
+relevant with this global connectivity where the in-degree will be the same
+regardless of dimension.
+}
 
 \subsection{Summary}
 
