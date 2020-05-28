@@ -66,6 +66,10 @@ specific information about past inputs for their individual task.'', from Maass
 et al. paper.
 }
 
+\textcolor{blue}{
+  I have some in the abstract I wrote for SPRAK3501.
+}
+
 \section{Echo State Networks}
 
 \subsection{Recurrent Neural Networks}
@@ -98,7 +102,7 @@ so on. Can/should be adapted from pre-thesis.
 \textcolor{red}{
   Common tunings, such as input scaling, spectral radius, leakage and
 sparsity. Extensions to base model. Bias, output feedback, teacher forced
-etc. Also deep ESNs now.
+etc. Also deep ESNs now (most recent, actually quite recent).
 }
 
 \textcolor{red}{
@@ -107,26 +111,24 @@ etc. Also deep ESNs now.
 
 \subsection{Real World Applications}
 
-\textcolor{red}{
-  Present some real world applications, like equalizing wireless communication
-  channel, short-term traffic load, short-term electric load, stock forecasting.
-}
+The ESN methodology has been applied somewhat successfully to real world
+tasks. Approaches include equalizing a wireless communication channel
+\cite{jaeger_harnessing_2004}, and short-term traffic \cite{an_short-term_2011},
+electric load \cite{song_hourly_2011}, and stock price forecasting
+\cite{lin_short-term_2009}. Robot control is also a popular area of research for
+RC applications, particularly for motor control and event detection
+\cite{aislan_antonelo_learning_2015, harding_evolution_2005,
+hutchison_movement_2004}. Perhaps less conventionally, RC has also been applied
+in the context of reinforcement learning \cite{bush_modeling_2005}.
 
-\textcolor{blue}{
-  Robot navigation mentioned in model for-in materio by dale, also interesting
-overall. Find some robot navigation examples.
-}
-
-\textcolor{red}{
-  Find the funny one about predicting printers that will break, which was an
-interesting one, perhaps not very useful or interesting. Shows the wider area of
-application.
-}
-
-\textcolor{blue}{
-  Some/most of these can be adapted from the small paragraph about this in the
-pre-thesis.
-}
+However, as the practicality of the paradigm resides primarily in chaotic time
+series prediction and classification, this is also its main focus. Furthermore,
+recent years have seen an increase in the realization of physical reservoirs to
+accompany existing software simulations. An example is a silicon photonics chip
+capable of 5-bit header recognition up to 12.5 Gbits$^{-1}$, and is scalable to
+even higher bitrates \cite{vandoorne_experimental_2014}. This surge of optimism
+has breathed new life into the field of RC, as physical reservoirs pave the way
+for new types of integrated chips.
 
 \subsection{Comparison to State of the Art}
 
@@ -134,7 +136,14 @@ pre-thesis.
   Perhaps a short comparison to RNN training methods, LSTM, and GRU. If not a
 complete subsection, at least introduce this in some of the other subsections,
 as to mention that there are other areas of research concerned with the same
-types of tasks.
+types of tasks. I don't know if this is necessary.
+}
+
+\textcolor{red}{
+  sota: gru, lstm, bi-lstm are some current ones that are used a
+lot. ``Comparison between DeepESNs and gatedRNNs on multivariate time-series
+prediction'' is a good one to actually get some insight. This is very lacking in
+literature!
 }
 
 \section{Physical Reservoir Computing}
