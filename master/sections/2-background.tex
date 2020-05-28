@@ -2,33 +2,58 @@
 
 Related work and the state of the art were reviewed, and identification of
 relevant background material was carried out in the project preceding this
-thesis \cite{aven_exploring_2019}. This background is herein amended with
-further insights into the paradigm of physical reservoir
-computing. Specifically, the main focus is transferred from physical limitations
-in general, to the narrower scope of spatial limitations relating to physical
-morphology and topology.
-
-\section{Order and Chaos}
+thesis \cite{aven_exploring_2019}. This background is herein amended with deeper
+insights into the paradigm of physical reservoir computing. Specifically, the
+main focus is transferred from physical limitations in general, to the narrower
+scope of spatial limitations relating to physical morphology and topology.
 
 \textcolor{red}{
-  A section on the main interesting points about order and chaos in the context
-of reservoir computing could maybe serve as a gentle introduction of the
-underlying principles?
+  The chapter covers important material used throughout the text, as well as a
+short historical background for context. Talk about sections.
 }
 
-\textcolor{red}{
-  I.e.: should a section be included that briefly explains the relevance of the
-line of criticality? Perhaps illustrating the subject with the Lyapunov
-exponent. The degree of sensitivity to initial conditions might not be
-completely relevant, but the theory as a whole is important.
-}
+\section{Complexity: Order, Chaos and Criticality}
+
+In deeming a physical system able to \textit{compute}, one implies information
+storage, retrieval and modification. We are as humans intimately familiar with
+the continuous, yet spontaneous computation present in our brains -- our
+consciousness. We are less acquainted, however, with the conditions that
+\textit{caused} the emergence of such a system.
+
+Spanning a wide range of topics and disciplines, the field of \textit{complexity
+theory} seeks answers to this conundrum. An exact definition of ``complexity''
+is perhaps ever so elusive, but at its core lies an emergence of behavior
+greater than the sum of its parts. Simple, local interactions give rise to
+intricate, global patterns. This spontaneous emergence of complex behavior is
+ubiquitous in nature. Ranging from convection cells in physics, to swarm and
+flock behavior in biology, there is an abundance of interesting phenomena to
+study \cite{heylighen_science_1999-1}.
+
+Langton investigated the emergence of computation in cellular automata (CA)
+\cite{langton_computation_1990}. His findings indicate a \textit{criticality} as
+a condition to support computation. In essence, in between \textit{ordered} and
+\textit{chaotic} dynamics, we find a critical phase transition. It is these
+systems, intertwining order and chaos, that are of interest.
+
+In systems that are too static, perturbation will fade too quickly. Chaotic
+systems, on the other hand, are wildly unpredictable, making them excessively
+sensitive. This \textit{edge of chaos} is a recurring theme in the investigation
+of the computational capabilities of physical systems. In fact, the edge of
+chaos has been found to be of significant in predicting the computational
+performance of for neural microcircuit models, consisting of spiking neurons and
+dynamic synapses \cite{legenstein_edge_2007}.
+
+Biologically inspired models, most famously the artificial neural network (ANN),
+are valuable scientific tools. Oftentimes, finding a suitable set of parameters
+for a model will amount to much the same as finding the critical phase
+transition between order and chaos. Reservoir computing (RC), a niche framework
+within the field of machine learning, is concerned with observing the inherent
+dynamics of a ``reservoir'' of local interconnections. Often employing random
+neural networks, RC exploits the intrinsic computation emerging from these local
+interconnections to solve practical tasks.
 
 \textcolor{red}{
-  ``Dynamic Systems and Computing at the Edge of Chaos''?
-}
-
-\textcolor{red}{
-  ``Reservoirs and criticality'' section of in-materio paper.
+  Should we include any figures? There is much beauty to behold.
 }
 
 \section{Reservoir Computing}
@@ -40,6 +65,8 @@ integrated information, from which specific readout elements can extract
 specific information about past inputs for their individual task.'', from Maass
 et al. paper.
 }
+
+\section{Echo State Networks}
 
 \subsection{Recurrent Neural Networks}
 
@@ -64,8 +91,8 @@ Network and Maass's Liquid State Machine.
 \textcolor{red}{
   A section that specifically explains how the default Echo State Networks
 function. Some minor details about work that has been done to improve upon the
-model, such as intrinsic plasticity, leaking neurons, and so on. Can/should be
-adapted from pre-thesis.
+model, such as intrinsic plasticity, leaking neurons, lateral inhibitions, and
+so on. Can/should be adapted from pre-thesis.
 }
 
 \textcolor{red}{
