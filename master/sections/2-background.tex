@@ -57,19 +57,44 @@ interconnections to solve practical tasks.
   Should we include any figures? There is much beauty to behold.
 }
 
-\section{Reservoir Computing}
+\section{Reservoir Computing Fundamentals}
 
-\textcolor{blue}{
-  ``Instead it proposes that the trajectory of internal states of a recurrent
-neural circuit provides a raw, unbiased, and universal source of temporally
-integrated information, from which specific readout elements can extract
-specific information about past inputs for their individual task.'', from Maass
-et al. paper.
-}
+Training recurrent neural networks (RNN) is an inherently difficult
+task. Gradient descent methods that incorporate loss information become
+increasingly inefficient on problems with long-range temporal dependencies. This
+inefficiency makes the backpropagation algorithm used with feed-forward
+structures less attractive. Specifically, a continuous search in the parameter
+space of recurrent networks may cause bifurcations points in the dynamics of the
+system, causing non-convergent training \cite{doya_bifurcations_nodate}. To
+circumvent this complexity, alternative methods that leave internal weights
+untrained have been proposed.
 
-\textcolor{blue}{
-  I have some in the abstract I wrote for SPRAK3501.
-}
+Liquid State Machines (LSMs) \cite{maass_real-time_2002} and Echo State Networks
+(ESNs) \cite{jaeger_echo_2001} independently present supervised learning methods
+that do not adapt the internal weights of the RNN. Instead, the output is
+generated using a simple, memoryless classifier or regressor. This makes the RNN
+function much like a kernel in kernel method algorithms, which seeks features
+and general relations in datasets to increase separability.
+
+Thus, by projecting into a high-dimensional space, temporal information of an
+input may be incorporated in an instantaneous readout. This methodology has been
+unified into the research subfield of RC \cite{schrauwen_overview_2007}, in
+which the focus is on separating the randomly generated \textit{reservoir} from
+the trained readout layer.
+
+Interestingly, there is no need for the reservoir to be an artificial neural
+network -- any high-dimensional, driven system exhibiting complex dynamic
+behavior can be used \cite{schrauwen_overview_2007}. As long as the dynamics
+that governs a given \textit{substrate} can be harnessed through system
+perturbation and readout, it can in theory be used as a reservoir.
+
+% (TODO): Correct section reference.
+A multitude of substrates have shown promise as reservoirs: dynamical systems
+models such as CA \cite{yilmaz_reservoir_2014}, and the more general random
+Boolean network (RBN) \cite{snyder_computational_2013}, provide a discrete
+alternative to the analogue ESN. Furthermore, a recent surge in physical
+reservoir implementations has reinvigorated the field, which is further
+introduced in Section \textcolor{red}{ref}.
 
 \section{Echo State Networks}
 
@@ -181,7 +206,7 @@ modelling activity and behaviour, and (iv) the impact of environmental
 factors.'', in-materio paper, Dale et al.
 }
 
-\subsection{Spatial Networks}
+\subsection{Spatial Networks and Topology}
 
 \textcolor{red}{
   Use a previous section on physical reservoir computing to lead into background
