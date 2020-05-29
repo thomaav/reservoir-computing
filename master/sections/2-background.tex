@@ -84,9 +84,9 @@ the trained readout layer.
 
 Interestingly, there is no need for the reservoir to be an artificial neural
 network -- any high-dimensional, driven system exhibiting complex dynamic
-behavior can be used \cite{schrauwen_overview_2007}. As long as the dynamics
-that governs a given \textit{substrate} can be harnessed through system
-perturbation and readout, it can in theory be used as a reservoir.
+behavior can be used \cite{schrauwen_overview_2007}. As long as the dynamics of
+the \textit{substrate} can respond suitably to input, it can in theory be used
+as a reservoir.
 
 % (TODO): Correct section reference.
 A multitude of substrates have shown promise as reservoirs: dynamical systems
@@ -98,25 +98,26 @@ introduced in Section \textcolor{red}{ref}.
 
 \section{Echo State Networks}
 
-\subsection{Recurrent Neural Networks}
+\subsection{Echo State Network Internals}
+
+% (TODO): Ask about re-using figures and text. Should be fine as it is cited and
+% specified. Rephrasing is a stupid waste of time.
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=3.0in]{figures/esn.png}
+  \caption{
+    Fig. 1: Basic architecture of ESN reservoir systems. The reservoir acts as a
+high-dimensional kernel, transforming the temporal input sequence into a spatial
+representation. The readout is trained with supervised linear regression,
+providing a least squares optimum.
+  }
+  \label{fig:narma10}
+\end{figure}
 
 \textcolor{red}{
-  Their use, and why backward edges makes it notoriously difficult to train such
-networks.
-}
-
-\subsection{Echo State Networks}
-
-\textcolor{red}{
-  The inception of reservoir computing as a methodology with Jaeger's Echo State
-Network and Maass's Liquid State Machine.
-}
-
-\textcolor{red}{
-  A section that specifically explains how the default Echo State Networks
-function. Some minor details about work that has been done to improve upon the
-model, such as intrinsic plasticity, leaking neurons, lateral inhibitions, and
-so on. Can/should be adapted from pre-thesis.
+  Perhaps the most widely used and known reservoir. A section that specifically
+explains how the default Echo State Networks function.
 }
 
 \textcolor{red}{
@@ -126,7 +127,24 @@ etc. Also deep ESNs now (most recent, actually quite recent).
 }
 
 \textcolor{red}{
+  In practice, we really just see a big difference from input scaling and
+scaling the spectral radius, others are marginal. Practicality and empiricism.
+}
+
+\textcolor{red}{
+  Some minor details about work that has been done to improve upon the model,
+such as intrinsic plasticity, leaking neurons, lateral inhibitions, and so
+on. Can/should be adapted from pre-thesis.
+}
+
+\textcolor{red}{
   Echo State Property and short-term memory.
+}
+
+\subsection{Training}
+
+\textcolor{red}{
+  Ridge Regression with friends.
 }
 
 \subsection{Real World Applications}
@@ -206,7 +224,21 @@ modelling activity and behaviour, and (iv) the impact of environmental
 factors.'', in-materio paper, Dale et al.
 }
 
-\subsection{Spatial Networks and Topology}
+\textcolor{blue}{
+  Something similar in ``Recent advances..'' as well, with (i-iv) points about
+what is necessary for something to be a physical reservoir.
+}
+
+In practice, physical reservoirs have been realized with a broad range of
+substrates: photonic systems \cite{vandoorne_experimental_2014}, electronic
+memristor circuits \cite{kulkarni_memristor-based_2012}, mechanical springs
+\cite{hauser_towards_2011}, and more biologically oriented reservoirs such as
+gene regulation networks \cite{jones_is_2007}, and the cat primary visual cortex
+\cite{scholkopf_temporal_2007}. Consult \cite{tanaka_recent_2018} for a thorough
+review of investigated physical substrates, their applications, and the general
+trends in physical RC.
+
+\subsection{Topology and Spatial Networks}
 
 \textcolor{red}{
   Use a previous section on physical reservoir computing to lead into background
@@ -310,9 +342,6 @@ information processing, due to a universal trade-off between memory and
 nonlinearity \cite{dambre_information_2012}.
 
 % (TODO): Not entirely orthogonal from generalization (see Burkow).
-
-% (TODO): Cite "Computational analysis of memory capacity in echo state
-% networks" in the methodology section of this specifically for ESNs.
 
 \subsubsection{Memory-Nonlinearity Trade-off}
 
