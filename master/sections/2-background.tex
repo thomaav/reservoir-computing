@@ -3,9 +3,10 @@
 Related work and the state of the art were reviewed, and identification of
 relevant background material was carried out in the project preceding this
 thesis \cite{aven_exploring_2019}. This background is herein amended with deeper
-insights into the paradigm of physical reservoir computing. Specifically, the
-main focus is transferred from physical limitations in general, to the narrower
-scope of spatial limitations relating to physical morphology and topology.
+insights into the paradigm of physical reservoir computing, and adapted to fit a
+thesis rather than an article. Specifically, the main focus is transferred from
+physical limitations in general, to the narrower scope of spatial limitations
+relating to physical morphology and topology.
 
 \textcolor{red}{
   The chapter covers important material used throughout the text, as well as a
@@ -79,12 +80,6 @@ et al. paper.
 networks.
 }
 
-\textcolor{blue}{
-  Problems with RNN and LSTM: page 5 of ``Short Term Memory in ESNs'', by Jaeger
-has some info on LSTM problem with chaos, and RNN training problem on long
-temporal dependencies.
-}
-
 \subsection{Echo State Networks}
 
 \textcolor{red}{
@@ -132,21 +127,30 @@ for new types of integrated chips.
 
 \subsection{Comparison to State of the Art}
 
-\textcolor{red}{
-  Perhaps a short comparison to RNN training methods, LSTM, and GRU. If not a
-complete subsection, at least introduce this in some of the other subsections,
-as to mention that there are other areas of research concerned with the same
-types of tasks. I don't know if this is necessary.
-}
+Few definitive comparisons between the ESN and similar flavors of the RNN have
+been carried out. The long short-term memory (LSTM) \cite{hochreiter_long_1997},
+as well as its more recent descendant, the gated recurrent unit (GRU)
+\cite{cho_learning_2014}, are mainstays in sequence processing, particularly in
+natural language processing. Early experiments demonstrated the ESN methodology
+to outperform previous LSTM methods on learning a chaotic attractor by orders of
+magnitude \cite{jaeger_echo_2001}, but ESNs have largely remained a secondary
+tool outside of chaotic time series prediction and classification.
 
-\textcolor{red}{
-  sota: gru, lstm, bi-lstm are some current ones that are used a
-lot. ``Comparison between DeepESNs and gatedRNNs on multivariate time-series
-prediction'' is a good one to actually get some insight. This is very lacking in
-literature!
-}
+A recent study compares the promising deep echo state network architecture
+(DeepESN) to that of gated RNNs, where an experimental comparison between
+recurrent models on multivariate time-series prediction tasks is made
+\cite{gallicchio_comparison_2019}. It is established that the DeepESN
+methodology outperforms other RNN approaches in their prediction ability on
+challenging, real world datasets. The computation time is also lessened about
+one order of magnitude compared to fully-trained RNN approaches. Thus, the
+adoption of LSTM and GRU in practice may not necessarily be based on performance
+suitability, but rather software availability and popularity.
 
 \section{Physical Reservoir Computing}
+
+\textcolor{red}{
+  Often used quite interchangeably with ``Evolution in Materio''.
+}
 
 \textcolor{red}{
   Anything exhibiting complex dynamic behavior may be used. Explain this, and
@@ -199,6 +203,13 @@ Networks'' by Gallicchio et al., ``Optimal modularity and memory capacity of
 neural reservoirs'', Rodriguez et al., ``Role of Structure..'', Dale et al.,
 ``Stability and Topology in Reservoir Computing'', Manevitz et al., and lastly
 all of Rodan's thesis on CRJ and deterministically constructed networks.
+}
+
+\textcolor{blue}{
+  ``Graph Echo State Networks'' and ``Tree Echo State Networks'' by
+Gallicchio. \cite{gallicchio_tree_2013}. \cite{gallicchio_graph_2010}. The
+possibility of extending neural networks methodologies for learning in domains
+of highly structured data representations.
 }
 
 \section{Assessing Reservoir Quality}

@@ -1,11 +1,6 @@
 \chapter{Methodology}
 
 \textcolor{red}{
-  Introduce the baseline Echo State Network that we used, and what types of
-training data we used for offline training and so on.
-}
-
-\textcolor{red}{
   Anyway: for each experiment, describe the experimental setup that was used
 such that it may \textit{easily be reproduced}. It has been very helpful when
 papers actually provide every relevant parameter such that I could run the
@@ -20,8 +15,32 @@ as the pre-thesis only used NARMA-10.
 }
 
 \textcolor{red}{
+  We do not really do much more than replace the reservoir, everything else
+remains much the same.
+}
+
+\section{ESN Parameters and Sample Sizes}
+
+\textcolor{red}{
+  Introduce the baseline Echo State Network that we used, and what types of
+training data we used for offline training and so on.
+}
+
+\textcolor{red}{
   Just repeating runs vs. cross validation. Common approach is just doing a
 bunch of runs.
+}
+
+\textcolor{red}{
+  A parameter is Ridge Regression with an SVD solver for computational
+routines. We also tried Cholesky solver and pseudo inverse.
+}
+
+\section{Benchmarks and Metrics}
+
+\textcolor{red}{
+  NARMA-10. Implementation of KQ/G and MC as well here. Show memory curve thing,
+how much per delay is remembered.
 }
 
 \textcolor{red}{
