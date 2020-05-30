@@ -244,9 +244,12 @@ trends in physical RC.
 
 \subsection{Topology and Spatial Networks}
 
-Physical reservoirs must necessarily be embedded in physical space. The layout
-of vertices and edges of such systems, however complicated their dynamics may
-be, are thus \textit{restricted by space}. Topology alone proves insufficient to
+When designing physical reservoirs, there is a chance that the choice of
+underlying topology is limited by physical factors, such as the type of physical
+interactions that are present in the substrate. Additionally, physical
+reservoirs must necessarily be embedded in physical space. The layout of
+vertices and edges of such systems, however complicated their dynamics may be,
+are thus \textit{restricted by space}. Topology alone proves insufficient to
 describe these networks, as these spatial constraints determine freedom in
 structure, i.e. node position and edge cost.
 
@@ -271,30 +274,32 @@ observe the simplest spatial reservoir.
 
 \subsubsection{Related Work}
 
-\textcolor{red}{
-  Related work in the context of reservoir computing that can be related to
-physical reservoirs computing.
-}
+Rodan and Tiňo discovered that simple, cyclic reservoirs, i.e. ring topologies,
+perform comparably to the ESN \cite{rodan_minimum_2011}. These cyclic reservoirs
+were later extended with regular jumps to consistently outperform regular ESNs
+\cite{rodan_simple_2012}. Gallicchio et al. reported similar findings in their
+work on DeepESN, where structured schemes such as multiple rings lead to the
+best performances \cite{gallicchio_reservoir_2019}.
 
-\textcolor{blue}{
-  Previous work on topology. For example ``Reservoir Topology in Deep Echo State
-Networks'' by Gallicchio et al., ``Optimal modularity and memory capacity of
-neural reservoirs'', Rodriguez et al., ``Role of Structure..'', Dale et al.,
-``Stability and Topology in Reservoir Computing'', Manevitz et al., and lastly
-all of Rodan's thesis on CRJ and deterministically constructed networks (minimal
-complexity esn).
-}
+Dale et al. compared ring, lattice, and fully-connected reservoir topologies.
+They argue that fully-connected ESNs exhibit the highest substrate quality,
+given higher memory capacities and a better ability to produce rich nonlinear
+representation of the input. The discrepancy between performance predicted by
+these metrics, and the benchmarks used by Rodan and Tiňo in their work on ring
+topologies should be noted.
 
-\textcolor{red}{
-  Watts-Strogatz. Small world topologies. Studied fairly extensively.
-}
+Lastly, Manevitz et al. have found small world topologies to produce fault
+tolerant reservoirs \cite{sidorov_stability_2010}. Errors resulting from
+introducing dead and noisy neurons were remedied by choosing a connectivity
+scheme pertaining to a power law distribution, illustrating superiority to
+uniform connectivity in terms of robustness.
 
-\textcolor{blue}{
-  ``Graph Echo State Networks'' and ``Tree Echo State Networks'' by
-Gallicchio. \cite{gallicchio_tree_2013}. \cite{gallicchio_graph_2010}. The
-possibility of extending neural networks methodologies for learning in domains
-of highly structured data representations.
-}
+Research on reservoir computing with constrained topology or physical morphology
+is a relatively sparse area. There is much to be discovered about the impact of
+reservoir construction with structured organization. Moreover, efforts to find
+useful topologies should also yield valuable insights about why the stochastic
+ESN works so well, to allow for more deterministic construction of reservoirs
+with desirable properties.
 
 \section{Assessing Reservoir Quality}
 

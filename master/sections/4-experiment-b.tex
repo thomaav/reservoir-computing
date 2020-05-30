@@ -284,12 +284,27 @@ metrics. We see that the square grids have a much lower kernel quality,
 i.e. less dynamics, which may impact performance. However, some studies with
 Mackey-Glass indicate that it will also work for that. So there is this
 trade-off to make the square grid work, in that the dynamics are lessened for
-memory, but it \textit{works}, which is the key.
+memory, but it \textit{works}, which is the key. Also, very important to look
+back to the discrepancy between Rodan and Dale here, as there we see something
+completely similar with rings. Good conclusion to draw!
 }
 
 \textcolor{red}{
   Should we include experiments with harder NARMA? I think there is already
 quite a lot of information, so this might not really be necessary.
+}
+
+\textcolor{blue}{
+  ``The experimental results clearly demonstrate that our very simple deter-
+ministic reservoir constructions have the potential to significantly outper-
+form standard ESN randomized reservoirs. We propose that instead of relying on
+unnecessary stochastic elements in reservoir construction, one can obtain
+superior (and sometimes superior by a large margin) perfor- mance by employing
+the simple regular unidirectional circular topology with bidirectional jumps
+with fixed cycle and jump weights. However, it is still not clear exactly what
+aspects of dynamic representations in the reservoirs are of importance and
+why.'' From cycle reservoirs with jumps paper. The part about stochastic
+elements is quite interesting.
 }
 
 \section{Shrinking and Growing Square Grids}
