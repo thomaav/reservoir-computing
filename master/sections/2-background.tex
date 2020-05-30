@@ -59,6 +59,8 @@ interconnections to solve practical tasks.
 
 \section{Reservoir Computing Fundamentals}
 
+% (TODO): Cite "Reservoir Computing as a Model for In-Materio Computing''
+
 Training recurrent neural networks (RNN) is an inherently difficult
 task. Gradient descent methods that incorporate loss information become
 increasingly inefficient on problems with long-range temporal dependencies. This
@@ -122,8 +124,7 @@ explains how the default Echo State Networks function.
 
 \textcolor{red}{
   Common tunings, such as input scaling, spectral radius, leakage and
-sparsity. Extensions to base model. Bias, output feedback, teacher forced
-etc. Also deep ESNs now (most recent, actually quite recent).
+sparsity. Extensions to base model. Bias, output feedback, teacher forced etc.
 }
 
 \textcolor{red}{
@@ -134,7 +135,10 @@ scaling the spectral radius, others are marginal. Practicality and empiricism.
 \textcolor{red}{
   Some minor details about work that has been done to improve upon the model,
 such as intrinsic plasticity, leaking neurons, lateral inhibitions, and so
-on. Can/should be adapted from pre-thesis.
+on. Also deep ESNs now (most recent, actually quite recent). Ensembles
+(something about this in Recent Advances..?). Can/should be adapted from
+pre-thesis. All of this is outside the scope of the thesis. Irrelevant, but
+should be mentioned.
 }
 
 \textcolor{red}{
@@ -240,18 +244,36 @@ trends in physical RC.
 
 \subsection{Topology and Spatial Networks}
 
-\textcolor{red}{
-  Use a previous section on physical reservoir computing to lead into background
-on networks that are manifested into a physical space. Talk about previous work,
-such as the Minimum Complexity Echo State Network, which has research goals that
-very closely resemble that of this thesis.
-}
+Physical reservoirs must necessarily be embedded in physical space. The layout
+of vertices and edges of such systems, however complicated their dynamics may
+be, are thus \textit{restricted by space}. Topology alone proves insufficient to
+describe these networks, as these spatial constraints determine freedom in
+structure, i.e. node position and edge cost.
+
+The real world presents us with plenty of networks that possess spatial
+components, ranging from the Internet to rail roads. Models have been developed
+to study the properties of these networks, which in turn may be useful in
+studying reservoirs that will have spatial constraints imposed. Enticing models
+include the Watts-Strogatz model \cite{watts_collective_1998}, with its
+small-world properties, and the Waxman model \cite{waxman_routing_1988}, where
+nodes are connected with a probability that depends on the distance between
+them. A thorough review of spatial networks is presented in
+\cite{barthelemy_spatial_2011}.
+
+However, in the context of physical reservoir computing, it may turn out to be
+helpful to take a step back. Before delving for interesting spatial models, it
+is important to gain insight into the performance penalties one might expect
+from enforcing a spatial layout in the first place. The foundation of the ESN is
+the Erdos-Renyi graph \cite{erdos_random_1959}, a simple model for random
+geometric graphs in which nodes are connected with a probability $p$. Imposing a
+metric space onto the ESN model, in practice a bare minimum, allows us to
+observe the simplest spatial reservoir.
+
+\subsubsection{Related Work}
 
 \textcolor{red}{
-  Discuss existing theory on spatial networks. Relevant topics may include the
-Erdős–Rényi model as a basis for Echo State Networks, then the Waxman model with
-its physical restraints, and then a dive further into completely regular
-structures such as lattices. Watts-Strogatz.
+  Related work in the context of reservoir computing that can be related to
+physical reservoirs computing.
 }
 
 \textcolor{blue}{
@@ -259,7 +281,12 @@ structures such as lattices. Watts-Strogatz.
 Networks'' by Gallicchio et al., ``Optimal modularity and memory capacity of
 neural reservoirs'', Rodriguez et al., ``Role of Structure..'', Dale et al.,
 ``Stability and Topology in Reservoir Computing'', Manevitz et al., and lastly
-all of Rodan's thesis on CRJ and deterministically constructed networks.
+all of Rodan's thesis on CRJ and deterministically constructed networks (minimal
+complexity esn).
+}
+
+\textcolor{red}{
+  Watts-Strogatz. Small world topologies. Studied fairly extensively.
 }
 
 \textcolor{blue}{
