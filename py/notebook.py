@@ -745,7 +745,7 @@ def plot_global_input_activations(save=False):
         plt.xlabel('Time step')
         plt.ylabel(r'$\tanh$ activation')
 
-        plt.plot(esn.X[esn.washout:esn.washout+l, :n], color='black')
+        plt.plot(esn.X[esn.washout:esn.washout+l, 30:40], color='black')
         plt.tight_layout()
         if save:
             save_plot(file_names[i])
