@@ -274,8 +274,17 @@ visible, while the ESN is sporadic, random.
 \end{figure*}
 
 \textcolor{red}{
+  After looking at the activations here, all positive, one may consider other
+sigmoid functions of course, but experiments showed $tanh$ to work just fine.
+}
+
+\textcolor{red}{
   We should maybe also compare MC and KQ/G to that of ESNs, as independent
-metrics.
+metrics. We see that the square grids have a much lower kernel quality,
+i.e. less dynamics, which may impact performance. However, some studies with
+Mackey-Glass indicate that it will also work for that. So there is this
+trade-off to make the square grid work, in that the dynamics are lessened for
+memory, but it \textit{works}, which is the key.
 }
 
 \textcolor{red}{
