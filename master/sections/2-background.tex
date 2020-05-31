@@ -1,5 +1,8 @@
 \chapter{Background}
 
+% (TODO): Re-read a lot of papers. Look for pieces of knowledge that are not
+% included, but definitely should be.
+
 Related work and the state of the art were reviewed, and identification of
 relevant background material was carried out in the project preceding this
 thesis \cite{aven_exploring_2019}. This background is herein amended with deeper
@@ -193,114 +196,6 @@ one order of magnitude compared to fully-trained RNN approaches. Thus, the
 adoption of LSTM and GRU in practice may not necessarily be based on performance
 suitability, but rather software availability and popularity.
 
-\section{Physical Reservoir Computing}
-
-\textcolor{red}{
-  Often used quite interchangeably with ``Evolution in Materio''.
-}
-
-\textcolor{red}{
-  Anything exhibiting complex dynamic behavior may be used. Explain this, and
-why this is, and what implications this carries.
-}
-
-\textcolor{red}{
-  The emergence of physical substrates as a medium for the reservoir computing
-paradigm. Illustrate some of the main topics, like photonics, optoeletronics,
-mechanical (coupled oscillators), biologically inspired (ecoli, invitro),
-magnetism. Use the survey paper by Tanaka et al.
-}
-
-\textcolor{red}{
-  It is importance to stress that we are considering alternatives to the
-traditional reservoirs in this section. Drive home the point that we are
-exploring physical mediums that are wildly different from traditional computers,
-where memory and computation and fundamentally separate.
-}
-
-\textcolor{blue}{
-  ``There are many physical properties and considerations that require
-discussion when talking about using any novel material for computation. Here we
-focus on four key factors that possess some relevance to substrate-based
-reservoirs: (i) a means by which to observe network connectivity and activity,
-(ii) assuring non-linearity is present in the system, (iii) methods for
-modelling activity and behaviour, and (iv) the impact of environmental
-factors.'', in-materio paper, Dale et al.
-}
-
-\textcolor{blue}{
-  Something similar in ``Recent advances..'' as well, with (i-iv) points about
-what is necessary for something to be a physical reservoir.
-}
-
-In practice, physical reservoirs have been realized with a broad range of
-substrates: photonic systems \cite{vandoorne_experimental_2014}, electronic
-memristor circuits \cite{kulkarni_memristor-based_2012}, mechanical springs
-\cite{hauser_towards_2011}, and more biologically oriented reservoirs such as
-gene regulation networks \cite{jones_is_2007}, and the cat primary visual cortex
-\cite{scholkopf_temporal_2007}. Consult \cite{tanaka_recent_2018} for a thorough
-review of investigated physical substrates, their applications, and the general
-trends in physical RC.
-
-\subsection{Topology and Spatial Networks}
-
-When designing physical reservoirs, there is a chance that the choice of
-underlying topology is limited by physical factors, such as the type of physical
-interactions that are present in the substrate. Additionally, physical
-reservoirs must necessarily be embedded in physical space. The layout of
-vertices and edges of such systems, however complicated their dynamics may be,
-are thus \textit{restricted by space}. Topology alone proves insufficient to
-describe these networks, as these spatial constraints determine freedom in
-structure, i.e. node position and edge cost.
-
-The real world presents us with plenty of networks that possess spatial
-components, ranging from the Internet to rail roads. Models have been developed
-to study the properties of these networks, which in turn may be useful in
-studying reservoirs that will have spatial constraints imposed. Enticing models
-include the Watts-Strogatz model \cite{watts_collective_1998}, with its
-small-world properties, and the Waxman model \cite{waxman_routing_1988}, where
-nodes are connected with a probability that depends on the distance between
-them. A thorough review of spatial networks is presented in
-\cite{barthelemy_spatial_2011}.
-
-However, in the context of physical reservoir computing, it may turn out to be
-helpful to take a step back. Before delving for interesting spatial models, it
-is important to gain insight into the performance penalties one might expect
-from enforcing a spatial layout in the first place. The foundation of the ESN is
-the Erdos-Renyi graph \cite{erdos_random_1959}, a simple model for random
-geometric graphs in which nodes are connected with a probability $p$. Imposing a
-metric space onto the ESN model, in practice a bare minimum, allows us to
-observe the simplest spatial reservoir.
-
-\subsubsection{Related Work}
-
-Rodan and Tiňo discovered that simple, cyclic reservoirs, i.e. ring topologies,
-perform comparably to the ESN \cite{rodan_minimum_2011}. These cyclic reservoirs
-were later extended with regular jumps to consistently outperform regular ESNs
-\cite{rodan_simple_2012}. Gallicchio et al. reported similar findings in their
-work on DeepESN, where structured schemes such as multiple rings lead to the
-best performances \cite{gallicchio_reservoir_2019}.
-
-Dale et al. compared ring, lattice, and fully-connected reservoir topologies.
-They argue that fully-connected ESNs exhibit the highest substrate quality,
-given higher memory capacities and a better ability to produce rich nonlinear
-representation of the input. The discrepancy between performance predicted by
-these metrics, and the benchmarks used by Rodan and Tiňo in their work on ring
-topologies should be noted.
-
-Lastly, Manevitz et al. have found small world topologies to produce fault
-tolerant reservoirs \cite{sidorov_stability_2010}. Errors resulting from
-introducing dead and noisy neurons were remedied by choosing a connectivity
-scheme pertaining to a power law distribution, illustrating superiority to
-uniform connectivity in terms of robustness.
-
-Research on reservoir computing with constrained topology or physical morphology
-is a relatively sparse area. There is much to be discovered about the impact of
-reservoir construction with structured organization. Moreover, efforts to find
-useful topologies should also yield valuable insights about why the stochastic
-ESN works so well, to allow for more deterministic construction of reservoirs
-with desirable properties.
-
 \section{Assessing Reservoir Quality}
 
 Designing \textit{good} reservoirs, possessing some set of desired properties,
@@ -446,7 +341,8 @@ The class of time series provided by a nonlinear autoregressive moving average,
 most often simply referred to as \textit{NARMA}, is a model commonly used to
 benchmark recurrent networks \cite{atiya_new_2000}. Its widespread use yields
 baseline performances for well established models, as well as more novel
-approaches \cite{verstraeten_experimental_2007, appeltant_information_2011}.
+approaches \cite{verstraeten_experimental_2007, appeltant_information_2011}. A
+10th-order NARMA system is depicted in Figure \ref{fig:narma10}.
 
 NARMA provides discrete-time temporal tasks, introducing a time-lag of $n$ time
 steps, and is given by
@@ -462,9 +358,11 @@ steps, and is given by
 
 Here, $n$ is the order of the system, and common constant parameters are $\alpha
 = 0.3$, $\beta = 0.05$, $\gamma = 1.5$ and $\delta = 0.1$. The input $u_{t}$ is
-an i.i.d. stream drawn uniformly from the interval [0, 0.5]. The time series is
-unstable, and tasks with higher than a 10th-order time lag introduce a
-saturation function to produce a bounded sequence:
+an i.i.d. stream drawn uniformly from the interval [0, 0.5], and the nonlinear
+product on the input sequence is shown in Figure
+\ref{fig:narma-nonlinearity}. The time series is unstable, and tasks with higher
+than a 10th-order time lag introduce a saturation function to produce a bounded
+sequence:
 
 \begin{equation}
   y_{t} =
@@ -492,9 +390,7 @@ Predicting a NARMA time series, given an input sequence $u$, presents a
 challenge of both memory and nonlinearity. This makes NARMA well-suited for
 evaluating both the memory capacity and computational power of reservoirs with a
 single metric. Reservoirs must necessarily remember input sequences of length
-$n$, and should preferably adhere to suitable dynamics on top of this. A
-10th-order system is depicted in Figure \ref{fig:narma10}, and a nonlinear
-product on the input sequence is shown in Figure \ref{fig:narma-nonlinearity}.
+$n$, and should preferably adhere to suitable dynamics on top of this.
 
 Evaluation of ESN performance on the NARMA10 system is a thoroughly explored
 area in the field of RC. Reported NRMSE performances for traditional ESN
@@ -504,6 +400,111 @@ goudarzi_comparative_2014, jaeger_adaptive_2003}. For some context, using a
 shift register containing the input as a reservoir will achieve a minimal NRMSE
 of 0.4. To achieve NRMSE values below this threshold it is necessary to
 introduce nonlinearity in the reservoir.
+
+\subsubsection{Mackey-Glass Equation}
+
+\textcolor{red}{
+  Maybe something about the equation if we end up using it.
+}
+
+\section{Physical Reservoir Computing}
+
+Developments in the field of RC have inevitably lead to novel and creative
+approaches to reservoir design. Previously considered an ``exotic'' technique,
+using physical substrates to realize reservoirs has become a common concept, and
+the number of studies has been increasing rapidly. Physical reservoir computing
+deviates from the traditional computer architecture in which processing and
+memory units are separate entities, and into the territory of unconventional
+computing. The notion of physical RC thus takes part in the evolution \textit{in
+materio} paradigm \cite{miller_evolution_2002}, encompassing the general idea of
+exploiting the physical properties of materials.
+
+\subsection{Physical Reservoirs Requirements}
+
+What types of physical properties must be considered when experimenting with
+novel materials for computation? Dale et al. suggest four key factors of
+relevance: observability, nonlinear dynamics, methods of modeling the system,
+and the impact of environmental factors \cite{adamatzky_reservoir_2017}. Tanaka
+et al. present four requirements for physical reservoirs to efficiently solve
+tasks: high dimensionality, nonlinearity, fading memory, and the separation
+property \cite{tanaka_recent_2018}.
+
+Hence, the computational requirements of physical reservoirs are similar to
+those of conventional reservoirs. Their main difference lie in their
+operability, as physical reservoirs tend to be harder to interact with. Suitable
+input and output schemes must exist, and may be hindered by environmental
+factors. Moreover, physical reservoirs have to be realized in a real, physical
+space, which is further introduced in Section
+\ref{ssec:topology-and-spatial-networks}.
+
+In practice, physical reservoirs have been realized with a broad range of
+substrates: photonic systems \cite{vandoorne_experimental_2014}, electronic
+memristor circuits \cite{kulkarni_memristor-based_2012}, mechanical springs
+\cite{hauser_towards_2011}, and more biologically oriented reservoirs such as
+gene regulation networks \cite{jones_is_2007}, and the cat primary visual cortex
+\cite{scholkopf_temporal_2007}. Consult \cite{tanaka_recent_2018} for a thorough
+review of investigated physical substrates, their applications, and the general
+trends in physical RC.
+
+\subsection{Topology and Spatial Networks}
+\label{ssec:topology-and-spatial-networks}
+
+When designing physical reservoirs, there is a chance that the choice of
+underlying topology is limited by physical factors, such as the type of physical
+interactions that are present in the substrate. Additionally, physical
+reservoirs must necessarily be embedded in physical space. The layout of
+vertices and edges of such systems, however complicated their dynamics may be,
+are thus \textit{restricted by space}. Topology alone proves insufficient to
+describe these networks, as these spatial constraints determine freedom in
+structure, i.e. node position and edge cost.
+
+The real world presents us with plenty of networks that possess spatial
+components, ranging from the Internet to rail roads. Models have been developed
+to study the properties of these networks, which in turn may be useful in
+studying reservoirs that will have spatial constraints imposed. Enticing models
+include the Watts-Strogatz model \cite{watts_collective_1998}, with its
+small-world properties, and the Waxman model \cite{waxman_routing_1988}, where
+nodes are connected with a probability that depends on the distance between
+them. A thorough review of spatial networks is presented in
+\cite{barthelemy_spatial_2011}.
+
+However, in the context of physical reservoir computing, it may turn out to be
+helpful to take a step back. Before delving for interesting spatial models, it
+is important to gain insight into the performance penalties one might expect
+from enforcing a spatial layout in the first place. The foundation of the ESN is
+the Erdos-Renyi graph \cite{erdos_random_1959}, a simple model for random
+geometric graphs in which nodes are connected with a probability $p$. Imposing a
+metric space onto the ESN model, in practice a bare minimum, allows us to
+observe the simplest spatial reservoir.
+
+\subsubsection{Related Work}
+
+Rodan and Tiňo discovered that simple, cyclic reservoirs, i.e. ring topologies,
+perform comparably to the ESN \cite{rodan_minimum_2011}. These cyclic reservoirs
+were later extended with regular jumps to consistently outperform regular ESNs
+\cite{rodan_simple_2012}. Gallicchio et al. reported similar findings in their
+work on DeepESN, where structured schemes such as multiple rings lead to the
+best performances \cite{gallicchio_reservoir_2019}.
+
+Dale et al. compared ring, lattice, and fully-connected reservoir topologies
+\cite{mcquillan_role_2019}.  They argue that fully-connected ESNs exhibit the
+highest substrate quality, given higher memory capacities and a better ability
+to produce rich nonlinear representation of the input. The discrepancy between
+performance predicted by these metrics, and the benchmarks used by Rodan and
+Tiňo in their work on ring topologies should be noted.
+
+Lastly, Manevitz et al. have found small world topologies to produce fault
+tolerant reservoirs \cite{sidorov_stability_2010}. Errors resulting from
+introducing dead and noisy neurons were remedied by choosing a connectivity
+scheme pertaining to a power law distribution, illustrating superiority to
+uniform connectivity in terms of robustness.
+
+Research on reservoir computing with constrained topology or physical morphology
+is a relatively sparse area. There is much to be discovered about the impact of
+reservoir construction with structured organization. Moreover, efforts to find
+useful topologies should also yield valuable insights about why the stochastic
+ESN works so well, to allow for more deterministic construction of reservoirs
+with desirable properties.
 
 %%% Local Variables:
 %%% mode: latex
