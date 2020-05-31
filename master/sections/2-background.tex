@@ -13,7 +13,8 @@ relating to physical morphology and topology.
 
 \textcolor{red}{
   The chapter covers important material used throughout the text, as well as a
-short historical background for context. Talk about sections.
+short historical background for context. Write this part when you are sure you
+are done.
 }
 
 \section{Complexity: Order, Chaos and Criticality}
@@ -168,32 +169,44 @@ As with virtually every machine learning technique, the application of ESNs
 requires some experience. Although a conceptually simple idea, generating
 adequate reservoir networks is influenced by multiple global
 parameters. Recommendations to achieve sufficient performance are presented in
-\cite{montavon_practical_2012, jaeger_tutorial_2002}, suggesting parameters
-such as the scaling of the input weight matrix, the spectral radius of the
-reservoir connection matrix, the leaking rate of reservoir nodes, and the model
+\cite{montavon_practical_2012, jaeger_tutorial_2002}, suggesting parameters such
+as the scaling of the input weight matrix $\boldsymbol{\iota}$, the spectral
+radius of the reservoir connection matrix $\boldsymbol{\rho}$, and the model
 size parameters to be of high importance. However, in practice the evaluation of
 a reservoir is an endeavor often conducted by training the output and measuring
 the error, sometimes requiring extensive parameter sweeps.
 
 \textcolor{red}{
-  Echo State Property and short-term memory. In practice amounts mostly to input
-scaling and spectral radius. This is the memory nonlinearity trade-off.
+  Echo State Property and short-term memory. What does ``echo'' really mean? In
+practice amounts mostly to input scaling and spectral radius. This is the memory
+nonlinearity trade-off.
 }
 
 \subsection{Improvements to the Traditional ESN}
 
-\textcolor{red}{
-  All beyond the scope of the thesis -- not what we are investigating.
-}
+Many improvements have been made to the vanilla ESN, most of which are beyond
+the scope of this thesis and its focus on physical reservoir
+computing. Nevertheless, an introduction to the methodology would be incomplete
+without a mention of some of the alterations that improve upon it.
 
-\textcolor{red}{
-  Some minor details about work that has been done to improve upon the model,
-such as intrinsic plasticity, noise, leaking neurons, lateral inhibitions, and
-so on. Also deep ESNs now (most recent, actually quite recent). Ensembles
-(something about this in Recent Advances..?). Can/should be adapted from
-pre-thesis. All of this is outside the scope of the thesis. Irrelevant, but
-should be mentioned.
-}
+Jaeger also proposed sigmoid reservoir nodes with memory to learn slow,
+continuous dynamics \cite{jaeger_echo_2001}. In reservoirs with \textit{leaky
+integrator neurons}, the nodes will not discard their previous state entirely,
+but maintain a memory due to a leaking rate $\alpha$. Another addition proposed
+by Jaeger is inserting noise into the training procedure, as it is well known in
+the field of traditional artificial neural networks that an addition of noise to
+training data can lead to generalization improvements similar to that of
+Tikhonov regularization \cite{bishop_training_1995}.
+
+Other important discoveries include improving reservoirs using intrinsic
+plasticity \cite{schrauwen_improving_2008} and lateral inhibition
+\cite{xue_decoupled_2007}, both inspired by concepts of neurobiology.
+
+Lastly, stacking layers similarly to deep learning methods has been
+attempted. With the aim of developing and enhancing \textit{hierarchical}
+dynamics, it is intended to allow for multiple time-scales, and increased
+richness in the reservoir, and has shown great promise
+\cite{gallicchio_deep_2017}.
 
 \subsection{Real World Applications}
 
