@@ -25,7 +25,7 @@ def nmse(y_predicted, y):
 def kernel_quality(i, esn, ks):
     # «Connectivity, Dynamics and Memory in Reservoir Computing with Binary and
     # Analog Neurons».
-    inputs = torch.rand(i*ks)
+    inputs = torch.rand(i*ks)*2 - 1
 
     split_overflow = len(inputs) % ks
     if split_overflow != 0:
@@ -44,7 +44,7 @@ def kernel_quality(i, esn, ks):
 def generalization(i, esn, ks):
     # «Connectivity, Dynamics and Memory in Reservoir Computing with Binary and
     # Analog Neurons». Footnote 5.
-    inputs = np.random.rand(i*ks)
+    inputs = np.random.rand(i*ks)*2 - 1
 
     split_overflow = len(inputs) % ks
     if split_overflow != 0:

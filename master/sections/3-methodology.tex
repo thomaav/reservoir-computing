@@ -7,28 +7,28 @@ experiment described in this thesis, the default setup will be as described in
 this section, unless otherwise specified. All ESNs are generated according to
 the architecture presented in Figure \ref{fig:esn}.
 
-We consider discrete-time ESNs with $N$ internal network nodes, a single input,
-and a single output node. $\mathbf{W}^{in}$ is generated as a random matrix with
-i.i.d. entries in the interval [-0.5, 0.5], and is fully connected. Experiments
-with default ESNs, i.e. experiments where the internal network
-$\mathbf{W}^{res}$ is not replaced, the weights are generated from the same
-distribution as $\mathbf{W}^{in}$, but with a 10\% node connectivity. This
+We considered discrete-time ESNs with $N$ internal network nodes, a single
+input, and a single output node. $\mathbf{W}^{in}$ was generated as a random
+matrix with i.i.d. entries in the interval [-0.5, 0.5], and was fully
+connected. In experiments with default ESNs, i.e. experiments where the internal
+network $\mathbf{W}^{res}$ is not replaced, the weights were generated from the
+same distribution as $\mathbf{W}^{in}$, but with a 10\% node connectivity. This
 method for instantiating $\mathbf{W}^{res}$ and $\mathbf{W}^{in}$ is common
 practice in RC \cite{montavon_practical_2012}.
 
-In all experiments where relevant, the reservoir weight matrix was rescaled such
+In experiments where relevant, the reservoir weight matrix was rescaled such
 that its spectral radius $\rho(\mathbf{W}^{res}) = 0.9$. The default input
-scaling used is $\iota = 1.0$. Both parameters could be tuned to provide
+scaling used was $\iota = 1.0$. Both parameters could be tuned to provide
 marginally better results in most cases, but these values were found to give a
 good baseline for comparisons between models.
 
-$\mathbf{W}^{out}$ is adapted with ridge regression, using single value
+$\mathbf{W}^{out}$ was adapted with ridge regression, using single value
 decomposition for computational routines. This was found to lead to the most
 stable and precise results.
 
 % (TODO): Perhaps re-run everything with exactly 20 runs. We need the
 % std. dev. anyway for tables in appendix.
-For all experiment runs, the first 200 states of each run are discarded to
+For all experiment runs, the first 200 states of each run were discarded to
 provide a washout of the initial reservoir state. Reported performances are the
 mean across 20 randomizations of each model representative. This sample size was
 found to be appropriate to pinpoint definite trends in the results. Standard
@@ -40,17 +40,43 @@ experiment\footnote{\textcolor{red}{deadlink}}.
 
 \section{Benchmarks and Metrics}
 
-\textcolor{red}{
-  We use the NRMSE. Comparability to the state of the art.
-}
+% (TODO): MG-17?
+To evaluate reservoirs, the benchmarks and metrics described in Section
+\ref{sec:benchmark} were used.
 
-\textcolor{red}{
-  NARMA-10. Implementation of KQ/G and MC as well here. Show memory curve thing,
-how much per delay is remembered.
-}
+For the NARMA-10 benchmark, the generated input was split into a training and
+test set, with $L_{train} = 2000$ and $L_{test} = 3000$. To evaluate performance
+on the benchmark, we used the normalized root mean square error (NRMSE). The
+NRMSE is a commonly used error metric, providing comparability to performances
+reported in previous work. Given a predicted signal $\mathbf{y}(t)$ and a target
+signal $\mathbf{\hat{y}}(t)$
 
-% (TODO): Cite "Computational analysis of memory capacity in echo state
-% networks" in the methodology section of this specifically for ESNs. For MC.
+\begin{equation}
+  \textrm{NRMSE}(\mathbf{y}, \mathbf{\hat{y}}) = \sqrt{\frac{
+      \mean{\norm{\mathbf{y}(t) - \mathbf{\hat{y}}(t)}^{2}}
+    }{
+      \mean{\norm{\mathbf{\hat{y}}(t) - \mean{\mathbf{\hat{y}}(t)}}^{2}}
+    }
+  }
+  .
+  \label{eq:nrmse}
+\end{equation}
+
+Kernel quality was evaluated by drawing $N$ input streams of length 20 uniformly
+from the interval [-1, 1], where $N$ is the number of hidden nodes. The
+resulting input streams were then run through the reservoir, and the rank of the
+resulting $N \times N$ matrix, consisting of the reservoir states, was
+computed. Generalization ability was evaluated in a similar manner, but
+differing in that the last four inputs across all input streams were
+identical. This is a standard way of computing the metrics
+\cite{busing_connectivity_2010}.
+
+Memory capacity was computed according to \cite{farkas_computational_2016}. An
+input stream of length 2200 was drawn uniformly from the interval [-1, 1], and
+the first 200 inputs were discarded to get rid of transients. Next, an input
+sequence of length 1000 was used for training, and the remaining 1000 inputs for
+testing. Memory capacity was computed according to Equation \ref{stm-eq}, using
+$k = 1.4N$ output neurons.
 
 \section{Experiments}
 
