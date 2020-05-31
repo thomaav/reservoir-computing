@@ -56,10 +56,6 @@ dynamics of a ``reservoir'' of local interconnections. Often employing random
 neural networks, RC exploits the intrinsic computation emerging from these local
 interconnections to solve practical tasks.
 
-\textcolor{red}{
-  Should we include any figures? There is much beauty to behold.
-}
-
 \section{Reservoir Computing Fundamentals}
 
 % (TODO): Cite "Reservoir Computing as a Model for In-Materio Computing''
@@ -93,20 +89,14 @@ behavior can be used \cite{schrauwen_overview_2007}. As long as the dynamics of
 the \textit{substrate} can respond suitably to input, it can in theory be used
 as a reservoir.
 
-% (TODO): Correct section reference.
 A multitude of substrates have shown promise as reservoirs: dynamical systems
 models such as CA \cite{yilmaz_reservoir_2014}, and the more general random
 Boolean network (RBN) \cite{snyder_computational_2013}, provide a discrete
 alternative to the analogue ESN. Furthermore, a recent surge in physical
-reservoir implementations has reinvigorated the field, which is further
-introduced in Section \textcolor{red}{ref}.
+reservoir implementations has reinvigorated the field, which is introduced
+further in Section \ref{sec:prc}.
 
 \section{Echo State Networks}
-
-\subsection{Echo State Network Internals}
-
-% (TODO): Ask about re-using figures and text. Should be fine as it is cited and
-% specified. Rephrasing is a stupid waste of time.
 
 \begin{figure}[t!]
   \centering
@@ -117,41 +107,92 @@ high-dimensional kernel, transforming the temporal input sequence into a spatial
 representation. The readout is trained with supervised linear regression,
 providing a least squares optimum.
   }
-  \label{fig:narma10}
+  \label{fig:esn}
 \end{figure}
 
-\textcolor{red}{
-  Perhaps the most widely used and known reservoir. A section that specifically
-explains how the default Echo State Networks function.
-}
+The ESN is one of the key flavors of RC, and at its core lie untrained, randomly
+initialized RNNs. Its conception introduced a highly practical approach to
+training RNNs that is both simple and computationally feasible. In ESNs inner
+weights remain fixed, and only the output weights are adapted to construct a
+linear readout. The basic architecture of the ESN model is illustrated in Figure
+\ref{fig:esn}, and it consists primarily of real-valued neurons connected by
+unrestricted synapses, which results in a recurrent network.
+
+\subsection{Echo State Network Internals}
+
+% (TODO): Ask about re-using figures and text. Should be fine as it is cited and
+% specified. Rephrasing is a stupid waste of time.
+
+At time-step $t$, the ESN reservoir is defined by its input, internal, and
+output units, denoted by $\mathbf{u}(t)$, $\mathbf{x}(t)$, and $\mathbf{y}(t)$,
+respectively. The reservoir dynamics are characterized by three weight matrices,
+$\mathbf{W}^{in}$, $\mathbf{W}^{res}$, and $\mathbf{W}^{out}$. In the
+traditional ESN approach, the reservoir state is evolved according to
+
+\begin{equation}
+  \mathbf{x}(t + 1) =
+    \tanh(\mathbf{W}^{res}\mathbf{x}(t)
+        + \mathbf{W}^{in}\mathbf{u}(t)),
+  \label{xt}
+\end{equation}
+
+\noindent using $\tanh$ as the nonlinear transfer function for internal
+reservoir nodes. The output of the reservoir is given by
+
+\begin{equation}
+  \mathbf{y}(t) =
+    \mathbf{W}^{out}\mathbf{x}(t).
+  \label{yt}
+\end{equation}
+
+\subsection{Training}
+
+To train an ESN model of size N in a supervised and offline mode, it is run to
+completion on a training set. The reservoir states are collected row-wise into a
+matrix $\mathbf{X}$, and the one-dimensional output into a vector
+$\mathbf{Y}$. The linear readout layer is then trained to minimize the squared
+output error $E = \norm{\mathbf{Y} - \mathbf{\hat{Y}}}$ where $\mathbf{\hat{Y}}$
+is the target output, which amounts to finding the $\mathbf{W}^{out}$ that
+minimizes the error with linear regression. Well-known methods include ridge
+regression, often called Tikhonov regularization, and the Moore-Penrose
+pseudo-inverse.
+
+When the network is adapted to $\mathbf{W}^{out}$, the ESN is fully trained,
+thus illustrating the apparent simplicity and low algorithmic complexity of the
+method. Gauging the performance of a trained network is done by running a test
+set.
+
+\subsection{ESN Generation}
+
+As with virtually every machine learning technique, the application of ESNs
+requires some experience. Although a conceptually simple idea, generating
+adequate reservoir networks is influenced by multiple global
+parameters. Recommendations to achieve sufficient performance are presented in
+\cite{montavon_practical_2012, jaeger_tutorial_2002}, suggesting parameters
+such as the scaling of the input weight matrix, the spectral radius of the
+reservoir connection matrix, the leaking rate of reservoir nodes, and the model
+size parameters to be of high importance. However, in practice the evaluation of
+a reservoir is an endeavor often conducted by training the output and measuring
+the error, sometimes requiring extensive parameter sweeps.
 
 \textcolor{red}{
-  Common tunings, such as input scaling, spectral radius, leakage and
-sparsity. Extensions to base model. Bias, output feedback, teacher forced etc.
+  Echo State Property and short-term memory. In practice amounts mostly to input
+scaling and spectral radius. This is the memory nonlinearity trade-off.
 }
 
+\subsection{Improvements to the Traditional ESN}
+
 \textcolor{red}{
-  In practice, we really just see a big difference from input scaling and
-scaling the spectral radius, others are marginal. Practicality and empiricism.
+  All beyond the scope of the thesis -- not what we are investigating.
 }
 
 \textcolor{red}{
   Some minor details about work that has been done to improve upon the model,
-such as intrinsic plasticity, leaking neurons, lateral inhibitions, and so
-on. Also deep ESNs now (most recent, actually quite recent). Ensembles
+such as intrinsic plasticity, noise, leaking neurons, lateral inhibitions, and
+so on. Also deep ESNs now (most recent, actually quite recent). Ensembles
 (something about this in Recent Advances..?). Can/should be adapted from
 pre-thesis. All of this is outside the scope of the thesis. Irrelevant, but
 should be mentioned.
-}
-
-\textcolor{red}{
-  Echo State Property and short-term memory.
-}
-
-\subsection{Training}
-
-\textcolor{red}{
-  Ridge Regression with friends.
 }
 
 \subsection{Real World Applications}
@@ -408,6 +449,7 @@ introduce nonlinearity in the reservoir.
 }
 
 \section{Physical Reservoir Computing}
+\label{sec:prc}
 
 Developments in the field of RC have inevitably lead to novel and creative
 approaches to reservoir design. Previously considered an ``exotic'' technique,
