@@ -1,31 +1,6 @@
 \chapter{Experiments: Random Geometric Graphs}
 \label{ch:rgg}
 
-\textcolor{red}{
-  Perhaps the first word that springs to mind when thinking about spatial
-constraints to graph, is ``space''. It is only natural that we begin with the
-simplest spatial network there is -- the random geometric graph, of which the
-only spatial constraint is that the vertices of the graph are placed in some
-underlying metric space.
-}
-
-\textcolor{red}{
-  Random geometric graph is the simplest spatial network, where $N$ nodes are
-placed randomly in some metric space. The specific probability distribution is
-just a uniform distribution in an underlying Euclidean space $[0, N)^d$, where
-$d$ is the dimensionality of the volume. Nodes have some neighborhood within a
-radius of $r$, of which nodes inside this radius will be connected by an edge.
-}
-
-\textcolor{red}{
-  Perhaps talk about similar models, such as Waxman and Erdos-Renyi. They should
-have been introduced in the background chapter, so we can refer to them
-here. The Erdos-Renyi is perhaps the closest spatial model to the echo state
-network, and the Waxman network is a generalized random geometric graph with a
-slight modification for node connectivity, i.e. a probabilistic connection
-function.
-}
-
 % (TODO): t!
 \begin{figure}[t]
   \centering
@@ -38,39 +13,41 @@ shown.
   \label{fig:rgg-example}
 \end{figure}
 
-\section{Methodology}
+The first idea that springs to mind when considering spatially constrained
+graphs, is of course to place the vertices in some metric space. When
+investigating spatial reservoirs, it is thus only natural that we begin with the
+simplest spatial network model -- the random geometric graph (RGG). Figure
+\ref{fig:rgg-example} depicts an example graph.
 
-% (TODO): Section references should be added as sections are added and
-% completed.
-\textcolor{red}{
-  \textbf{Methodology:} We use fully connected graphs. I.e. distance r of
-infinity. We use 3d networks by default, but this is investigated further. We
-introduce distance functions to the model, of which used ones are $1/d$, $1/d^2$
-and $1/d^3$. So they are connected if $d(x, y, z) < r$, where $d(x, y, z) =
-\norm{x-y}_{2} = \sqrt{\sum_{i=1}^{d}{(x_{i}-y_{i})^2}}$, and $r = \infty$. The
-implementation is a standard echo state network from the methodology chapter
-where weights are determined by the scheme above.
-}
+To construct a reservoir based on the RGG model, we place its $N$ internal nodes
+randomly in an underlying metric space $[0, l)^{dim}$, giving each node a
+position attribute sampled from a uniform distribution. For any given pair of
+nodes $x, y$, we consider the Euclidean distance between them
+
+\begin{equation}
+  d(x, y) = \norm{x-y}_{2} = \sqrt{\sum_{i=1}^{dim}{(x_{i}-y_{i})^2}}.
+  \label{eq:rgg-dist}
+\end{equation}
+
+Nodes are connected only to the nodes within their neighborhood radius $r$,
+i.e. where $d < r$. However, since we are interested in the behavior in physical
+materials, we set $r = \infty$ to allow full connectivity in all
+experiments. Thus, edges are weighted according to several distance functions,
+$1/d$, $1/d^2$, and $1/d^3$, to model how the interaction strength diminishes
+with distance in many physical substrates. For example, the spins in artificial
+spin ice is subject to a magnetic field from all neighboring spins that
+diminishes according to $1/d^3$ \cite{jensen_computation_2018}. A dimensionality
+of 3, i.e. $[0, l)^{3}$, is used.
 
 \section{Size of the Underlying Volume}
 
 \subsection{Synopsis}
 
-\textcolor{red}{
-  A natural first question when considering random geometric graphs is that of
-the underlying space. The behavior of the ``echo state network'' that we create
-will obviously be affected by the magnitude of the weights we create between the
-hidden nodes.
-}
-
-\textcolor{red}{
-  The most interesting metric for the resulting matrices is of course the
-spectral radius, i.e. the largest eigenvalue, as this governs dynamics, and a
-very high one may cause unbounded deviation from initial states, even though the
-tanh activation bounds the actual activations. How does the spectral radius
-relate to the performance of our network, and can this be related to previous
-work?
-}
+Our first experiment is concerned with the size of the metric space in which we
+embed the reservoir, the $l$ of $[0, l)^3$. The behavior of the ESN created will
+obviously be affected by the magnitude of the weights of the network edges. A
+space that is too small, will result in weights that are too big, and vice
+versa.
 
 \subsection{Results and Discussion}
 
@@ -97,48 +74,44 @@ node coupling using two different distance functions: $1/d$ (a) and $1/d^2$ (b).
   \label{fig:size-graph-volume}
 \end{figure*}
 
-\textcolor{red}{
-  We immediately see that using a volume of size 1x1x1 is useless, as this would
-produce nodes that are very close. Nodes that are too close will drive the 1/d
-function through the roof (as the weights will potentially be quite large), and
-we will immediately saturate $tanh$ activations in the network.
-}
+The results of tuning the underlying volume size $l$ is shown in Figure
+\ref{fig:size-graph-volume}. Shown are the results for the distance functions
+$1/d$ and $1/d^2$. The plots include both the NRMSE of the network on the
+NARMA-10 benchmark, and the resulting spectral radius of its internal reservoir
+matrix $\mathbf{W}^{res}$ for the same network.
 
-\textcolor{red}{
-  Figure \ref{fig:size-graph-volume} illustrates the point by scaling the size
-of the underlying volume. The volume goes from 1x1x1 through the sizes in the
-plot as NxNxN where N is the ``volume size''. We plot both the NRMSE and
-spectral radius of the resulting w_res of the echo state network, and can
-clearly pinpoint a similar result to that of the literature: a spectral radius
-$\rho < 1$, but not too small, is favored. We should also specify that the
-spectral radius is the absolute value of the largest eigenvector, which controls
-the dynamics of the system, see ``On the quantifications..'' paper, see
-Verstraeten et al.
-}
+First, we see that an underlying volume of size $l = 1$ is near useless. The
+weights generated by the $1/d$ and $1/d^2$ distance functions are too big, as
+expected. The consequence of big weights is that the spectral radius of the
+$\mathbf{W}^{res}$ grows too large as well. In fact, the $tanh$ transfer
+function of the internal nodes stays completely saturated throughout the entire
+benchmark run.
 
-\textcolor{red}{
-  Performance-wise we see that both distance functions achieve an NRMSE a little
-bit below 0.6, which is worse than what a shift register would achieve. Thus, we
-are nowhere close to the echo state network, and a spatial constraint like this
-by itself seems to induce a big performance penalty/increase in error.
-}
+Next, we see that as the spectral radius of $\mathbf{W}^{res}$ decreases, so
+does the benchmark error. It is well-known that a spectral radius that is too
+small will cause ordered or fixed-point behavior, and one that is too big may
+cause unbounded deviation from initial states. Hence, the valleys seen in Figure
+\ref{fig:size-graph-volume}, are equivalent to those seen in early explorations
+of the spectral radius property in reservoirs
+\cite{verstraeten_experimental_2007}. However, in our case, the spectral radius
+is implicitly scaled by stretching the size of the underlying volume in which
+the graph is embedded.
 
-\textcolor{red}{
-  For further experiments, we can remedy this initial issue by scaling directly
-by the spectral radius, which fixes the problem. Scaling by the spectral radius
-is done by multiplying the weight by a scalar, which would be equivalent to
-scaling underlying volume with a scalar. This is relevant for physical mediums,
-as what we are seeing in practice is that distance function in conjunction with
-the size of the space is quite relevant, otherwise we dip to either side of
-Figure \ref{fig:size-graph-volume}.
-}
+Knowledge that stretching the underlying space is equivalent to scaling them
+spectral radius of the reservoir is of key interest. In physical contexts, this
+means that we can scale the degree of dynamical richness in the reservoir by
+moving nodes, or otherwise strengthening or lessening their connectivity. This
+conclusion seems obvious, but is of importance for following experiments, as we
+can directly scale the spectral radius $\mathbf{W}^{res}$ with confidence that
+we could do the same by scaling the metric space.
 
-\textcolor{red}{
-  The summary of what we see is that if we were to design a reservoir by
-modeling it after a random geometric graph, we would have to think about the
-size of the space we are using, especially if the distance function that must be
-used is fixed by the laws of physics.
-}
+Performance-wise, spatially constraining ESN reservoirs has caused an increase
+in error compared to the non-constrained approach. The best reservoirs, seen at
+the bottom of the valley in Figure \ref{fig:size-graph-volume-b}, achieve an
+NRMSE around 0.5, with a spectral radius $\boldsymbol{\rho}$ around 0.8. This is
+worse than what is achieved using a shift register with perfect memory. There is
+thus an indication that spatial restrictions do cause a performance penalty, and
+figuring out what is causing this is a main theme of the following sections.
 
 \section{Choice of Distance Function}
 
@@ -209,7 +182,8 @@ compared to the standard echo state network.
   \caption{
     Effect of input scaling on reservoirs generated as random geometric
 graphs. There is a correlation between the short-term memory capacity of the
-reservoirs (a), and error rates for the NARMA-10 task (b).
+reservoirs (a), and error rates for the NARMA-10 task (b). The distance function
+used is $1/d^2$.
   }
   \label{fig:dist-performance-is}
 \end{figure*}
@@ -267,6 +241,13 @@ remedied by lowering the input scaling to wash older inputs out slower.
 \subsection{Synopsis}
 
 \textcolor{red}{
+  We choose the distance function for $1/d$ when we move on, as this was found
+to give more stable results, as the weights become so small with the other
+distance functions. Similar results were seen with $1/d^2$ as well, but less
+pronounced.
+}
+
+\textcolor{red}{
   \textit{Why} we are doing this deviates quite a bit from the goal of being
 related to physical reservoir computing, as this is not something one can do
 willy-nilly in such cases. However, this is a measure to gain some insight into
@@ -305,7 +286,7 @@ is an issue.
 directedness.
 }
 
-textcolor{blue}{
+\textcolor{blue}{
   Dale et al. investigates this a bit in their paper: ``It then becomes clear
 that how weights are structured and directed, controlling information flow, has
 a greater affect on quality of the network. This supports similar results using
@@ -361,7 +342,7 @@ relevant with this global connectivity where the in-degree will be the same
 regardless of dimension.
 }
 
-\section{Conclusions}
+\section{Conclusion}
 
 \textcolor{red}{
   We have investigated imposing the simplest type of spatial restriction onto
