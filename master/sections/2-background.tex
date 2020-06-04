@@ -468,9 +468,36 @@ introduce nonlinearity in the reservoir.
 
 \subsubsection{Mackey-Glass Equation}
 
-\textcolor{red}{
-  Maybe something about the equation if we end up using it.
-}
+% (TODO): Fig.
+
+A common benchmark for dynamical systems is chaotic attractor learning. One such
+benchmark is the Mackey-Glass delay differential equation
+
+\begin{equation}
+  \dot{y}(t) =
+    \alpha \frac
+    {y(t-\tau)}
+    {1 + y(t-\tau)^\beta}
+    - \gamma y(t),
+  \label{eq:mg17}
+\end{equation}
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=3.0in]{figures/mg17-example.png}
+  \caption{
+    Sample sequence from the Mackey-Glass ($\tau = 17$) delay differential
+equation.
+  }
+  \label{fig:mg17-example}
+\end{figure}
+
+where common constant parameters are $\alpha = 0.2$, $\beta = 10$ and $\gamma =
+0.1$. A chaotic attractor appears when $\tau > 16.8$, and in practice $\tau =
+17$ is used to generate a mildly chaotic attractor, while $\tau = 30$ yields
+strongly chaotic behavior. The time series is most often generated with
+numerical methods such as the Runge-Kutta method. Figure \ref{fig:mg17-example}
+shows an example Mackey-Glass sequence with $\tau = 17$.
 
 \section{Physical Reservoir Computing}
 \label{sec:prc}

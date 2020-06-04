@@ -93,6 +93,18 @@ def esn_mc(params, attr=[]):
     return memory_capacity(esn), esn_attributes
 
 
+def esn_kq(params, attr=[]):
+    esn = ESN.ESN(**params)
+    esn_attributes = [getattr(esn, _attr) for _attr in attr]
+    return kernel_quality(20, esn, esn.hidden_nodes), esn_attributes
+
+
+def esn_gen(params, attr=[]):
+    esn = ESN.ESN(**params)
+    esn_attributes = [getattr(esn, _attr) for _attr in attr]
+    return generalization(20, esn, esn.hidden_nodes), esn_attributes
+
+
 def evaluate_esn(dataset, esn, plot=False, plot_range=None):
     washout = esn.washout
 

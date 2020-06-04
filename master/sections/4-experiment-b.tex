@@ -277,7 +277,8 @@ in ESNs is 10\%.
 
 \textcolor{red}{
   Performance wise? Input is actually just adding a single scalar. The internal
-matrix is very sparse. Compared to ESN this should be pretty nice.
+matrix is very sparse. Compared to ESN this should be pretty nice. We can do a
+pretty short benchmark, just raw, unfair comparison.
 }
 
 \textcolor{red}{
@@ -344,7 +345,7 @@ why.'' From cycle reservoirs with jumps paper. The part about stochastic
 elements is quite interesting.
 }
 
-\section{Dynamics in Square Grids}
+\section{Nonlinear Dynamics in Square Grids}
 
 \subsection{Synopsis}
 
@@ -357,6 +358,47 @@ ring and crj.
 }
 
 \subsection{Results and Discussion}
+
+% (TODO): t!
+\begin{figure*}[t]
+  \centering
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/esn-rank.png}
+    \caption{}
+    \label{fig:rank-a}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/sq-rank.png}
+    \caption{}
+    \label{fig:rank-b}
+  \end{subfigure}
+  \caption{
+    \textcolor{red}{
+      No caption yet.
+    }
+  }
+  \label{fig:rank}
+\end{figure*}
+
+\textcolor{red}{
+  The ESN can reach most of the behavior space, as described in Dale et al. We
+tune the spectral radius to 0.7, achieving very results to before, but a bit
+more interesting KQ/G space. Easier to compare with lattices.
+}
+
+% (TODO): t!
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=3.5in]{figures/mg17.png}
+  \caption{
+    \textcolor{red}{
+      No caption yet.
+    }
+  }
+  \label{fig:mg17}
+\end{figure}
 
 \section{Shrinking and Growing Square Grids}
 

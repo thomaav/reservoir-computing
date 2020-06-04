@@ -40,16 +40,27 @@ experiment\footnote{\textcolor{red}{deadlink}}.
 
 \section{Benchmarks and Metrics}
 
-% (TODO): MG-17?
 To evaluate reservoirs, the benchmarks and metrics described in Section
-\ref{sec:benchmark} were used.
+\ref{sec:benchmark} were used. Note that the our primary evaluation tool was the
+NARMA-10 benchmark, using the rest as supplements where relevant.
 
-For the NARMA-10 benchmark, the generated input was split into a training and
-test set, with $L_{train} = 2000$ and $L_{test} = 3000$. To evaluate performance
-on the benchmark, we used the normalized root mean square error (NRMSE). The
-NRMSE is a commonly used error metric, providing comparability to performances
-reported in previous work. Given a predicted signal $\mathbf{y}(t)$ and a target
-signal $\mathbf{\hat{y}}(t)$
+For the NARMA-10 benchmark, We generated the time series according to Equation
+\ref{eq:narma}. The generated input was split into a training and test set, with
+$L_{train} = 2000$ and $L_{test} = 3000$, to allow comparisons with results
+presented in \cite{rodan_minimum_2011}.
+
+The Mackey-Glass benchmark has been used in a range of ways, making comparison
+of models harder than for NARMA. We used the method presented in
+\cite{ma_deep-esn:_2017}. We generated a time series from Equation \ref{eq:mg17}
+using discrete approximation, squashing it into a range of [-1, 1] with
+$\tanh(y-1)$. The series was split into a training and test set, with $L_{train}
+= 6400$ and $L_{test} = 2000$. The task of the reservoir was to predict input 84
+time steps ahead, i.e. $\mathbf{y}(t) = \mathbf{u}(t+84)$.
+
+To evaluate performance on the benchmark, we used the normalized root mean
+square error (NRMSE). The NRMSE is a commonly used error metric, providing
+comparability to performances reported in previous work. Given a predicted
+signal $\mathbf{y}(t)$ and a target signal $\mathbf{\hat{y}}(t)$
 
 \begin{equation}
   \textrm{NRMSE}(\mathbf{y}, \mathbf{\hat{y}}) = \sqrt{\frac{

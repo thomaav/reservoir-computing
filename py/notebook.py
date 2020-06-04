@@ -8,7 +8,7 @@ from collections import OrderedDict
 
 import dataset as ds
 from ESN import ESN, Distribution, from_square_G, create_delay_line
-from metric import esn_nrmse, evaluate_esn, esn_mc
+from metric import esn_nrmse, evaluate_esn, esn_mc, esn_kq, esn_gen
 from gridsearch import experiment, load_experiment
 from plot import plot_df_trisurf, set_figsize, get_figsize, plot_lattice, plot_vector_hist
 from matrix import euclidean, inv, inv_squared, inv_cubed
@@ -753,6 +753,148 @@ def plot_global_input_activations(save=False):
         plt.show()
 
 
+def eval_esn(f):
+    params = OrderedDict()
+    params['hidden_nodes'] = list(range(20, 260, 10))
+    params['w_res_density'] = [0.1]
+    params['spectral_radius'] = [0.7]
+    return experiment(f, params, runs=20)
+
+
+def eval_square_grid(f):
+    from ESN import Distribution
+
+    params = OrderedDict()
+    params['w_res_type'] = ['tetragonal']
+    params['w_in_distrib'] = [Distribution.fixed]
+    params['dir_frac'] = [1.0]
+    params['input_scaling'] = [0.1]
+    params['hidden_nodes'] = [n*n for n in range(5, 16)]
+    return experiment(f, params, runs=20)
+
+
+def kq_gen():
+    esn_kq_df = eval_esn(esn_kq)
+    esn_kq_df.to_pickle('experiments/esn_kq.pkl')
+    esn_gen_df = eval_esn(esn_gen)
+    esn_gen_df.to_pickle('experiments/esn_gen.pkl')
+
+    square_grid_kq_df = eval_square_grid(esn_kq)
+    square_grid_kq_df.to_pickle('experiments/square_grid_kq.pkl')
+    square_grid_gen_df = eval_square_grid(esn_gen)
+    square_grid_gen_df.to_pickle('experiments/square_grid_gen.pkl')
+
+
+def plot_square_grid_kq_gen():
+    esn_kq_df = load_experiment('experiments/esn_kq.pkl')
+    esn_gen_df = load_experiment('experiments/esn_gen.pkl')
+    esn_kq_df = esn_kq_df.loc[esn_kq_df['hidden_nodes'] <= 230]
+    esn_gen_df = esn_gen_df.loc[esn_gen_df['hidden_nodes'] <= 230]
+
+    sq_kq_df = load_experiment('experiments/square_grid_kq.pkl')
+    sq_gen_df = load_experiment('experiments/square_grid_gen.pkl')
+
+    esn_kq_df = esn_kq_df.groupby(['hidden_nodes']).mean().reset_index()
+    esn_gen_df = esn_gen_df.groupby(['hidden_nodes']).mean().reset_index()
+    plt.plot(esn_kq_df['hidden_nodes'], esn_kq_df['esn_kq'], color='black', linestyle='dashed', label='Kernel quality')
+    plt.plot(esn_gen_df['hidden_nodes'], esn_gen_df['esn_gen'], color='black', linestyle='solid', label='Generalization')
+
+    plt.xlabel('Hidden nodes')
+    plt.ylabel('Rank')
+    plt.ylim((0, 225))
+
+    plt.legend()
+    plt.tight_layout()
+    save_plot('esn-rank.png')
+    plt.show()
+
+    sq_kq_df = sq_kq_df.groupby(['hidden_nodes']).mean().reset_index()
+    sq_gen_df = sq_gen_df.groupby(['hidden_nodes']).mean().reset_index()
+    plt.plot(sq_kq_df['hidden_nodes'], sq_kq_df['esn_kq'], color='black', linestyle='dashed', label='Kernel quality')
+    plt.plot(sq_gen_df['hidden_nodes'], sq_gen_df['esn_gen'], color='black', linestyle='solid', label='Generalization')
+
+    plt.xlabel('Hidden nodes')
+    plt.ylabel('Rank')
+    plt.ylim((0, 225))
+
+    plt.legend()
+    plt.tight_layout()
+    save_plot('sq-rank.png')
+    plt.show()
+
+
+def mg_17():
+    from nolitsa import data
+
+    mg17 = data.mackey_glass(length=10000, tau=17.0, sample=1)
+    mg17 = [np.tanh(t-1) for t in mg17]
+
+    train_len = 6400
+    test_len = 2000
+
+    train = mg17[:train_len]
+    u_train = train[:-84]
+    y_train = train[84:]
+
+    test = mg17[train_len:train_len+test_len]
+    u_test = test[:-84]
+    y_test = test[84:]
+
+    ds.dataset = [torch.FloatTensor(d) for d in [u_train, y_train, u_test, y_test]]
+
+
+def plot_mg17_example():
+    mg_17()
+
+    plt.plot(ds.dataset[0][:1000], color='black')
+
+    plt.xlabel('Time step')
+    plt.ylabel(r'Mackey-Glass ($\tau$ = 17) output')
+
+    plt.tight_layout()
+    save_plot('mg17-example.png')
+    plt.show()
+
+
+def run_mg_17():
+    mg_17()
+
+    params = OrderedDict()
+    params['hidden_nodes'] = list(range(20, 410, 10))
+    params['w_res_density'] = [0.1]
+    df = experiment(esn_nrmse, params, runs=20)
+    df.to_pickle('experiments/esn_mg17.pkl')
+
+    params = OrderedDict()
+    params['w_res_type'] = ['tetragonal']
+    params['w_in_distrib'] = [Distribution.fixed]
+    params['dir_frac'] = [1.0]
+    params['input_scaling'] = [0.1]
+    params['hidden_nodes'] = [n*n for n in range(5, 21)]
+    df = experiment(esn_nrmse, params, runs=20)
+    df.to_pickle('experiments/sq_mg17.pkl')
+
+
+def plot_mg_17():
+    esn_df = load_experiment('experiments/esn_mg17.pkl')
+    esn_df = esn_df.loc[esn_df['hidden_nodes'] <= 400]
+    sq_df = load_experiment('experiments/sq_mg17.pkl')
+
+    esn_df = esn_df.groupby(['hidden_nodes']).mean().reset_index()
+    sq_df = sq_df.groupby(['hidden_nodes']).mean().reset_index()
+
+    plt.plot(esn_df['hidden_nodes'], esn_df['esn_nrmse'], color='black', linestyle='dashed', label='ESN')
+    plt.plot(sq_df['hidden_nodes'], sq_df['esn_nrmse'], color='black', linestyle='solid', label='Square grid')
+
+    plt.xlabel('Hidden nodes')
+    plt.ylabel(r'Mackey-Glass ($\tau$ = 17) NRMSE')
+
+    plt.legend()
+    plt.tight_layout()
+    save_plot('mg17.png')
+    plt.show()
+
+
 def node_removal_impact():
     import copy
 
@@ -762,9 +904,9 @@ def node_removal_impact():
     params['w_res_type'] = 'tetragonal'
     params['hidden_nodes'] = 144
     params['dir_frac'] = 1.0
-    dir_esn = ESN(**params)
+    dir_square_grid = ESN(**params)
 
-    def_nrmse = evaluate_esn(ds.dataset, dir_esn)
+    def_nrmse = evaluate_square_grid(ds.dataset, dir_esn)
     nrmse_diffs = []
 
     for i in range(len(dir_esn.G.nodes)):
