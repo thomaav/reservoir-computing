@@ -1,44 +1,10 @@
-\chapter{Experiments: Regular Tilings}
+\chapter{Experiments: Lattices}
 \label{ch:regular-tilings}
 
 % (TODO): Overall: standard deviations.
 
 % (TODO): Remember to always specify specifics of experiment setups for all
 % experiments
-
-\textcolor{red}{
-  \textbf{Methodology:} We look at the three most common types of tilings by
-regular polygons: regular tilings. Grünbaum and Shephard (section 1.3) about
-tilings, talks about regularity. ``Edge-to-edge'' tiling by congruent regular
-polygons. The three regular tesselations, or Euclidean tilings, are square,
-triangular, and hexagonal.
-}
-
-\textcolor{red}{
-  There also exists semiregular, often called uniform, tilings, where there are
-two or more faces. There are also more complex schemes, but we are interested in
-tilings that are lattice-like. The different types of Bravais lattices for 2
-dimensions were all investigated, but using just regular tilings was found to be
-sufficient. We are not necessarily interesting in comparing lattice structures
-directly, but rather in the applicability of such structures in general.
-}
-
-\textcolor{blue}{
-  ``Synchronization properties and reservoir computing capability of hexagonal
-spintronicoscillator arrays'' paper.
-}
-
-\textcolor{blue}{
-  ``Lattice networks/models are common in computational physics, condensed
-matter physics and beyond, modelling physical interactions, phase transitions
-and structure [15]. Examples include: discrete lattices like the Ising model
-with variables representing magnetic dipole moments of atomic spins, and the
-Gray- Scott reaction-diffusion model to simulate chemical systems [22]. Also,
-physical substrates often have a regular grid of connections. Lattice networks
-are therefore more realistic representations of many physical systems that would
-be considered for reservoir computing.'', Role of Structure and Complexity, Dale
-et al.
-}
 
 % (TODO): t!
 \begin{figure*}[t]
@@ -59,22 +25,42 @@ et al.
     \label{fig:rt-tri}
   \end{subfigure}
   \caption{
-    Regular tilings investigated for their quality as reservoir
-topologies. Investigated topologies include square (a), hexagonal (b), and
-triangular (c) regular tilings.
+    Types of lattices investigated for their quality as reservoir
+topologies. Investigated tilings include square (a), hexagonal (b), and
+triangular (c).
   }
   \label{fig:regular-tilings}
 \end{figure*}
 
-\section{Methodology}
+Lattice models are common in computational physics
+\cite{lavis_equilibrium_2015}. Understanding important models of computational
+physics in reservoir contexts is thus crucial to advance physical RC
+methodology. For example, the Ising model with dipole moments of atomic spins
+\cite{jensen_computation_2018}, spin-torque oscillator arrays
+\cite{tsunegi_physical_2019}, and the Ginzburg-Landau equation
+\cite{opala_neuromorphic_2019}, describe systems that are employed on a
+two-dimensional lattice, and have been used in reservoir settings. In this
+chapter, we therefore investigate lattice networks as more realistic models of
+physical reservoirs.
 
-% (TODO): Chapter reference.
+We explore the properties that lattice graphs exhibit as reservoirs by
+structuring internal nodes in this manner. Lattice graphs may be embedded in
+Euclidean space to form regular tilings, of which there three in two-dimensional
+space: square, hexagonal and triangular, which are all depicted in Figure
+\ref{fig:regular-tilings}. Other, more complicated tiling schemes
+exist. Semiregular, often called uniform, tilings are created using two or more
+faces. However, complicated grids are left outside the scope of this thesis, as
+our primary focus is the fundamental applicability of lattice layouts, not
+comparing the performance between them.
+
+Reservoirs are created by replacing the reservoirs of ESN models with the
+adjacency matrix generated for lattice models. For each experiment,
+$\mathbf{W}^{res}$ is then scaled to a spectral radius of 0.9, as this is
+equivalent to scaling the coupling, or spacing, between nodes in a physical
+system. Beyond this, our reservoir model remains the same as that of the ESN.
+
 \textcolor{red}{
-  \textbf{Methodology:} We use the same base as provided by the chapter on
-methodology, but replace the weight matrix of the reservoir, i.e. its innards,
-with that of the lattice structures we generate. This provides connectivity
-within the reservoir of regular, spatially constrained nature. Everything else
-should be the same.
+  Perhaps a paragraph summarizing each section.
 }
 
 \section{Reservoir Quality of Regular Tilings}
@@ -255,6 +241,11 @@ in ESNs is 10\%.
 \end{table}
 
 \textcolor{red}{
+  Performance wise? Input is actually just adding a single scalar. The internal
+matrix is very sparse. Compared to ESN this should be pretty nice.
+}
+
+\textcolor{red}{
   Key difference to CRJ: there is only one input weight, not a distribution with
 signedness.
 }
@@ -317,6 +308,20 @@ aspects of dynamic representations in the reservoirs are of importance and
 why.'' From cycle reservoirs with jumps paper. The part about stochastic
 elements is quite interesting.
 }
+
+\section{Dynamics in Square Grids}
+
+\subsection{Synopsis}
+
+\textcolor{red}{
+  I think maybe a section on KQ+G, and then Mackey-Glass 17 in addition could be
+good. MG17 should be re-tuned input scaling and spectral radius since its a new
+task, obviously. We can compare KQ with that of Dale et al. structure, and reach
+a similar conclusion to that of the background, with the discrepancy between
+ring and crj.
+}
+
+\subsection{Results and Discussion}
 
 \section{Shrinking and Growing Square Grids}
 
@@ -481,6 +486,32 @@ before.
   Remember that we are not necessarily concerned with finding really good square
 grids, but rather that they work at all, since we are concerned with spatial
 constraints.
+}
+
+\textcolor{red}{
+  We find square grids to slightly outperform ESNs on NARMA, and about as good
+on MG17.
+}
+
+\textcolor{red}{
+  We find directedness to be important, and \textit{sufficient}. We find a type
+of ESN that is fairly deterministic like CRJ, but has some freedom in
+structure. This is useful for exploring ESNs.
+}
+
+\textcolor{red}{
+  We underline a discrepancy between KQ and actual performance that is already
+seen with CRJ. This is quite interesting.
+}
+
+\textcolor{red}{
+  By analyzing removal of nodes, we find that there seems to be a ``core'' stem
+for solving the NARMA task. And ``augmenting'' nodes around. This might be
+telling about what happens in ESNs also, but due to randomness.
+}
+
+\textcolor{red}{
+  We find that removing nodes and evaluating can be good to remove noisy nodes.
 }
 
 
