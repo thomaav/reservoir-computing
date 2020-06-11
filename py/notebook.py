@@ -157,7 +157,7 @@ def rgg_volume_size():
     params['dist_function'] = [inv, inv_squared]
     params['dim_size'] = [1] + list(np.arange(10, 510, 10))
 
-    df = experiment(esn_nrmse, params, runs=10, esn_attributes=['org_spectral_radius'])
+    df = experiment(esn_nrmse, params, runs=20, esn_attributes=['org_spectral_radius'])
     df.to_pickle('experiments/rgg_volume_size.pkl')
 
 
@@ -582,7 +582,7 @@ def directed_regular_tilings_performance():
     params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
     params['hidden_nodes'] = [25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225]
     params['dir_frac'] = np.arange(0.0, 1.1, 0.1)
-    lattice_dir_df = experiment(esn_nrmse, params, runs=10)
+    lattice_dir_df = experiment(esn_nrmse, params, runs=20)
     lattice_dir_df.to_pickle('experiments/lattice_dir.pkl')
 
 
@@ -682,7 +682,7 @@ def unique_weights():
     params['w_res_type'] = ['tetragonal']
     params['hidden_nodes'] = [100, 225, 400]
     params['dir_frac'] = [1.0]
-    df = experiment(esn_nrmse, params, runs=10, esn_attributes=['w_in', 'w_res'])
+    df = experiment(esn_nrmse, params, runs=20, esn_attributes=['w_in', 'w_res'])
     df['uwin'] = df['w_in'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
     df['uwres'] = df['w_res'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
     del df['w_in']
@@ -692,7 +692,7 @@ def unique_weights():
     params = OrderedDict()
     params['hidden_nodes'] = [100, 225, 400]
     params['w_res_density'] = [0.1]
-    df = experiment(esn_nrmse, params, runs=10, esn_attributes=['w_in', 'w_res'])
+    df = experiment(esn_nrmse, params, runs=20, esn_attributes=['w_in', 'w_res'])
     df['uwin'] = df['w_in'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
     df['uwres'] = df['w_res'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
     del df['w_in']
@@ -962,7 +962,7 @@ def general_esn_shrink():
     params = OrderedDict()
     params['hidden_nodes'] = [1, 3] + list(range(5, 150, 5))
     params['w_res_density'] = [0.1]
-    lattice_dir_df = experiment(esn_nrmse, params, runs=10)
+    lattice_dir_df = experiment(esn_nrmse, params, runs=20)
     lattice_dir_df.to_pickle('experiments/esn_general_short.pkl')
 
 
@@ -1130,7 +1130,7 @@ def harder_benchmarks_performance():
     params['w_in_distrib'] = [Distribution.fixed]
     params['dir_frac'] = [1.0]
 
-    df = experiment(esn_nrmse, params, runs=10)
+    df = experiment(esn_nrmse, params, runs=20)
     df.to_pickle('experiments/narma20_performance.pkl')
 
     u_train, y_train = ds.NARMA(sample_len = 2000, system_order=30)
@@ -1145,7 +1145,7 @@ def harder_benchmarks_performance():
     params['w_in_distrib'] = [Distribution.fixed]
     params['dir_frac'] = [1.0]
 
-    df = experiment(esn_nrmse, params, runs=10)
+    df = experiment(esn_nrmse, params, runs=20)
     df.to_pickle('experiments/narma30_performance.pkl')
 
 

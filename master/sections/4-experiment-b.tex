@@ -64,6 +64,7 @@ system. Beyond this, our reservoir model remains the same as that of the ESN.
 }
 
 \section{Reservoir Quality of Lattices}
+\label{sec:lattice-quality}
 
 \subsection{Synopsis}
 
@@ -165,14 +166,6 @@ improves lattice models is the topic of the next section.
 
 \subsection{Synopsis}
 
-% (TODO): ref.
-\textcolor{red}{
-Using knowledge obtained in Chapter ?, we modify the resulting networks to have
-directed edges, and scale the input magnitude to find a suitable one.
-}
-
-\subsection{Results and Discussion}
-
 % (TODO): t!
 \begin{figure*}[t]
   \centering
@@ -191,10 +184,22 @@ directed edges, and scale the input magnitude to find a suitable one.
   \end{subfigure}
   \caption{
     Example square grids where 25\% (a) and 75\% (b) of the undirected edges are
-made directed instead.
+made directed.
   }
   \label{fig:dir-lattice}
 \end{figure*}
+
+One of the key discoveries of Chapter \ref{ch:rgg} is that directed edges
+improve performance significantly in random geometric graph reservoirs. It is of
+interest to repeat this experiment with lattice reservoirs, especially since
+information flow is so clearly visible in a lattice structure. We modify the
+generated lattice graphs generated in previous sections of this chapter to have
+a fraction of directed edges. Figure \ref{fig:dir-lattice} illustrates the
+concept for square lattices, where 25\% and 75\% of the edges of the two
+lattices, respectively, have been directed. The directed reservoir edges have a
+50\% chance of going in either direction.
+
+\subsection{Results and Discussion}
 
 % (TODO): t!
 \begin{figure*}[t]
@@ -218,46 +223,84 @@ made directed instead.
     \label{fig:rt-dir-perf-trisurf-tri}
   \end{subfigure}
   \caption{
-    \textcolor{red}{No caption yet.}
+    Benchmark error as a function of reservoir size and directedness. The
+fraction of directed edges determines the amount of edges that are left
+bidirectional, explained by Figure \ref{fig:dir-lattice}. Shown are results for
+square (a), hexagonal (b) and triangular (c) lattices.
   }
   \label{fig:rt-dir-perf-trisurf}
 
   \centering
   \includegraphics[width=3.5in]{figures/rt-dir-perf.png}
-  \caption{\textcolor{red}{No caption yet here.}}
+  \caption{
+    Benchmark error as a function of size for directed lattice reservoirs. All
+reservoirs are fully directed, and the direction of each edge is decided by an
+unbiased coin toss.
+  }
   \label{fig:rt-dir-perf}
 \end{figure*}
 
-\textcolor{red}{
-  We see that directed edges make the grids perform quite close to ESNs on the
-NARMA-10 dataset. We choose the square lattice to move further, as they are all
-quite similar, but the square one seems most stable and performs very well.
-}
+Figure \ref{fig:rt-dir-perf-trisurf} presents the results of introducing a
+fraction of directed edges to lattice reservoirs. Most reservoirs show reduced
+error rates with increasing fractions of directed edges.
+
+A small exception is visible for very small square and hexagonal reservoirs,
+where a fully directed reservoir may degrade if the edges align in an
+insufficient manner. Nodes in triangular reservoirs have six incident edges, as
+opposed to the three and four of square and hexagonal, thus giving a smaller
+chance of insufficient reservoirs appearing. Note that this problem disappears
+with bigger reservoirs. This compelling result indicates that our method of
+generating directed edges guarantees good reservoirs as their sizes increase --
+one does not need to ``get lucky'' with directions.
+
+Convincing improvements are exhibited once reservoirs become fully directed and
+sufficiently big, which is especially visible at the sudden drops at the closest
+points of the surface areas. The drops are only sudden when compared to
+reservoirs of a lower fraction of directed edges. We plot the cross section of
+the surface areas at full directedness in Figure \ref{fig:rt-dir-perf}, showing
+that the error rates keep decreasing with increased reservoir size. This is
+again in stark contrast to their undirected counterparts, which in Section
+\ref{sec:lattice-quality}, and also previous in Section \ref{sec:restore} only
+perform marginally better as reservoir size is increased.
 
 \begin{figure}
   \centering
   \includegraphics[width=3.5in]{figures/rt-performance-big.png}
-  \caption{\textcolor{red}{No caption here yet.}}
+  \caption{
+    NRMSE of square lattice reservoirs with global, fixed input schemes compared
+to standard ESNs. With the sparse input scheme only 50\% of the hidden nodes see
+the input.
+  }
   \label{fig:rt-performance-big}
 \end{figure}
 
-\textcolor{red}{
-  When we introduce a global input scheme, the square grids get even
-better. This is crazy. The square grids do not plateau nearly as much as the
-ESNs. In fact they get much better. We also add sparse input matrices, which
-means only 50\% of the hidden nodes see the input.
-}
+Thus, twice we have found directed edges to improve reservoir performance
+significantly, once in random geometric graph reservoirs in Section
+\ref{sec:restore}, and now again in lattices. Despite this, lattice reservoirs
+still perform slightly worse than ESN.
+
+In the project preceding this thesis, it was found that a global input scheme,
+i.e. an input scheme where every input weight is set to 1 and then scaled, works
+with ESNs given appropriate scaling \cite{aven_exploring_2019}. This simple
+input scheme is relevant to physical RC, given physical substrates in which
+every node is forced to see the same input. Results from using this input scheme
+with square grids are shown in Figure \ref{fig:rt-performance-big}.
+
+It is abundantly clear that the global input scheme works well with the square
+lattice. In fact, it scales even better with reservoir size than the regular
+ESNs used in our experiments. Additionally, we have also included error rates
+for a square grid with a sparser input scheme in which only 50\% of the hidden
+nodes see the input. These networks marginally improve even further upon the
+performance of square lattices.
 
 % (TODO): t!
 \begin{table}[t]
   \centering
   \begin{center}
     \caption{
-      \textcolor{red}{
-        Simple weighting scheme of square grids. Displayed values are given as
-an average across 10 experiment runs (std. dev.). Reservoir connectivity density
-in ESNs is 10\%.
-      }
+      Simplicity of the weighting scheme of square grids. Square grid reservoirs
+contain a single unique magnitude for input and reservoir weights. Displayed
+values are given as an average across 20 experiment runs (std. dev.).
     }
     \label{tab:sq-global-input}
     \begin{tabular}{c c c c c}
@@ -275,16 +318,23 @@ in ESNs is 10\%.
   \end{center}
 \end{table}
 
-\textcolor{red}{
-  Performance wise? Input is actually just adding a single scalar. The internal
-matrix is very sparse. Compared to ESN this should be pretty nice. We can do a
-pretty short benchmark, just raw, unfair comparison.
-}
+Table \ref{tab:sq-global-input} shows the simplicity of the square grids used in
+Figure \ref{fig:rt-performance-big}. The input of the entire reservoir is
+decided by a single scalar. Furthermore, there is still only a single unique
+magnitude used for reservoir weights in $\mathbf{W}^{res}$, which is determined
+by the spacing of nodes.
 
-\textcolor{red}{
-  Key difference to CRJ: there is only one input weight, not a distribution with
-signedness.
-}
+Simple cyclic reservoirs (SCR) use topology in a similar manner to use a
+deterministic weighting scheme \cite{rodan_minimum_2011}. Units in SCRs are
+organized in a cycle, with a single unique weight magnitude. All input
+connections have the same absolute weight value, but the sign is determined by
+means of an unbiased coin. The intention with SCR is to remove stochasticity in
+reservoir generation. With square lattices a similar strategy is
+employed. However, we do not use a stochastic scheme of generating signed input
+values, but instead generate the flow of information in this manner. This leaves
+an opportunity to study the structures that are generated, allowing us to peer
+into the apparent black box of the ESN, as we shall see in Section
+\ref{sec:shrink-grow}.
 
 % (TODO): t!
 \begin{figure*}[t]
@@ -302,47 +352,41 @@ signedness.
     \label{fig:activations-b}
   \end{subfigure}
   \caption{
-    \textcolor{red}{
-      This is only 10 of the nodes to give an example without cluttering too
-much. Square grid has only positive activations, and the input is clearly
-visible, while the ESN is sporadic, random.
-    }
+    Evolution of internal node activations for ESN (a) and square lattice with
+global input (b). Reservoirs contain $N = 144$ nodes, but only a subset of 10 is
+shown to avoid clutter.
+}
+
   }
   \label{fig:activations}
 \end{figure*}
 
-\textcolor{red}{
-  After looking at the activations here, all positive, one may consider other
-sigmoid functions of course, but experiments showed $tanh$ to work just fine.
-}
+The evolution of internal node activations proves to be of interest. Figure
+\ref{fig:activations} depicts an example run, comparing the standard ESN to
+square grids with a fixed, global input scheme. It is clearly visible that nodes
+in Figure \ref{fig:activations-b} receive the same input, while uniform
+distribution of the ESN in \ref{fig:activations-a} seems more sporadic due to
+its uniform input distribution in the interval [-0.5, 0.5].
+
+Note also that the activations of nodes in a square lattice reservoir are
+strictly positive, as the NARMA input sequence is strictly positive. This may
+warrant a change of activation to other sigmoid functions, as half of $tanh$
+remains unused, but has not been investigated further.
+
+In summary, our experimental results demonstrate the potential of designing
+reservoirs in a non-stochastic manner. By introducing directed edges to
+spatially constrained lattice reservoirs, we have stumbled upon reservoirs that
+perform exceptionally well on the NARMA-10 benchmark. These results suggest
+that, in a physical RC context, physical substrates will show degraded
+performance unless there is a directed flow of information. Additionally, we
+propose directed lattice reservoirs as a means to explore this impact of
+information flow deeper.
 
 \textcolor{red}{
-  We should maybe also compare MC and KQ/G to that of ESNs, as independent
-metrics. We see that the square grids have a much lower kernel quality,
-i.e. less dynamics, which may impact performance. However, some studies with
-Mackey-Glass indicate that it will also work for that. So there is this
-trade-off to make the square grid work, in that the dynamics are lessened for
-memory, but it \textit{works}, which is the key. Also, very important to look
-back to the discrepancy between Rodan and Dale here, as there we see something
-completely similar with rings. Good conclusion to draw!
-}
-
-\textcolor{red}{
-  Should we include experiments with harder NARMA? I think there is already
-quite a lot of information, so this might not really be necessary.
-}
-
-\textcolor{blue}{
-  ``The experimental results clearly demonstrate that our very simple deter-
-ministic reservoir constructions have the potential to significantly outper-
-form standard ESN randomized reservoirs. We propose that instead of relying on
-unnecessary stochastic elements in reservoir construction, one can obtain
-superior (and sometimes superior by a large margin) perfor- mance by employing
-the simple regular unidirectional circular topology with bidirectional jumps
-with fixed cycle and jump weights. However, it is still not clear exactly what
-aspects of dynamic representations in the reservoirs are of importance and
-why.'' From cycle reservoirs with jumps paper. The part about stochastic
-elements is quite interesting.
+  Is it worth it to present performance comparisons? The square lattice has a
+single scalar input (i.e. no matrix), and a very sparse reservoir matrix. This
+might turn out to be quite a lot faster than ESN in practice, but might be
+irrelevant.
 }
 
 \section{Nonlinear Dynamics in Square Grids}
@@ -388,6 +432,17 @@ tune the spectral radius to 0.7, achieving very results to before, but a bit
 more interesting KQ/G space. Easier to compare with lattices.
 }
 
+\textcolor{red}{
+  We should maybe also compare MC and KQ/G to that of ESNs, as independent
+metrics. We see that the square grids have a much lower kernel quality,
+i.e. less dynamics, which may impact performance. However, some studies with
+Mackey-Glass indicate that it will also work for that. So there is this
+trade-off to make the square grid work, in that the dynamics are lessened for
+memory, but it \textit{works}, which is the key. Also, very important to look
+back to the discrepancy between Rodan and Dale here, as there we see something
+completely similar with rings. Good conclusion to draw!
+}
+
 % (TODO): t!
 \begin{figure}[t]
   \centering
@@ -401,6 +456,7 @@ more interesting KQ/G space. Easier to compare with lattices.
 \end{figure}
 
 \section{Shrinking and Growing Square Grids}
+\label{sec:shrink-grow}
 
 \subsection{Synopsis}
 
