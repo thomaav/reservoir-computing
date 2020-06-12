@@ -906,11 +906,13 @@ def node_removal_impact():
     params['dir_frac'] = 1.0
     dir_square_grid = ESN(**params)
 
-    def_nrmse = evaluate_square_grid(ds.dataset, dir_esn)
+    def_nrmse = evaluate_esn(ds.dataset, dir_square_grid)
     nrmse_diffs = []
 
-    for i in range(len(dir_esn.G.nodes)):
-        esn = copy.deepcopy(dir_esn)
+    print(def_nrmse)
+
+    for i in range(len(dir_square_grid.G.nodes)):
+        esn = copy.deepcopy(dir_square_grid)
         esn.remove_hidden_node(i)
         nrmse_diffs.append(evaluate_esn(ds.dataset, esn) - def_nrmse)
 
@@ -1001,6 +1003,7 @@ def plot_node_removal(save=False):
 
     for i in [130, 70, 35, 20]:
         title = f'Lattice, {i} nodes, NRMSE {lattice_nrmses[max_nodes-i]:.3f}'
+        print(title)
         plot_lattice(dir_esn.G.reverse(), edge_color='0.7', cols='0.7', show=False, ax=plt.gca())
         plot_lattice(lattices[max_nodes - i].reverse(), ax=plt.gca(), show=False)
         plt.gca().set_axis_off()

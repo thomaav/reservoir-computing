@@ -396,7 +396,7 @@ In this section we look at the potential diversity of nonlinear operations in
 square lattice reservoirs. Although the NARMA-10 presents a task of nonlinear
 operation, we herein conduct experiments to determine the kernel quality and
 generalization capabilities of the square lattice reservoirs, and run benchmarks
-with the Mackey-Glass benchmark to generate a mildly chaotic attractor ($\taub =
+with the Mackey-Glass benchmark to generate a mildly chaotic attractor ($\tau =
 17$).
 
 \subsection{Results and Discussion}
@@ -470,45 +470,86 @@ slightly better. We would like to stress that previous work commonly compares
 reservoirs up to a size of $N = 200$, in which case Figure
 \ref{fig:rt-performance-big} and Figure \ref{fig:mg17} show ESN and square
 lattice reservoirs to almost perform equally. Thus, from these benchmarks we may
-gather that there is potential in lattice reservoirs as simulation models.
+gather that there is potential in lattice reservoirs as simulation models, most
+pressingly as a tool for theoretical analysis rather than an ESN competitor.
 
 \section{Shrinking and Growing Square Grids}
 \label{sec:shrink-grow}
 
 \subsection{Synopsis}
 
+In Section \ref{sec:lat-dir-edge} we asserted that the directedness of square
+lattice reservoirs will allow us to peer into the ``black box'' character of
+reservoirs. Traditional reservoir generation is driven by ad-hoc methodology,
+resulting in reservoirs which internals are difficult to interpret. Hence,
+constructing simpler, more deterministic reservoirs will allow us a clearer view
+of where and how input will flow in the network. Lattice reservoirs follow a
+straightforward connectivity scheme and are embedded in space, making analysis
+easier.
+
+In this section we attempt to gain a deeper understanding into what makes a
+square lattice reservoir perform well on the NARMA-10 benchmark. First we remove
+nodes from the lattice in an incremental manner, where each iteration removes
+the node that results in the lowest increase in error. Then we take the opposite
+route, adding nodes along the frontier of the lattice, always adding the node
+and directing the edges in the manner causing the largest decrease in
+error. Both shrinking and growing square lattice reservoirs thus follow a
+simplistic, exhaustive approach.
+
 \subsection{Results and Discussion}
 
-\textcolor{blue}{
-  ``Reservoir computing: Reducing network size and improving
-predictionstability'', as well as another paper in mailbox is about simplifying
-networks (other is about Shanon information). Maybe useful to talk discuss these
-as introduction.
-}
+\subsubsection{Shrinking Reservoirs}
 
 \begin{figure}
   \centering
   \includegraphics[width=3.5in]{figures/removal-hist.png}
   \caption{
-    \textcolor{red}{
-      Impact on NARMA-10 NRMSE when removing nodes from a 12x12 square grid
-reservoir. No nodes are absolutely essential, while some removals actually
-improve overall performance.
-    }
+    Impact of node removal from a $12 \times 12$ square lattice reservoir. The
+original NRMSE of the reservoir is 0.28.
   }
   \label{fig:rt-removal-hist}
 \end{figure}
+
+We begin the experiment by creating a single $12 \times 12$ square lattice
+reservoir and evaluating the impact of removing singular nodes in individual
+copies. Figure \ref{fig:rt-removal-hist} shows the distribution of the impact
+the removal of a node has on a reservoir with an original benchmark NRMSE of
+0.28. Few node removals make a difference, and the few that do only change the
+NRMSE marginally. This speaks to an inherent robustness in the reservoir, as
+dead nodes do not degenerate performance entirely. Interestingly, a minority of
+nodes provide a decrease in error upon removal, indicating a noisiness that
+causes a hinderance.
 
 \begin{figure}
   \centering
   \includegraphics[width=3.5in]{figures/shrink-performance.png}
   \caption{
-    \textcolor{red}{
-      No caption yet.
-    }
+    NRMSE as a function of nodes removed from the original reservoir. Both
+traditional ESN and square lattice reservoirs are investigated, and compared to
+randomly a randomly generated ESN of the same size.
   }
   \label{fig:sq-shrink-performance}
 \end{figure}
+
+When node removals have been exhausted, the node causing the smallest increase
+in benchmark error is removed. This is then repeated until there is a single
+node left in the reservoir. Figure \ref{fig:sq-shrink-performance} details the
+development of reservoir error for each iteration. We conduct the same
+experiment with default ESNs, comparing both models to randomly generated ESNs
+of the same size.
+
+Results show that both square lattice reservoirs and ESN reservoirs benefit from
+removal of a few noisy nodes. Furthermore, almost half the reservoirs may be
+removed in this manner before performance degrades to values below that of the
+initial state. Clearly, numerous of the hidden nodes in the reservoirs that were
+generated originally serve little purpose. Pruning ESNs has been attempted
+before. For example, by pruning output connections as regularization methods
+\cite{dutoit_pruning_2009}, or by using the concept of attack tolerance to
+remove nodes which output weights $\mathbf{W}^{out}$ correspond to large or
+small values \cite{haluszczynski_reservoir_2020}. Results that indicate
+optimization potential in network pruning are interesting in a physical RC
+context, as the resources required to realize reservoirs naturally increases
+with size.
 
 % (TODO): t!
 \begin{figure*}[t]
@@ -516,13 +557,13 @@ improve overall performance.
   \begin{subfigure}{.40\textwidth}
     \centering
     \includegraphics[width=1.0\linewidth]{figures/sq-grid-130.png}
-    \caption{}
+    \caption{$N = 130$, NRMSE = 0.21.}
     \label{fig:sq-grid-130}
   \end{subfigure}
   \begin{subfigure}{.40\textwidth}
     \centering
     \includegraphics[width=1.0\linewidth]{figures/sq-grid-70.png}
-    \caption{}
+    \caption{$N = 70$, NRMSE = 0.27.}
     \label{fig:sq-grid-70}
   \end{subfigure}
   \vskip\baselineskip
@@ -530,33 +571,50 @@ improve overall performance.
   \begin{subfigure}{.40\textwidth}
     \centering
     \includegraphics[width=1.0\linewidth]{figures/sq-grid-35.png}
-    \caption{}
+    \caption{$N = 35$, NRMSE = 0.29.}
     \label{fig:sq-grid-35}
   \end{subfigure}
   \begin{subfigure}{.40\textwidth}
     \centering
     \includegraphics[width=1.0\linewidth]{figures/sq-grid-20.png}
-    \caption{\textcolor{red}{Should have NRMSE and nodes left here.}}
+    \caption{$N = 20$, NRMSE = 0.40.}
     \label{fig:sq-grid-20}
   \end{subfigure}
   \caption{
-    \textcolor{red}{
-      Progression when incrementally removing nodes from a 12x12 square grid.
-    }
+    Evaluation during incremental removal of nodes from a $12 \times 12$ square
+lattice reservoir.
   }
   \label{fig:sq-grid}
 \end{figure*}
 
-\textcolor{red}{
-  Add the example when we have removed nodes from ESN? The one that is just
-impossible to make sense of. This is common knowledge however, we could probably
-just mention that.
-}
+Pruning reservoir size is relevant not only to reduce costs, it is also valuable
+for theoretical analysis. Figure \ref{fig:sq-grid} depicts the state of the
+reservoir at four different points during shrinking. Performance degrades to
+that of a delay line when there is around $N = 20$ nodes left in the reservoir,
+shown Figure \ref{fig:sq-grid-20}. This is also exactly what is remaining: a
+delay line of length 11, and two cycles of length 4. Moreover, an NRMSE of 0.29
+achieved with just $N = 35$ nodes in Figure \ref{fig:sq-grid-35}. We see a
+``core'' providing the required short-term memory, with nodes along this stem
+for processing purposes. This core is also present in the original 144-node
+network, but is now easier to spot.
 
-\textcolor{red}{
-  We need to stress that this is just one example, there is no variance here,
-which is a bit of a weakness in the argument.
-}
+We have illustrated the value of square lattice reservoirs as an analytical
+tool. This rather simple experiment has deduced that heavy lifting to solve the
+NARMA-10 benchmark is done by a core stem of memory augmented by surrounding
+nodes. A comparable analysis is harder to make for the corresponding shrunk ESN
+reservoir from Figure \ref{fig:sq-shrink-performance}, as even just embedding
+the network in a metric space requires complicated spring models such as
+force-directed graph drawing.
+
+In summary, in this section we have deviated slightly from the original goal of
+the thesis relating spatial constraints to physical substrates to investigate
+the spatial structures that emerge in lattice reservoirs that solve the NARMA-10
+benchmark. We suggest the analysis herein to be only the tip of the iceberg, as
+heuristics such as average node degree, investigation of the cyclic structures,
+and adding skip edges to square lattices to improve our understanding of the ESN
+black box.
+
+\subsubsection{Growing Reservoirs}
 
 \begin{figure}
   \centering
@@ -603,6 +661,12 @@ and progress in (b, c).
   We repeat the experiment, but this time \textit{adding} nodes along the
 frontier, as we can exhaust every possibility for every iteration without that
 much trouble. Harder to see what is happening now.
+}
+
+\textcolor{red}{
+  Not really interested in how well the reservoirs do, but rather if there are
+any interesting structures. Hard to tell, would need some heuristics
+maybe. Cause for further work, as it is beyond the scope of the thesis.
 }
 
 \section{Restoring Bidirectional Edges}
