@@ -163,6 +163,7 @@ importance of a directed flow of information, and whether directedness also
 improves lattice models is the topic of the next section.
 
 \section{Lattices with Directed Edges}
+\label{sec:lat-dir-edge}
 
 \subsection{Synopsis}
 
@@ -225,8 +226,8 @@ lattices, respectively, have been directed. The directed reservoir edges have a
   \caption{
     Benchmark error as a function of reservoir size and directedness. The
 fraction of directed edges determines the amount of edges that are left
-bidirectional, explained by Figure \ref{fig:dir-lattice}. Shown are results for
-square (a), hexagonal (b) and triangular (c) lattices.
+bidirectional, explained by Figure \protect\ref{fig:dir-lattice}. Shown are
+results for square (a), hexagonal (b) and triangular (c) lattices.
   }
   \label{fig:rt-dir-perf-trisurf}
 
@@ -355,8 +356,6 @@ into the apparent black box of the ESN, as we shall see in Section
     Evolution of internal node activations for ESN (a) and square lattice with
 global input (b). Reservoirs contain $N = 144$ nodes, but only a subset of 10 is
 shown to avoid clutter.
-}
-
   }
   \label{fig:activations}
 \end{figure*}
@@ -393,13 +392,12 @@ irrelevant.
 
 \subsection{Synopsis}
 
-\textcolor{red}{
-  I think maybe a section on KQ+G, and then Mackey-Glass 17 in addition could be
-good. MG17 should be re-tuned input scaling and spectral radius since its a new
-task, obviously. We can compare KQ with that of Dale et al. structure, and reach
-a similar conclusion to that of the background, with the discrepancy between
-ring and crj.
-}
+In this section we look at the potential diversity of nonlinear operations in
+square lattice reservoirs. Although the NARMA-10 presents a task of nonlinear
+operation, we herein conduct experiments to determine the kernel quality and
+generalization capabilities of the square lattice reservoirs, and run benchmarks
+with the Mackey-Glass benchmark to generate a mildly chaotic attractor ($\taub =
+17$).
 
 \subsection{Results and Discussion}
 
@@ -419,41 +417,60 @@ ring and crj.
     \label{fig:rank-b}
   \end{subfigure}
   \caption{
-    \textcolor{red}{
-      No caption yet.
-    }
+    Kernel quality and generalization capability as a function of reservoir size
+for ESN (a) and square lattice reservoirs (b).
   }
   \label{fig:rank}
 \end{figure*}
 
-\textcolor{red}{
-  The ESN can reach most of the behavior space, as described in Dale et al. We
-tune the spectral radius to 0.7, achieving very results to before, but a bit
-more interesting KQ/G space. Easier to compare with lattices.
-}
+Consider Figure \ref{fig:rank}, comparing the kernel quality of the default ESN
+to square lattice reservoirs. The parameters of the reservoirs remain the same
+as in Section \ref{sec:lat-dir-edge}, except a scaling of the ESN spectral
+radius to 0.7, as to avoid complete saturation of the respective ranks. We
+discover that square lattice reservoirs attain lower kernel
+qualities. Additionally the difference between kernel quality and generalization
+is also higher for ESN. This difference is often used as a metric of reservoir
+quality, as a high kernel quality and low generalization rank is desirable.
 
-\textcolor{red}{
-  We should maybe also compare MC and KQ/G to that of ESNs, as independent
-metrics. We see that the square grids have a much lower kernel quality,
-i.e. less dynamics, which may impact performance. However, some studies with
-Mackey-Glass indicate that it will also work for that. So there is this
-trade-off to make the square grid work, in that the dynamics are lessened for
-memory, but it \textit{works}, which is the key. Also, very important to look
-back to the discrepancy between Rodan and Dale here, as there we see something
-completely similar with rings. Good conclusion to draw!
-}
+If we examine kernel quality (KQ) and generalization rank (G) as a behavior
+space $KQ:G$, sweeping parameter spaces will reveal the flexibility of reservoir
+types. For all reservoirs, $KQ < N$ and $G < N$, given reservoir size $N$. It is
+known that the standard, fully-connected ESN may be tuned to have almost any
+$KQ:G$, while lattice reservoirs cover a smaller area of the $KQ:G$ behavior
+space, as they are unable to achieve a high $KQ$
+\cite{mcquillan_role_2019}. This conclusion is reproduced in Figure
+\ref{fig:rank}.
+
+In Section \ref{ssec:topology-and-spatial-networks}, we noted a discrepancy
+between performance predicted by kernel quality and benchmarks used by Rodan and
+Tiňo in their work on ring topologies. Ring topologies cover a smaller area of
+the $KQ:G$ behavior space than fully-connected ESNs. Nonetheless, cyclic
+reservoirs with regular jumps (CRJ) consistently outperform ESNs across multiple
+benchmarks \cite{rodan_simple_2012}. We see a similar outcome in our experiments
+with square lattices, where reservoirs perform comparably on the benchmark, but
+exhibit a lower kernel quality. This strengthens a conclusion that
+deterministically constructed reservoirs can perform well, given appropriate
+tasks.
 
 % (TODO): t!
 \begin{figure}[t]
   \centering
   \includegraphics[width=3.5in]{figures/mg17.png}
   \caption{
-    \textcolor{red}{
-      No caption yet.
-    }
+    NRMSE as a function of reservoir size. Note that this benchmark is the
+Mackey-Glass chaotic attractor with $\tau = 17$.
   }
   \label{fig:mg17}
 \end{figure}
+
+Figure \ref{fig:mg17} shows NRMSE achieved for square lattice reservoirs on the
+Mackey-Glass delay differential equation with mild chaos, $\tau = 17$. Again,
+see a comparable performance, although in this case the ESN model scales
+slightly better. We would like to stress that previous work commonly compares
+reservoirs up to a size of $N = 200$, in which case Figure
+\ref{fig:rt-performance-big} and Figure \ref{fig:mg17} show ESN and square
+lattice reservoirs to almost perform equally. Thus, from these benchmarks we may
+gather that there is potential in lattice reservoirs as simulation models.
 
 \section{Shrinking and Growing Square Grids}
 \label{sec:shrink-grow}
