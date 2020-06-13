@@ -677,7 +677,13 @@ potential in researching the creation of structured, deterministic reservoirs.
 
 \subsection{Synopsis}
 
-Finally.. somthingsomethin importance physical reservoir computing
+Among the discoveries of our previous experiments, the importance of directed
+edges to create a flow of information is of major relevancy to physical RC
+settings. In this section we analyze the effect of restoring bidirectional edges
+by following the greedy approach in Section \ref{sec:shrink-grow}. A base $12
+\times 12$ square lattice reservoir is generated, and its 264 edges are
+incrementally made bidirectional by choosing the edge causing the least increase
+in error for each iteration.
 
 \subsection{Results and Discussion}
 
@@ -685,20 +691,24 @@ Finally.. somthingsomethin importance physical reservoir computing
   \centering
   \includegraphics[width=3.5in]{figures/undir-performance.png}
   \caption{
-    \textcolor{red}{
-      No caption yet. 12x12 square grid.
-    }
+    NRMSE as a function of the fraction of edges of a square lattice reservoir
+that are changed to be undirected. A $12 \times 12$ lattice is used, starting
+from 264 directed edges.
   }
   \label{fig:undirection-performance}
 \end{figure}
 
-\textcolor{red}{
-  Imagine something similar to that of Figure \ref{fig:dir-lattice}, where now
-only a fraction of the edges are directed again. However, we cannot directly
-compare this to that of a cross section of that plot, as we have changed our
-input scheme to be global, instead of the uniform distribution that was used
-before.
-}
+Results are shown in Figure \ref{fig:undirection-performance}. First, there is a
+small dip in error for the initial 20 or so edges. When an edge goes from
+directed to undirected, its entry in $\mathbf{W}^{out}$ is in practice mirrored
+along the diagonal axis, essentially \textit{adding} an incident edge in the
+opposite direction. When greedily choosing which edges to change, it is
+unsurprising that there are instances where an additional edge is beneficial.
+
+As an increasing fraction of edges made undirected, the reservoir benchmark
+error rises steadily. Performance degrades drastically after about 90\% of edges
+have been changed. Again we see that a non-symmetric weight matrix enables
+richer dynamics, here as a direct consequence of the restored symmetry.
 
 \section{Conclusions}
 

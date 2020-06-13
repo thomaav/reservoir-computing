@@ -1093,7 +1093,7 @@ def plot_making_edges_undirected_performance():
     plt.plot([n/264 for n in range(1, 265)], nrmses, color='black')
     plt.ylim((0.0, 1.0))
 
-    plt.xlabel('Edges made undirected')
+    plt.xlabel('Fraction of edges made undirected')
     plt.ylabel('NARMA-10 NRMSE')
 
     plt.tight_layout()
