@@ -381,13 +381,6 @@ performance unless there is a directed flow of information. Additionally, we
 propose directed lattice reservoirs as a means to explore this impact of
 information flow deeper.
 
-\textcolor{red}{
-  Is it worth it to present performance comparisons? The square lattice has a
-single scalar input (i.e. no matrix), and a very sparse reservoir matrix. This
-might turn out to be quite a lot faster than ESN in practice, but might be
-irrelevant.
-}
-
 \section{Nonlinear Dynamics in Square Grids}
 
 \subsection{Synopsis}
@@ -616,62 +609,75 @@ black box.
 
 \subsubsection{Growing Reservoirs}
 
-\begin{figure}
-  \centering
+Growing reservoirs in the same manner as shrinking them is an enticing
+approach. There is a finite amount of positions where new nodes may be inserted
+into the network, and for each such position there is only a handful of ways to
+direct the incident edges. By exhausting all possibilities, we may attach the
+node that causes the largest decrease in benchmark error.
+
+\begin{figure} \centering
   \includegraphics[width=3.5in]{figures/grow-performance.png}
   \caption{
-    \textcolor{red}{
-      No caption yet.
-    }
+    NRMSE as a function of hidden nodes when growing a square lattice
+reservoir. The process is begun from a reservoir of size $N = 74$, depicted in
+Figure \protect\ref{fig:sq-grid-grow-74}.
   }
   \label{fig:sq-grow-performance}
 \end{figure}
 
+Figure \ref{fig:sq-grow-performance} shows the NRMSE development of a reservoir
+grown with this method. We begin with a node of $N = 74$ hidden nodes, found to
+be the best performing reservoir when shrinking a $12 \times 12$ square lattice
+reservoir in the previous section. We see a steady decrease in benchmark error
+for each node addition. Achieving a great benchmark score is of course
+desirable, as the results clearly show that building reservoirs specialized for
+specific tasks will outperform randomly generated ones.
+
 % (TODO): t!
-\begin{figure*}[t]
-  \centering
-  \begin{subfigure}{1.0\textwidth}
-    \centering
-    \includegraphics[width=0.5\linewidth]{figures/sq-grid-grow-74.png}
-    \caption{}
+\begin{figure*}[t] \centering
+  \begin{subfigure}{1.0\textwidth} \centering
+\includegraphics[width=0.5\linewidth]{figures/sq-grid-grow-74.png}
+    \caption{$N = 74$, NRMSE = 0.26.}
     \label{fig:sq-grid-grow-74}
   \end{subfigure}
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[width=1.0\linewidth]{figures/sq-grid-grow-124.png}
-    \caption{}
+  \begin{subfigure}{.49\textwidth} \centering
+\includegraphics[width=1.0\linewidth]{figures/sq-grid-grow-124.png}
+    \caption{$N = 124$, NRMSE = 0.18.}
     \label{fig:sq-grid-grow-124}
   \end{subfigure}
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[width=1.0\linewidth]{figures/sq-grid-grow-250.png}
-    \caption{\textcolor{red}{Should have captions for NRMSE and size.}}
+  \begin{subfigure}{.49\textwidth} \centering
+\includegraphics[width=1.0\linewidth]{figures/sq-grid-grow-250.png}
+    \caption{$N = 250$, NRMSE = 0.15.}
     \label{fig:sq-grid-grow-250}
   \end{subfigure}
   \caption{
-    \textcolor{red}{
-      Caption. We see the initial reservoir from where we start growing in (a),
-and progress in (b, c).
-    }
+    Evaluation during incremental addition of nodes to a square lattice
+reservoir. The process starts from the reservoir in (a).
   }
   \label{fig:sq-grid-grow}
 \end{figure*}
 
-\textcolor{red}{
-  We repeat the experiment, but this time \textit{adding} nodes along the
-frontier, as we can exhaust every possibility for every iteration without that
-much trouble. Harder to see what is happening now.
-}
+However, as previously mentioned, our intention with square lattice reservoirs
+is not to provide yet another ESN competitor, but to gain insights into their
+inner workings. Figure \ref{fig:sq-grid-grow} depicts the reservoir at three
+different points during its growth. Curiously, holes appear in the lattice in
+Figure \ref{fig:sq-grid-grow-250}, demonstrating that there are parts of the
+lattice where adding nodes, irrelevant of the directions of its incident edges,
+will cause little performance gain.
 
-\textcolor{red}{
-  Not really interested in how well the reservoirs do, but rather if there are
-any interesting structures. Hard to tell, would need some heuristics
-maybe. Cause for further work, as it is beyond the scope of the thesis.
-}
+Figure \ref{fig:sq-grid-grow-250} also illustrates the apparent difficulty of
+analyzing networks without good heuristics. Consider for example the difference
+between Figure \ref{fig:sq-grid-grow-250}, and the much smaller Figure
+\ref{fig:sq-grid-35}. The latter provides a much clearer picture of what it is
+\textit{doing} during the NARMA-10 benchmark. We thus refer to the approaches
+suggested in the summary of the previous section -- there seems to be tremendous
+potential in researching the creation of structured, deterministic reservoirs.
 
 \section{Restoring Bidirectional Edges}
 
 \subsection{Synopsis}
+
+Finally.. somthingsomethin importance physical reservoir computing
 
 \subsection{Results and Discussion}
 
