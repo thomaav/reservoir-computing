@@ -1,4 +1,5 @@
 \chapter{Introduction}
+\label{ch:intro}
 
 \textcolor{red}{
   Reservoir Computing spawned from difficulty of training RNNs. From Reservoir
@@ -17,9 +18,10 @@ regular structures that exhibit the same characteristics we see in existing
 models like ESN/LSM?
 }
 
-\section{Goals}
+\section{Research Goals}
 
-Research questions:
+Ultimately, the goal of the thesis is to answer the following research
+questions.
 
 \begin{itemize}
 \item How does the Reservoir Computing paradigm translate to the spatially
@@ -45,15 +47,27 @@ principles, but may be impractical to investigate given an already created
 
 \section{Thesis Overview}
 
-\textcolor{red}{
-  Chapters are about so and so. Fill in when chapters and sections are done.
-}
+The thesis is structured as follows. Chapter \ref{ch:intro} introduces the
+research domain, and presents the motivation behind exploring spatial
+constraints in reservoir computing. Chapter \ref{ch:background} covers relevant
+background material used throughout the thesis. An overview of previous work on
+physical reservoir computing is given in \ref{ssec:physreq}, and a discussion of
+topology and spatial restrictions within reservoir computing is presented in
+\ref{ssec:topology-and-spatial-networks}.
 
-\textcolor{red}{
-  Experiments naturally lead from one into the next by asking questions, so that
-they are not necessarily self-contained. This is to create a common thread
-within the thesis.
-}
+Chapter \ref{ch:method} describes the thesis methodology. Section
+\ref{sec:esn-param} presents the parameters used for echo state network
+generation, while Section \ref{sec:bench-metr} explains the implementation
+details of benchmarks and other metrics.
+
+Chapters \ref{ch:rgg} and \ref{ch:regular-tilings} present experiments made with
+random geometric graphs and lattice networks, respectively. Most experiments
+rely on the knowledge gained in previous sections, and thus follow a
+chronological order.
+
+Finally, Chapter \ref{ch:conclusion} summarizes the discoveries of the
+experiments, draws conclusions related to the research goals of the thesis, and
+suggests areas of future work.
 
 %%% Local Variables:
 %%% mode: latex
