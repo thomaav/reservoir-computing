@@ -20,30 +20,33 @@ models like ESN/LSM?
 
 \section{Research Goals}
 
-Ultimately, the goal of the thesis is to answer the following research
-questions.
+In this thesis, we seek a better theoretical foundation for how reservoir
+computing methodology translates to physical substrates. Specifically, we are
+interested in understanding how spatially restricting the nodes of a reservoir
+network impacts performance. Ultimately, the goal of the thesis is to answer the
+following research questions:
 
-\begin{itemize}
-\item How does the Reservoir Computing paradigm translate to the spatially
-constrained topology setting of a physical medium?
-\item How do highly regular structures compare in terms of memory capacity,
-information processing capacity, and robustness, to that of established models
-such as echo state networks?
-\item Can we find simple, deterministic weighting schemes for recurrent neural
-networks, that are realizable as physical interactions?
-\item Which characters/parameters in established models must necessarily
-translate well to physical settings?
-\end{itemize}
+\textbf{RQ1:} How does the reservoir computing paradigm translate to the
+spatially constrained topology setting of a physical medium?
 
-\textcolor{blue}{
-  ``Reference [88] explores this idea by addressing three issues: (i) what is
-the minimal complexity of topology and parameters that produce comparable
-performance to standard models?  (ii) what degree of randomness is needed to
-construct competitive reservoirs? and (iii) how do completely deterministic
-reservoirs compare? These are good questions for understanding underlying RC
-principles, but may be impractical to investigate given an already created
-(maybe static) physical substrate.''
-}
+First, we are concerned with investigating practical challenges of realizing
+physical reservoirs. We are interested in how restrictions, primarily embedding
+reservoirs in physical space, will affect reservoir quality.
+
+\textbf{RQ2:} How do highly regular, physical structures compare in information
+processing capability to that of established models such as echo state networks?
+
+Second, we are interested in how reservoirs with regular structures, such as
+lattice grids, compare to established models. If there are discrepancies in
+capability, we pursue the reasoning to gain a deeper theoretical insight into
+why the regularity is disadvantageous.
+
+\textbf{RQ3:} Can we find simple, deterministic reservoir generation
+methodology, relying less on random weighting schemes?
+
+Designing reservoirs in a highly deterministic manner is desirable, especially
+due to the fact that it may simplify the physical realization process. Simple
+schemes to embed nodes in space and establish connectivity are beneficial.
 
 \section{Thesis Overview}
 
