@@ -1,29 +1,38 @@
 \chapter{Introduction}
 \label{ch:intro}
 
-\textcolor{red}{
-  Reservoir Computing spawned from difficulty of training RNNs. From Reservoir
-Computing we now have a lot of physically based reservoirs. Introduce the
-sentiment.
-}
+With the inevitable demise of Moore's law, researchers now seek computational
+methods beyond the traditional transistor-based computer architecture. A wide
+range of approaches, collectively dubbed \textit{unconventional computing}
+methodology, aim to exploit the intrinsic computation present in many natural
+systems. For example, \textit{evolution in-materio} shows that computation can
+be implemented in physical systems as a hybrid of analogue and traditional
+computation \cite{miller_evolution--materio_2014}.
 
-\textcolor{red}{
-  Now, with physical reservoirs, we will have to adapt our previous Echo State
-Networks to physical morphologies. Does this work?
-}
+Reservoir computing (RC) has become a predominant member of the unconventional
+computing paradigm. It is a framework suited for processing of temporal and
+sequential data, exploiting the underlying dynamics of a
+\textit{reservoir}. Classical RC is derived from recurrent neural network (RNN)
+models, e.g. echo state networks \cite{jaeger_echo_2001}. Utilizing an RNN as a
+reservoir, input sequences are projected into a high-dimensional space,
+incorporating its temporal information in an instantaneous readout. Training is
+carried out by adapting the readout layer with supervised linear regression,
+providing faster and simpler training than traditional gradient descent methods.
 
-\textcolor{red}{
-  Spatial networks, can we use existing graph and lattice theory? Can we find
-regular structures that exhibit the same characteristics we see in existing
-models like ESN/LSM?
-}
+Interestingly, there is no need for the reservoir to be an artificial neural
+network -- any high-dimensional, driven system exhibiting complex dynamic
+behavior can be used \cite{schrauwen_overview_2007}. Through a fusion of
+in-materio computation and the reservoir methodology, \textit{physical}
+reservoir computing has seen a recent surge of interest
+\cite{adamatzky_reservoir_2017, tanaka_recent_2018}.
 
-\textcolor{red}{
-  Last two paragraphs should be: (i) we investigate two types of spatial
-restrictions in \textit{simulation} to see what happens. And (ii), we use
-spatial restriction models to propose new ways to do theoretical analysis when
-we have spatial embedding.
-}
+In this work, the goal is to explore inherent limitations faced when exploiting
+physical substrates as reservoirs. In the project preceding this thesis, noise,
+equipment accuracy, and system observability were investigated as physical
+limitations \cite{aven_exploring_2019}. Herein, we further this work, focusing
+on constrained topology or physical morphology. Physical reservoirs must
+necessarily be embedded in physical space, and the role of structure is
+relatively unexplored area of RC.
 
 \section{Research Goals}
 
@@ -53,9 +62,13 @@ methodology, relying less on random weighting schemes?
 
 Designing reservoirs in a highly deterministic manner is desirable, especially
 due to the fact that it may simplify the physical realization process. Simple
-schemes to embed nodes in space and establish connectivity are
+schemes to embed nodes in space and establish connectivity are thus
 beneficial. Additionally, less stochastic elements in reservoir generation may
 allow us to peer into the ``black box'' character of reservoir computing.
+
+To answer the posed research questions, we conduct simulations using traditional
+echo state network methodology. We investigate two types of spatially
+constrained network models as reservoirs: random geometric graphs and lattices.
 
 \section{Thesis Overview}
 
