@@ -37,11 +37,22 @@ found to be appropriate to pinpoint definite trends in the results. Standard
 deviations for all experiments are thus provided in the appendix.
 
 The Python software library implementation is available online, including a
-Jupyter Notebook reproducing each
+Jupyter Notebook for reproducing each
 experiment\footnote{\textcolor{red}{deadlink}}.
 
 \section{Benchmarks and Metrics}
 \label{sec:bench-metr}
+
+\begin{figure}[t!]
+  \centering
+  \includegraphics[width=3.0in]{figures/benchmark-example.png}
+  \caption{
+    Evaluation of a traditional ESN of size $N = 200$ on the NARMA-10
+benchmark. The first 40 time steps of the benchmark are shown, comparing target
+output to the predicted output of the reservoir. The resulting NRMSE was 0.23.
+  }
+  \label{fig:benchmark-example}
+\end{figure}
 
 To evaluate reservoirs, the benchmarks and metrics described in Section
 \ref{sec:benchmark} were used. Note that the our primary evaluation tool was the
@@ -55,7 +66,7 @@ presented in \cite{rodan_minimum_2011}.
 The Mackey-Glass benchmark has been used in a range of ways, making comparison
 of models harder than for NARMA. We used the method presented in
 \cite{ma_deep-esn:_2017}. We generated a time series from Equation \ref{eq:mg17}
-using discrete approximation, squashing it into a range of [-1, 1] with
+using discrete approximation, squashing the output into a range of [-1, 1] with
 $\tanh(y-1)$. The series was split into a training and test set, with $L_{train}
 = 6400$ and $L_{test} = 2000$. The task of the reservoir was to predict input 84
 time steps ahead, i.e. $\mathbf{y}(t) = \mathbf{u}(t+84)$.
@@ -75,6 +86,12 @@ signal $\mathbf{y}(t)$ and a target signal $\mathbf{\hat{y}}(t)$
   .
   \label{eq:nrmse}
 \end{equation}
+
+An evaluation of a traditional ESN of size $N = 200$ using the NARMA-10
+benchmark is shown in Figure \ref{fig:benchmark-example}. In this figure, the
+first 40 time steps of the benchmark are shown, comparing the target output to
+the predicted output of the reservoir. The resulting NRMSE of the benchmark was
+0.23.
 
 Kernel quality was evaluated by drawing $N$ input streams of length 20 uniformly
 from the interval [-1, 1], where $N$ is the number of hidden nodes. The

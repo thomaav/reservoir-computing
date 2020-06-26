@@ -105,7 +105,7 @@ def esn_gen(params, attr=[]):
     return generalization(20, esn, esn.hidden_nodes), esn_attributes
 
 
-def evaluate_esn(dataset, esn, plot=False, plot_range=None):
+def evaluate_esn(dataset, esn, plot=False, plot_range=None, show=True):
     washout = esn.washout
 
     u_train, y_train, u_test, y_test = dataset
@@ -125,13 +125,14 @@ def evaluate_esn(dataset, esn, plot=False, plot_range=None):
             predicted = y_predicted
 
         plt.plot(target, 'black', label='Target output')
-        plt.plot(predicted, 'red', label='Predicted output', alpha=0.5)
+        plt.plot(predicted, 'black', label='Predicted output', linestyle='dashed')
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left',
                    ncol=2, mode="expand", borderaxespad=0., fancybox=False)
 
-        plt.ylabel('Reservoir output')
-        plt.xlabel('Time')
+        plt.ylabel('Output')
+        plt.xlabel('Time step')
 
-        plt.show()
+        if show:
+            plt.show()
 
     return _nrmse

@@ -114,6 +114,19 @@ def plot_NARMA_nonlinearity():
     plt.show()
 
 
+def plot_benchmark_example(save=False):
+    params = OrderedDict()
+    params['hidden_nodes'] = 200
+    params['w_res_density'] = 0.1
+
+    esn = ESN(**params)
+    nrmse = evaluate_esn(ds.dataset, esn, plot=True, plot_range=[0, 40], show=False)
+    if save:
+        plt.tight_layout()
+        save_plot('benchmark-example.png')
+    print(f'NRMSE: {nrmse}')
+
+
 # EXPERIMENTS: Random Geometric Graphs.
 
 
