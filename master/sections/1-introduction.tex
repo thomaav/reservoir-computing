@@ -10,14 +10,15 @@ be implemented in physical systems as a hybrid of analogue and traditional
 computation \cite{miller_evolution--materio_2014}.
 
 Reservoir computing (RC) has become a predominant member of the unconventional
-computing paradigm. It is a framework suited for processing of temporal and
-sequential data, exploiting the underlying dynamics of a
-\textit{reservoir}. Classical RC is derived from recurrent neural network (RNN)
-models, e.g. echo state networks \cite{jaeger_echo_2001}. Utilizing an RNN as a
-reservoir, input sequences are projected into a high-dimensional space,
+computing paradigm \cite{adamatzky_reservoir_2017}. It is a framework suited for
+processing of temporal and sequential data, exploiting the underlying dynamics
+of a \textit{reservoir}. Classical RC is derived from recurrent neural network
+(RNN) models, e.g. echo state networks \cite{jaeger_echo_2001}. Utilizing an RNN
+as a reservoir, input sequences are projected into a high-dimensional space,
 incorporating its temporal information in an instantaneous readout. Training is
-carried out by adapting the readout layer with supervised linear regression,
-providing faster and simpler training than traditional gradient descent methods.
+then carried out by adapting the readout layer with supervised linear
+regression, providing faster and simpler training than traditional gradient
+descent methods.
 
 Interestingly, there is no need for the reservoir to be an artificial neural
 network -- any high-dimensional, driven system exhibiting complex dynamic
@@ -31,8 +32,10 @@ physical substrates as reservoirs. In the project preceding this thesis, noise,
 equipment accuracy, and system observability were investigated as physical
 limitations \cite{aven_exploring_2019}. Herein, we further this work, focusing
 on constrained topology or physical morphology. Physical reservoirs must
-necessarily be embedded in physical space, and the role of structure is
-relatively unexplored area of RC.
+necessarily be embedded in physical space, often having completely fixed
+structural properties. This is in contrast to abstraction models -- physical
+models are commonly limited in the way we may change its geometry. The role of
+structure is a relatively unexplored area of RC.
 
 \section{Research Goals}
 
@@ -68,7 +71,14 @@ allow us to peer into the ``black box'' character of reservoir computing.
 
 To answer the posed research questions, we conduct simulations using traditional
 echo state network methodology. We investigate two types of spatially
-constrained network models as reservoirs: random geometric graphs and lattices.
+constrained network models as reservoirs: random geometric graphs and
+lattices. Thus, since all experiments use echo state networks, we use a higher
+level abstraction to model physical reservoirs by imposing specific structural
+properties on the architecture. Generated networks are evaluated using widely
+used approaches: the nonlinear autoregressive moving average (NARMA)
+\cite{atiya_new_2000}, the Mackey-Glass delay differential equation
+\cite{mackey_oscillation_1977}, kernel quality and generalization
+\cite{legenstein_edge_2007}, and short-term memory \cite{jaeger_short_2002}.
 
 \section{Thesis Overview}
 
