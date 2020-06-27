@@ -6,8 +6,7 @@
 % (TODO): Remember to always specify specifics of experiment setups for all
 % experiments
 
-% (TODO): t!
-\begin{figure*}[t]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{.32\textwidth}
     \centering
@@ -30,7 +29,7 @@ topologies. Investigated tilings include square (a), hexagonal (b), and
 triangular (c).
   }
   \label{fig:regular-tilings}
-\end{figure*}
+\end{figure}
 
 Lattice models are common in computational physics
 \cite{lavis_equilibrium_2015}. Understanding important models of computational
@@ -91,7 +90,7 @@ in a significant performance penalty. Additionally, little difference is seen
 between the three types of tilings.
 
 % (TODO): t!
-\begin{figure*}[t]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{.32\textwidth}
     \centering
@@ -117,7 +116,7 @@ as a function of reservoir size and input scaling. Investigated topologies
 include square (a), hexagonal (b), and triangular (c) regular tilings.
   }
   \label{fig:rt-performance-is}
-\end{figure*}
+\end{figure}
 
 In Section \ref{sec:dist-func}, it was discovered that reservoirs modeling
 random geometric graphs exhibited low memory retention. The symptoms are similar
@@ -164,7 +163,7 @@ improves lattice models is the topic of the next section.
 \subsection{Synopsis}
 
 % (TODO): t!
-\begin{figure*}[t]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{.40\textwidth}
     \centering
@@ -184,7 +183,7 @@ improves lattice models is the topic of the next section.
 made directed.
   }
   \label{fig:dir-lattice}
-\end{figure*}
+\end{figure}
 
 One of the key discoveries of Chapter \ref{ch:rgg} is that directed edges
 improve performance significantly in random geometric graph reservoirs. It is of
@@ -199,7 +198,7 @@ lattices, respectively, have been directed. The directed reservoir edges have a
 \subsection{Results and Discussion}
 
 % (TODO): t!
-\begin{figure*}[t]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{.32\textwidth}
     \centering
@@ -235,7 +234,7 @@ reservoirs are fully directed, and the direction of each edge is decided by an
 unbiased coin toss.
   }
   \label{fig:rt-dir-perf}
-\end{figure*}
+\end{figure}
 
 Figure \ref{fig:rt-dir-perf-trisurf} presents the results of introducing a
 fraction of directed edges to lattice reservoirs. Most reservoirs show reduced
@@ -334,7 +333,7 @@ into the apparent black box of the ESN, as we shall see in Section
 \ref{sec:shrink-grow}.
 
 % (TODO): t!
-\begin{figure*}[t]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{.49\textwidth}
     \centering
@@ -354,7 +353,7 @@ global input (b). Reservoirs contain $N = 144$ nodes, but only a subset of 10 is
 shown to avoid clutter.
   }
   \label{fig:activations}
-\end{figure*}
+\end{figure}
 
 The evolution of internal node activations proves to be of interest. Figure
 \ref{fig:activations} depicts an example run, comparing the standard ESN to
@@ -391,7 +390,7 @@ with the Mackey-Glass benchmark to generate a mildly chaotic attractor ($\tau =
 \subsection{Results and Discussion}
 
 % (TODO): t!
-\begin{figure*}[t]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{.49\textwidth}
     \centering
@@ -410,7 +409,7 @@ with the Mackey-Glass benchmark to generate a mildly chaotic attractor ($\tau =
 for ESN (a) and square lattice reservoirs (b).
   }
   \label{fig:rank}
-\end{figure*}
+\end{figure}
 
 Consider Figure \ref{fig:rank}, comparing the kernel quality of the default ESN
 to square lattice reservoirs. The parameters of the reservoirs remain the same
@@ -541,7 +540,7 @@ context, as the resources required to realize reservoirs naturally increases
 with size.
 
 % (TODO): t!
-\begin{figure*}[t]
+\begin{figure}[t]
   \centering
   \begin{subfigure}{.40\textwidth}
     \centering
@@ -574,7 +573,7 @@ with size.
 lattice reservoir.
   }
   \label{fig:sq-grid}
-\end{figure*}
+\end{figure}
 
 Pruning reservoir size is relevant not only to reduce costs, it is also valuable
 for theoretical analysis. Figure \ref{fig:sq-grid} depicts the state of the
@@ -630,7 +629,7 @@ desirable, as the results clearly show that building reservoirs specialized for
 specific tasks will outperform randomly generated ones.
 
 % (TODO): t!
-\begin{figure*}[t] \centering
+\begin{figure}[t] \centering
   \begin{subfigure}{1.0\textwidth} \centering
 \includegraphics[width=0.5\linewidth]{figures/sq-grid-grow-74.png}
     \caption{$N = 74$, NRMSE = 0.26.}
@@ -651,7 +650,7 @@ specific tasks will outperform randomly generated ones.
 reservoir. The process starts from the reservoir in (a).
   }
   \label{fig:sq-grid-grow}
-\end{figure*}
+\end{figure}
 
 However, as previously mentioned, our intention with square lattice reservoirs
 is not to provide yet another ESN competitor, but to gain insights into their
@@ -708,38 +707,45 @@ richer dynamics, here as a direct consequence of the restored symmetry.
 
 \section{Conclusions}
 
-\textcolor{red}{
-  Remember that we are not necessarily concerned with finding really good square
-grids, but rather that they work at all, since we are concerned with spatial
-constraints.
-}
+The goal of this chapter was to investigate the computational feasibility of
+lattice models as reservoirs. We have investigated how the fixed geometry can
+cause degradation in reservoir quality, and evaluated methods to
+deterministically construct spatially restricted reservoirs.
 
-\textcolor{red}{
-  We find square grids to slightly outperform ESNs on NARMA, and about as good
-on MG17.
-}
+Analysis of bidirectional lattice reservoirs revealed that there is little
+difference between square, hexagonal and triangular tilings. The marginal
+difference between the different tilings again suggest that the \textit{overall
+structure} of the reservoir determines its feasibility, as the difference
+between the tilings account for little more than the number of edges incident
+each node. This simple, sparse lattice architecture was shown to provide decent
+results overall.
 
-\textcolor{red}{
-  We find directedness to be important, and \textit{sufficient}. We find a type
-of ESN that is fairly deterministic like CRJ, but has some freedom in
-structure. This is useful for exploring ESNs.
-}
+When edges of the lattice were changed to be directed, reservoir quality
+increased to values almost comparable to traditional ESNs. Changing the input
+scheme to a fixed, global input saw an additional gain in performance,
+outperforming traditional ESNs on the NARMA-10 benchmark. The importance of
+directedness found in Chapter \ref{ch:rgg} thus resurfaced in lattice
+experiments, strengthening previous conclusions.
 
-\textcolor{red}{
-  We underline a discrepancy between KQ and actual performance that is already
-seen with CRJ. This is quite interesting.
-}
+Interestingly, there is a discrepancy between the reservoir quality predicted by
+the kernel quality, and the resulting benchmark evaluation. We found that
+lattice reservoirs in general may attain a narrower range of kernel qualities
+than ESNs, but perform comparably on benchmark tasks. Equivalent conclusions
+have been drawn for ring topologies previously, illustrating that
+deterministically constructed reservoirs may perform well on suitable tasks.
 
-\textcolor{red}{
-  By analyzing removal of nodes, we find that there seems to be a ``core'' stem
-for solving the NARMA task. And ``augmenting'' nodes around. This might be
-telling about what happens in ESNs also, but due to randomness.
-}
+By deterministically removing and adding nodes to lattice reservoirs, we
+illustrated methodology to explore their inner workings. For example, for the
+NARMA-10 benchmark we found that lattice reservoirs seem work by augmenting a
+``core'' stem of nodes which make up the short-term memory, with augmentative
+nodes around it. We reasoned that constructing reservoirs in deterministic ways
+may pave the way to a deeper understanding of ESN internals.
 
-\textcolor{red}{
-  We find that removing nodes and evaluating can be good to remove noisy nodes.
-}
-
+Hence, we argue that there are three main contributions in this chapter. (i) We
+found physical reservoirs with lattice structures to be feasible, but may
+require imposed directedness for scalability. (ii) We presented a lattice model
+suitable for theoretical analysis of ESN internals. (iii) We showed example
+analyses, suggesting further methods and heuristics.
 
 %%% Local Variables:
 %%% mode: latex
