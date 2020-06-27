@@ -3,24 +3,50 @@
 
 \section{Conclusion}
 
-\textcolor{red}{
-  There are a lot of things we can conclude, we focus on the most important ones
-to answer research questions.
-}
+In this thesis we have explored physical reservoir computing with spatial
+constraints. Our goal was to provide a better theoretical foundation for how
+reservoir computing methodology translates to physical substrates. We conducted
+software simulations using echo state network methodology to investigate the
+feasibility of reservoirs with two different spatial restrictions: random
+geometric graphs and lattices. Furthermore, we have developed lattice reservoirs
+that can be used for theoretical analysis of ESN internals, accompanied with
+example analyses of deterministic reservoir construction.
+
+\textbf{RQ1:} How does the reservoir computing paradigm translate to the
+spatially constrained topology setting of a physical medium?
+
+The difference from abstraction models such as ESNs to physical reservoirs is
+primarily concerned with the \textit{limitations} posed when interacting with an
+actual physical substrate. In this work we have investigated spatial
+limitations, and in Section \ref{sec:rwd} we emphasized that the weight
+distribution resulting from a spatially constrained reservoir is different from
+unrestricted architectures. The translation of the RC paradigm to a spatial,
+physical setting is thus primarily limited by the (possibly fixed) geometries of
+the underlying substrate how its internal units are connected. Other limitations
+than spatial constraints, such as noise and system observability, were explored
+in preliminary work \cite{aven_exploring_2019}.
+
+More specifically, we have shown that ESNs with imposed spatial limitations by
+default see a decrease in performance compared to their abstract
+counterparts. However, both RGG and lattice reservoirs achieved improved
+performance once the symmetry in the resulting internal reservoir matrix was
+broken by directed and signed edges.
+
+\textbf{RQ2:} How do highly regular, physical structures compare in information
+processing capability to that of established models such as echo state networks?
 
 \textcolor{red}{
-  first related to physcial then general we stumbled upon
+  Highly regular structures investigated: lattices. We see something similar to
+Rodan and Tino.
 }
 
-\textcolor{red}{
-  What was achieved? Remember to \textit{very specifically} answer the research
-questions presented in the introduction. What did we set out to achieve, and
-what was concretely achieved. RQ1, RQ2, and RQ3.
-}
+\textbf{RQ3:} Can we find simple, deterministic reservoir generation
+methodology, relying less on random weighting schemes?
 
 \textcolor{red}{
-  Remember to include shortcomings here (which should also be discussed in the
-discussion section, of course).
+  We have introduced methodology to do so, since the directedness is the
+stochastic element we can use this methodology to further our understanding,
+which is also the intention of CRJ.
 }
 
 \textcolor{red}{
@@ -35,17 +61,6 @@ box problem). (4) Introduce a notion that there might be some core ``stem'' in
 ESNs that correspond to a memory, that is operated on by augmentative nodes.
 }
 
-\textcolor{blue}{
-  ``This is somewhat counterin-tuitive as large weights in the output function
-suggest astrong influence of the respective node in the aggregationof the
-(correct) output signal.'' This is not necessarily true, as we saw in some of
-our experiments. ``Our results demonstrate that a large optimization po-tential
-lies in a systematical refinement of the differen-tial reservoir properties for
-a given data set.  This wasoutlined on the examples of controlled node removal
-andintroduction of a scaling factor in the activation function.'' Also quite
-relevant.
-}
-
 \section{Future Work}
 
 \textcolor{red}{
@@ -54,8 +69,8 @@ investigating?
 }
 
 \textcolor{red}{
-  If one wants to determine if square grids is comparable to ESNs, more
-benchmarks are needed. We just studied whether they are usable at all.
+  real life may not be in the same lockstep, so real life experiments are
+  interesting. for example having directedness in artificial spin ice.
 }
 
 %%% Local Variables:

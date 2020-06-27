@@ -482,7 +482,7 @@ simplistic, exhaustive approach.
 
 \subsubsection{Shrinking Reservoirs}
 
-\begin{figure}
+\begin{figure}[htb]
   \centering
   \includegraphics[width=3.5in]{figures/removal-hist.png}
   \caption{
@@ -502,7 +502,7 @@ dead nodes do not degenerate performance entirely. Interestingly, a minority of
 nodes provide a decrease in error upon removal, indicating a noisiness that
 causes a hinderance.
 
-\begin{figure}
+\begin{figure}[htb]
   \centering
   \includegraphics[width=3.5in]{figures/shrink-performance.png}
   \caption{
@@ -603,7 +603,8 @@ into the network, and for each such position there is only a handful of ways to
 direct the incident edges. By exhausting all possibilities, we may attach the
 node that causes the largest decrease in benchmark error.
 
-\begin{figure} \centering
+\begin{figure}[htb]
+  \centering
   \includegraphics[width=3.5in]{figures/grow-performance.png}
   \caption{
     NRMSE as a function of hidden nodes when growing a square lattice
@@ -620,6 +621,22 @@ reservoir in the previous section. We see a steady decrease in benchmark error
 for each node addition. Achieving a great benchmark score is of course
 desirable, as the results clearly show that building reservoirs specialized for
 specific tasks will outperform randomly generated ones.
+
+However, as previously mentioned, our intention with square lattice reservoirs
+is not to provide yet another ESN competitor, but to gain insights into their
+inner workings. Figure \ref{fig:sq-grid-grow} depicts the reservoir at three
+different points during its growth. Curiously, holes appear in the lattice in
+Figure \ref{fig:sq-grid-grow-250}, demonstrating that there are parts of the
+lattice where adding nodes, irrelevant of the directions of its incident edges,
+will cause little performance gain.
+
+Figure \ref{fig:sq-grid-grow-250} also illustrates the apparent difficulty of
+analyzing networks without good heuristics. Consider for example the difference
+between Figure \ref{fig:sq-grid-grow-250}, and the much smaller Figure
+\ref{fig:sq-grid-35}. The latter provides a much clearer picture of what it is
+\textit{doing} during the NARMA-10 benchmark. We thus refer to the approaches
+suggested in the summary of the previous section -- there seems to be tremendous
+potential in researching the creation of structured, deterministic reservoirs.
 
 \begin{figure}[htb]
   \centering
@@ -645,22 +662,6 @@ reservoir. The process starts from the reservoir in (a).
   \label{fig:sq-grid-grow}
 \end{figure}
 
-However, as previously mentioned, our intention with square lattice reservoirs
-is not to provide yet another ESN competitor, but to gain insights into their
-inner workings. Figure \ref{fig:sq-grid-grow} depicts the reservoir at three
-different points during its growth. Curiously, holes appear in the lattice in
-Figure \ref{fig:sq-grid-grow-250}, demonstrating that there are parts of the
-lattice where adding nodes, irrelevant of the directions of its incident edges,
-will cause little performance gain.
-
-Figure \ref{fig:sq-grid-grow-250} also illustrates the apparent difficulty of
-analyzing networks without good heuristics. Consider for example the difference
-between Figure \ref{fig:sq-grid-grow-250}, and the much smaller Figure
-\ref{fig:sq-grid-35}. The latter provides a much clearer picture of what it is
-\textit{doing} during the NARMA-10 benchmark. We thus refer to the approaches
-suggested in the summary of the previous section -- there seems to be tremendous
-potential in researching the creation of structured, deterministic reservoirs.
-
 \section{Restoring Bidirectional Edges}
 
 \subsection{Synopsis}
@@ -675,7 +676,7 @@ in error for each iteration.
 
 \subsection{Results and Discussion}
 
-\begin{figure}
+\begin{figure}[htb]
   \centering
   \includegraphics[width=3.5in]{figures/undir-performance.png}
   \caption{

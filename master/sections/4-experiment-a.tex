@@ -62,28 +62,6 @@ space that is too small will result in weights that are too big, and vice versa.
 
 \subsection{Results and Discussion}
 
-\begin{figure}[htb]
-  \centering
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[width=1.0\linewidth]{figures/RGG-volume-size-inv.png}
-    \caption{}
-    \label{fig:size-graph-volume-a}
-  \end{subfigure}
-  \begin{subfigure}{.49\textwidth}
-    \centering
-    \includegraphics[width=1.0\linewidth]{figures/RGG-volume-size-inv-squared.png}
-    \caption{}
-    \label{fig:size-graph-volume-b}
-  \end{subfigure}
-  \caption{
-    Spectral radius and performance of generated random geometric graphs of size
-$N = 100$, as a function of the size of the underlying volume. Illustrated is
-node coupling using two different distance functions: $1/d$ (a) and $1/d^2$ (b).
-  }
-  \label{fig:size-graph-volume}
-\end{figure}
-
 The results of tuning the underlying volume size $l$ is shown in Figure
 \ref{fig:size-graph-volume}. Shown are the results for the distance functions
 $1/d$ and $1/d^2$, respectively. The plots include both the NRMSE of the network
@@ -106,6 +84,28 @@ of the spectral radius property in reservoirs
 \cite{verstraeten_experimental_2007}. However, in our case, the spectral radius
 is implicitly scaled by stretching the size of the underlying volume in which
 the graph is embedded.
+
+\begin{figure}[htb]
+  \centering
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/RGG-volume-size-inv.png}
+    \caption{}
+    \label{fig:size-graph-volume-a}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/RGG-volume-size-inv-squared.png}
+    \caption{}
+    \label{fig:size-graph-volume-b}
+  \end{subfigure}
+  \caption{
+    Spectral radius and performance of generated random geometric graphs of size
+$N = 100$, as a function of the size of the underlying volume. Illustrated is
+node coupling using two different distance functions: $1/d$ (a) and $1/d^2$ (b).
+  }
+  \label{fig:size-graph-volume}
+\end{figure}
 
 Knowledge that stretching the underlying space is equivalent to scaling the
 spectral radius of the reservoir is of key interest. In physical contexts, this
@@ -307,6 +307,7 @@ networks were shown to cover a bigger behavior space than their undirected
 counterparts.
 
 \section{Reservoir Weight Distribution}
+\label{sec:rwd}
 
 \subsection{Synopsis}
 
