@@ -73,8 +73,7 @@ radius of 0.9.
 
 \subsection{Results and Discussion}
 
-% (TODO): t!
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphics[width=3.5in]{figures/regular-tilings-performance.png}
   \caption{
@@ -89,8 +88,7 @@ size. We see that restricting reservoir topologies to lattice structures results
 in a significant performance penalty. Additionally, little difference is seen
 between the three types of tilings.
 
-% (TODO): t!
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \begin{subfigure}{.32\textwidth}
     \centering
@@ -162,8 +160,7 @@ improves lattice models is the topic of the next section.
 
 \subsection{Synopsis}
 
-% (TODO): t!
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \begin{subfigure}{.40\textwidth}
     \centering
@@ -197,8 +194,7 @@ lattices, respectively, have been directed. The directed reservoir edges have a
 
 \subsection{Results and Discussion}
 
-% (TODO): t!
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \begin{subfigure}{.32\textwidth}
     \centering
@@ -225,7 +221,9 @@ bidirectional, explained by Figure \protect\ref{fig:dir-lattice}. Shown are
 results for square (a), hexagonal (b) and triangular (c) lattices.
   }
   \label{fig:rt-dir-perf-trisurf}
+\end{figure}
 
+\begin{figure}[htb]
   \centering
   \includegraphics[width=3.5in]{figures/rt-dir-perf.png}
   \caption{
@@ -289,8 +287,7 @@ for a square grid with a sparser input scheme in which only 50\% of the hidden
 nodes see the input. These networks marginally improve even further upon the
 performance of square lattices.
 
-% (TODO): t!
-\begin{table}[t]
+\begin{table}[htb]
   \centering
   \begin{center}
     \caption{
@@ -332,8 +329,7 @@ an opportunity to study the structures that are generated, allowing us to peer
 into the apparent black box of the ESN, as we shall see in Section
 \ref{sec:shrink-grow}.
 
-% (TODO): t!
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \begin{subfigure}{.49\textwidth}
     \centering
@@ -389,8 +385,7 @@ with the Mackey-Glass benchmark to generate a mildly chaotic attractor ($\tau =
 
 \subsection{Results and Discussion}
 
-% (TODO): t!
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \begin{subfigure}{.49\textwidth}
     \centering
@@ -440,8 +435,7 @@ exhibit a lower kernel quality. This strengthens a conclusion that
 deterministically constructed reservoirs can perform well, given appropriate
 tasks.
 
-% (TODO): t!
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \includegraphics[width=3.5in]{figures/mg17.png}
   \caption{
@@ -539,8 +533,7 @@ optimization potential in network pruning are interesting in a physical RC
 context, as the resources required to realize reservoirs naturally increases
 with size.
 
-% (TODO): t!
-\begin{figure}[t]
+\begin{figure}[htb]
   \centering
   \begin{subfigure}{.40\textwidth}
     \centering
@@ -628,8 +621,8 @@ for each node addition. Achieving a great benchmark score is of course
 desirable, as the results clearly show that building reservoirs specialized for
 specific tasks will outperform randomly generated ones.
 
-% (TODO): t!
-\begin{figure}[t] \centering
+\begin{figure}[htb]
+  \centering
   \begin{subfigure}{1.0\textwidth} \centering
 \includegraphics[width=0.5\linewidth]{figures/sq-grid-grow-74.png}
     \caption{$N = 74$, NRMSE = 0.26.}

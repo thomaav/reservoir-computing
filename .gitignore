@@ -22,3 +22,4 @@ master.html
 *.lof
 *.lot
 master/auto
+*.out
