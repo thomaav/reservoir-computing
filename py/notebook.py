@@ -134,7 +134,7 @@ def plot_rgg_example(save=True):
     from matrix import waxman
     from plot import scatter_3d
 
-    G = waxman(200, alpha=1.0, beta=1.0)
+    G = waxman(200, z_frac=0.0, alpha=1.0, beta=1.0)
 
     xs, ys = [], []
     for n in G.nodes:
@@ -157,6 +157,34 @@ def plot_rgg_example(save=True):
     plt.tight_layout()
     if save:
         save_plot('RGG-example.png')
+    plt.show()
+
+
+def plot_rgg_example_connected(save=True):
+    from matrix import waxman
+    from plot import scatter_3d
+
+    G = waxman(200, z_frac=0.0, alpha=1.0, beta=1.0, connectivity='rgg_example')
+
+    xs, ys = [], []
+    for n in G.nodes:
+        xs.append(G.nodes[n]['pos'][0])
+        ys.append(G.nodes[n]['pos'][1])
+
+    pos = nx.get_node_attributes(G, 'pos')
+    pos = {v: (p[0], p[1]) for v, p in pos.items()}
+
+    ax = plt.gca()
+    nx.draw_networkx(G, pos=pos, with_labels=False, node_color='black', node_size=20, ax=ax)
+    ax.tick_params(left=True, bottom=True, labelleft=True, labelbottom=True)
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_xticks([0, 0.5, 1])
+    ax.set_yticks([0, 0.5, 1])
+
+    plt.tight_layout()
+    if save:
+        save_plot('RGG-example-connected.png')
     plt.show()
 
 

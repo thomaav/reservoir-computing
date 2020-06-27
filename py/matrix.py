@@ -57,6 +57,12 @@ def waxman(n, alpha, beta, connectivity='default', z_frac=1.0, scale=1.0,
             else:
                 G.add_edge(u, v, weight=weight_sign*dist_function(pos[u], pos[v])*scale)
                 G.add_edge(v, u, weight=weight_sign*dist_function(pos[v], pos[u])*scale)
+    elif connectivity == 'rgg_example':
+        for pair in combinations(G, 2):
+            u, v = pair[0], pair[1]
+            if dist_function(pos[u], pos[v]) < 0.10:
+                G.add_edge(u, v, weight=1)
+                G.add_edge(v, u, weight=1)
 
     return G
 

@@ -4,11 +4,22 @@
 % (TODO): t!
 \begin{figure}[t]
   \centering
-  \includegraphics[width=3.5in]{figures/RGG-example.png}
+  \begin{subfigure}{.47\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/RGG-example.png}
+    \caption{}
+    \label{fig:rgg-example-a}
+  \end{subfigure}
+  \begin{subfigure}{.49\textwidth}
+    \centering
+    \includegraphics[width=1.0\linewidth]{figures/RGG-example-connected.png}
+    \caption{}
+    \label{fig:rgg-example-b}
+  \end{subfigure}
   \caption{
-    Example vertices drawn to generate a random geometric graph embedded in a
-two-dimensional Euclidean space. The neighborhood radius $r$ of a single node is
-shown.
+    (a) Example vertices drawn to generate an RGG embedded in a two-dimensional
+Euclidean space. The neighborhood radius $r$ of a single node is shown. (b) RGG
+instance with neighborhood radius $r = 0.1$.
   }
   \label{fig:rgg-example}
 \end{figure}
@@ -21,8 +32,9 @@ simplest spatial network model -- the random geometric graph (RGG). Figure
 
 To construct a reservoir based on the RGG model, we place its $N$ internal nodes
 randomly in an underlying metric space $[0, l)^{dim}$, giving each node a
-position attribute sampled from a uniform distribution. For any given pair of
-nodes $x, y$, we consider the Euclidean distance between them
+position attribute sampled from a uniform distribution. An example distribution
+of the vertices is shown in Figure \ref{fig:rgg-example-a}. For any given pair
+of nodes $x, y$, we consider the Euclidean distance between them
 
 \begin{equation}
   d(x, y) = \norm{x-y}_{2} = \sqrt{\sum_{i=1}^{dim}{(x_{i}-y_{i})^2}}.
@@ -30,14 +42,15 @@ nodes $x, y$, we consider the Euclidean distance between them
 \end{equation}
 
 Nodes are connected only to the nodes within their neighborhood radius $r$,
-i.e. where $d < r$. However, since we are interested in the behavior in physical
-materials, we set $r = \infty$ to allow full connectivity in all
-experiments. Thus, edges are weighted according to several distance functions,
-$1/d$, $1/d^2$, and $1/d^3$, to model how the interaction strength diminishes
-with distance in many physical substrates. For example, the spins in artificial
-spin ice is subject to a magnetic field from all neighboring spins that
-diminishes according to $1/d^3$ \cite{jensen_computation_2018}. A dimensionality
-of 3, i.e. $[0, l)^{3}$, is used.
+i.e. where $d < r$, depicted in Figure \ref{fig:rgg-example-b}. However, since
+we are interested in the behavior in physical materials, we set $r = \infty$ to
+allow full connectivity in all experiments. Thus, edges are weighted according
+to several distance functions, $1/d$, $1/d^2$, and $1/d^3$, to model how the
+interaction strength diminishes with distance in many physical substrates. For
+example, the spins in artificial spin ice is subject to a magnetic field from
+all neighboring spins that diminishes according to $1/d^3$
+\cite{jensen_computation_2018}. A dimensionality of 3, i.e. $[0, l)^{3}$, is
+used.
 
 \section{Size of the Underlying Volume}
 \label{sec:volume-size}
