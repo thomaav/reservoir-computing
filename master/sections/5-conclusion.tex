@@ -35,43 +35,66 @@ broken by directed and signed edges.
 \textbf{RQ2:} How do highly regular, physical structures compare in information
 processing capability to that of established models such as echo state networks?
 
-\textcolor{red}{
-  Highly regular structures investigated: lattices. We see something similar to
-Rodan and Tino.
-}
+Highly regular lattice structures with \textit{bidirectional} edges perform
+worse than ESNs. However, our investigations also demonstrated that introducing
+directedness to lattice reservoirs restores the ESN performance, indicating that
+structures that allow a definitive flow of information may be sufficient. We
+also showed that a fixed, global input betters performance compared to a
+standard uniform distribution, making lattice reservoirs scale better than
+traditional ESNs on the NARMA-10 benchmark. We thus observe that regular
+structures may perform just as well as established models, as both previous work
+on ring topology as well as the work in this thesis suggests that
+deterministically constructing regular reservoirs has revealed great potential.
 
 \textbf{RQ3:} Can we find simple, deterministic reservoir generation
 methodology, relying less on random weighting schemes?
 
-\textcolor{red}{
-  We have introduced methodology to do so, since the directedness is the
-stochastic element we can use this methodology to further our understanding,
-which is also the intention of CRJ.
-}
+It is previously established that ring topology models may be constructed
+deterministically to serve as quality reservoirs \cite{rodan_minimum_2011}. In
+this thesis we introduced lattice reservoir models, which are constructed by
+deterministically placing nodes on a two-dimensional grid. Both ring and lattice
+reservoirs, however, require some stochastic element to work well. In the case
+of rings the sign of the input seen by each node is determined by an unbiased
+coin, while in the case of lattices it is the direction of the edge between each
+node that is decided by a coin flip. We therefore argue that there is untapped
+potential in creating reservoirs of deterministic, regular natures.
 
-\textcolor{red}{
-  Some thoughts on what we have discovered: (1) Removal of nodes can be a
-convenient measure (perhaps something similar to ``Reservoir computing: Reducing
-network size and improving prediction stability'', but I think maybe this paper
-makes an erroneous assumption?). (2) Directedness by itself is
-\textit{sufficient} by itself, but does not necessarily imply that it is a
-textit{must}. (3) A method of visualizing the internals of reservoirs with some
-degree of randomness, as opposed to CRJ, but easier to look at than ESNs (black
-box problem). (4) Introduce a notion that there might be some core ``stem'' in
-ESNs that correspond to a memory, that is operated on by augmentative nodes.
-}
+Finally, by removing and adding nodes to lattice reservoirs, we illustrated
+methodology for theoretical analysis of the inner workings of such
+networks. Firstly, we found that a removal of a few nodes can be a convenient
+measure to reduce network size and improve prediction performance. More
+importantly, we also argue that understanding the behavior of networks when
+solving specific benchmarks is a stepping stone to looking into the general
+black box behavior of ESNs, and that the regular structure of lattice reservoirs
+is easier to observe directly than the more stochastic structure of ESNs. Hence,
+the intention of lattice reservoirs is not to provide yet another ESN
+competitor, but to open up for further analysis in future work.
 
 \section{Future Work}
 
-\textcolor{red}{
-  What should be done? What \textit{would} we have done if we were to continue
-investigating?
-}
+As there is always an abundance of future work to conduct, we here limit
+suggestions to two main categories of experiments we deem the most interesting
+to explore: physical realization of reservoirs to determine if directed exchange
+and flow of information is sufficient to create quality reservoirs, and deeper
+theoretical analysis using lattice models to find interesting heuristics in good
+reservoirs.
 
-\textcolor{red}{
-  real life may not be in the same lockstep, so real life experiments are
-  interesting. for example having directedness in artificial spin ice.
-}
+First, as ASI has proven to be a promising substrate for reservoir computing, it
+is a good candidate for study of real physical limitations
+\cite{jensen_reservoir_2020}. In this thesis it is suggested that directedness
+is a key component in good reservoirs, and how this translates to an actual
+physical medium would be interesting to explore. For example, imposing shift
+register structures onto ASI to allow for directed flows may hold a potential
+for creating quality reservoirs.
+
+Second, further theoretical analysis using lattice models should result in a
+deeper understanding of why the traditional, stochastic ESN model works so
+well. By modifying lattice models to find good heuristics such as average node
+degree, investigate cyclic structures, add skip edges, and so on, we may
+discover what it is that makes ESN reservoirs ``tick''. Specifically, lattice
+reservoirs are inherently embedded in space, making them easier to visualize and
+understand. This is valuable when attempting to understand how specific tasks
+are solved by an ESN.
 
 %%% Local Variables:
 %%% mode: latex
