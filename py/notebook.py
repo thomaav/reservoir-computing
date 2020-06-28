@@ -5,6 +5,7 @@ import pickle
 import torch
 import networkx as nx
 from collections import OrderedDict
+from tabulate import tabulate
 
 import dataset as ds
 from ESN import ESN, Distribution, from_square_G, create_delay_line
@@ -202,18 +203,23 @@ def rgg_volume_size():
     df.to_pickle('experiments/rgg_volume_size.pkl')
 
 
-def plot_rgg_volume_size():
+def plot_rgg_volume_size(std=False):
     df = load_experiment('experiments/rgg_volume_size.pkl')
 
     df['dist_function'] = df['dist_function'].apply(
         lambda f: f.__name__ if not isinstance(f, str) else f
     )
 
-    inv_df = df.loc[df['dist_function'] == inv.__name__]
-    inv_squared_df = df.loc[df['dist_function'] == inv_squared.__name__]
+    org_inv_df = df.loc[df['dist_function'] == inv.__name__]
+    org_inv_squared_df = df.loc[df['dist_function'] == inv_squared.__name__]
 
-    inv_df = inv_df.groupby(['dim_size']).min().reset_index()
-    inv_squared_df = inv_squared_df.groupby(['dim_size']).min().reset_index()
+    inv_df = org_inv_df.groupby(['dim_size']).mean().reset_index()
+    inv_squared_df = org_inv_squared_df.groupby(['dim_size']).min().reset_index()
+
+    if std:
+        agg = { 'esn_nrmse': ['mean', 'std'] }
+        std_inv_df = org_inv_df.groupby(['dim_size']).agg(agg).reset_index()
+        print(tabulate(std_inv_df, headers=['l', 'NRMSE mean', 'NRMSE std'], showindex=False))
 
     file_names = ['RGG-volume-size-inv.png', 'RGG-volume-size-inv-squared.png']
     for i, df in enumerate([inv_df, inv_squared_df]):
@@ -260,7 +266,7 @@ def rgg_dist_performance():
     df.to_pickle('experiments/rgg_dist_performance.pkl')
 
 
-def plot_rgg_dist_performance(agg='mean', file_name=None):
+def plot_rgg_dist_performance(agg='mean', file_name=None, std=False):
     df = load_experiment('experiments/rgg_dist_performance.pkl')
     esn = load_experiment('experiments/esn_general_performance.pkl')
     esn['hidden_nodes'] = esn[esn['hidden_nodes'] <= 180]['hidden_nodes']
@@ -272,6 +278,17 @@ def plot_rgg_dist_performance(agg='mean', file_name=None):
     inv_perf = df.loc[df['dist_function'] == inv.__name__]
     inv_squared_perf = df.loc[df['dist_function'] == inv_squared.__name__]
     inv_cubed_perf = df.loc[df['dist_function'] == inv_cubed.__name__]
+
+    if std:
+        std_agg = { 'esn_nrmse': ['mean', 'std'] }
+        std_inv_perf = inv_perf.groupby(['hidden_nodes']).agg(std_agg).reset_index()
+        std_inv_squared_perf = inv_squared_perf.groupby(['hidden_nodes']).agg(std_agg).reset_index()
+        std_inv_cubed_perf = inv_cubed_perf.groupby(['hidden_nodes']).agg(std_agg).reset_index()
+        std_esn_perf = esn.groupby(['hidden_nodes']).agg(std_agg).reset_index()
+        print(tabulate(std_inv_perf, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False))
+        print(tabulate(std_inv_squared_perf, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False))
+        print(tabulate(std_inv_cubed_perf, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False))
+        print(tabulate(std_esn_perf, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False))
 
     labels = ['ESN', '1/d', '1/d^2', '1/d^3']
     linestyles = ['dashdot', 'dotted', 'dashed', 'solid']
