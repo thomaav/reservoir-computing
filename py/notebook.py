@@ -219,7 +219,8 @@ def plot_rgg_volume_size(std=False):
     if std:
         agg = { 'esn_nrmse': ['mean', 'std'] }
         std_inv_df = org_inv_df.groupby(['dim_size']).agg(agg).reset_index()
-        print(tabulate(std_inv_df, headers=['l', 'NRMSE mean', 'NRMSE std'], showindex=False))
+        print(tabulate(std_inv_df, headers=['l', 'NRMSE mean', 'NRMSE std'], showindex=False,
+                       tablefmt='orgtbl'))
 
     file_names = ['RGG-volume-size-inv.png', 'RGG-volume-size-inv-squared.png']
     for i, df in enumerate([inv_df, inv_squared_df]):
