@@ -1,8 +1,35 @@
 \chapter*{Abstract}
 
-\textcolor{red}{
-  A bunch of abstract.
-}
+Reservoir computing has become a predominant member of the unconventional
+computing paradigm. It is a framework suited for processing of temporal and
+sequential data, traditionally using recurrent neural network models to
+incorporate past inputs into an instantaneous readout.
+
+Interestingly, there is no need for the reservoir to be an artificial neural
+network -- any high-dimensional, driven system exhibiting complex dynamic
+behavior can be used. A wide range of physical substrates have been proposed as
+reservoir machines, ranging from nanomagnetic assemblies to living cultures of
+neurons.
+
+A major challenge when realizing physical reservoirs is the physical limitations
+present in the underlying substrate. In this thesis, we investigate spatially
+embedded reservoirs, as physical substrates often have structural properties
+that are completely fixed. First we modify echo state networks to be created as
+random geometric graphs, the simplest spatial network model. Then we conduct
+experiments with echo state networks that consist of lattice structures, which
+are highly regular architectures.
+
+Results show that spatial constraints by default inhibit the NARMA-10 benchmark
+performance of both models. However, introducing directed edges to the network
+instead of bidirectional ones restore performance to compete with established
+models, indicating that the flow of information is an important property of
+quality reservoirs.
+
+Furthermore, simple square lattice reservoirs with a fixed, global input are
+found to perform as well as echo state networks on NARMA-10 and Mackey-Glass
+benchmarks. The value of regular, deterministic structures as a tool for
+theoretical analysis is evaluated, giving examples of methodology to explore the
+inner workings of networks when solving specific tasks.
 
 \chapter*{Sammendrag}
 
