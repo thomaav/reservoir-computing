@@ -286,10 +286,10 @@ def plot_rgg_dist_performance(agg='mean', file_name=None, std=False):
         std_inv_squared_perf = inv_squared_perf.groupby(['hidden_nodes']).agg(std_agg).reset_index()
         std_inv_cubed_perf = inv_cubed_perf.groupby(['hidden_nodes']).agg(std_agg).reset_index()
         std_esn_perf = esn.groupby(['hidden_nodes']).agg(std_agg).reset_index()
-        print(tabulate(std_inv_perf, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False))
-        print(tabulate(std_inv_squared_perf, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False))
-        print(tabulate(std_inv_cubed_perf, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False))
-        print(tabulate(std_esn_perf, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False))
+        print(tabulate(std_inv_perf, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_inv_squared_perf, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_inv_cubed_perf, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_esn_perf, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
 
     labels = ['ESN', '1/d', '1/d^2', '1/d^3']
     linestyles = ['dashdot', 'dotted', 'dashed', 'solid']
@@ -328,12 +328,19 @@ def rgg_dist_mc():
     df.to_pickle('experiments/rgg_dist_mc.pkl')
 
 
-def plot_rgg_dist_mc():
+def plot_rgg_dist_mc(std=False):
     inv_df = load_experiment('experiments/rgg_dist_mc_inv.pkl')
     inv_squared_df = load_experiment('experiments/rgg_dist_mc_inv_squared.pkl')
 
     inv_df = inv_df.loc[inv_df['hidden_nodes'] == 80]
     inv_squared_df = inv_squared_df.loc[inv_squared_df['hidden_nodes'] == 80]
+
+    if std:
+        agg = { 'esn_mc': ['mean', 'std'] }
+        std_inv_df = inv_df.groupby(['input_scaling']).agg(agg).reset_index()
+        std_inv_squared_df = inv_squared_df.groupby(['input_scaling']).agg(agg).reset_index()
+        print(tabulate(std_inv_df, headers=['Input scaling', 'MC mean', 'MC std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_inv_squared_df, headers=['Input scaling', 'MC mean', 'MC std'], showindex=False, tablefmt='orgtbl'))
 
     linestyles = ['solid', 'dashed']
     labels = ['1/d', '1/d^2']
@@ -362,12 +369,19 @@ def rgg_dist_performance_is():
     df.to_pickle('experiments/rgg_dist_performance_is.pkl')
 
 
-def plot_rgg_dist_performance_is():
+def plot_rgg_dist_performance_is(std=False):
     inv_df = load_experiment('experiments/rgg_dist_performance_is_inv.pkl')
     inv_squared_df = load_experiment('experiments/rgg_dist_performance_is_inv_squared.pkl')
 
     inv_df = inv_df.loc[inv_df['hidden_nodes'] == 80]
     inv_squared_df = inv_squared_df.loc[inv_squared_df['hidden_nodes'] == 80]
+
+    if std:
+        agg = { 'esn_nrmse': ['mean', 'std'] }
+        std_inv_df = inv_df.groupby(['input_scaling']).agg(agg).reset_index()
+        std_inv_squared_df = inv_squared_df.groupby(['input_scaling']).agg(agg).reset_index()
+        print(tabulate(std_inv_df, headers=['Input scaling', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_inv_squared_df, headers=['Input scaling', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
 
     linestyles = ['solid', 'dashed']
     labels = ['1/d', '1/d^2']
@@ -398,11 +412,18 @@ def performance_restoration():
     df.to_pickle('experiments/performance_restoration.pkl')
 
 
-def plot_performance_restoration():
+def plot_performance_restoration(std=False):
     df = load_experiment('experiments/performance_restoration.pkl')
 
     undirected_df = df.loc[df['directed'] == False]
     directed_df = df.loc[df['directed'] == True]
+
+    if std:
+        agg = { 'esn_nrmse': ['mean', 'std'] }
+        std_undir_df = undirected_df.groupby(['hidden_nodes', 'sign_frac']).agg(agg).reset_index()
+        std_dir_df = directed_df.groupby(['hidden_nodes', 'sign_frac']).agg(agg).reset_index()
+        print(tabulate(std_undir_df, headers=['Hidden nodes', 'Sign fraction', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_dir_df, headers=['Hidden nodes', 'Sign fraction', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
 
     groupby = ['hidden_nodes', 'sign_frac']
     axes    = ['hidden_nodes', 'sign_frac', 'esn_nrmse']
@@ -428,7 +449,7 @@ def plot_performance_restoration():
     save_plot('perf-rest-dir.png')
 
 
-def plot_performance_restoration_comparison():
+def plot_performance_restoration_comparison(std=False):
     df = load_experiment('experiments/performance_restoration.pkl')
     esn_df = load_experiment('experiments/esn_general_performance.pkl')
 
@@ -439,6 +460,15 @@ def plot_performance_restoration_comparison():
     undirected_df = undirected_df.loc[undirected_df['sign_frac'] == 0.5]
     directed_df = directed_df.loc[directed_df['sign_frac'] == 0.5]
     esn_df['sign_frac'] = 0.5
+
+    if std:
+        agg = { 'esn_nrmse': ['mean', 'std'] }
+        std_undir_df = undirected_df.groupby(['hidden_nodes']).agg(agg).reset_index()
+        std_dir_df = directed_df.groupby(['hidden_nodes']).agg(agg).reset_index()
+        std_esn_df = esn_df.groupby(['hidden_nodes']).agg(agg).reset_index()
+        print(tabulate(std_undir_df, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_dir_df, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_esn_df, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
 
     linestyles = ['dashed', 'dotted', 'solid']
     labels = ['Undirected', 'Directed', 'ESN']
@@ -518,17 +548,32 @@ def regular_tilings_performance():
     nrmse_df.to_pickle('experiments/lattice_nrmse.pkl')
 
 
-def plot_regular_tilings_performance():
+def plot_regular_tilings_performance(std=False):
     nrmse_df = load_experiment('experiments/lattice_nrmse.pkl')
-    esn = load_experiment('experiments/esn_general_performance.pkl')
-    esn['hidden_nodes'] = esn[esn['hidden_nodes'] <= 400]['hidden_nodes']
+    org_esn = load_experiment('experiments/esn_general_performance.pkl')
+    org_esn['hidden_nodes'] = org_esn[org_esn['hidden_nodes'] <= 400]['hidden_nodes']
 
     grouped_df = nrmse_df.groupby(['hidden_nodes', 'w_res_type']).mean().reset_index()
-    esn = esn.groupby(['hidden_nodes']).mean().reset_index()
+    esn = org_esn.groupby(['hidden_nodes']).mean().reset_index()
 
     sq = grouped_df.loc[grouped_df['w_res_type'] == 'tetragonal']
     hex = grouped_df.loc[grouped_df['w_res_type'] == 'hexagonal']
     tri = grouped_df.loc[grouped_df['w_res_type'] == 'triangular']
+
+    if std:
+        std_sq = nrmse_df.loc[nrmse_df['w_res_type'] == 'tetragonal']
+        std_hex = nrmse_df.loc[nrmse_df['w_res_type'] == 'hexagonal']
+        std_tri = nrmse_df.loc[nrmse_df['w_res_type'] == 'triangular']
+
+        agg = { 'esn_nrmse': ['mean', 'std'] }
+        std_sq = std_sq.groupby(['hidden_nodes']).agg(agg).reset_index()
+        std_hex = std_hex.groupby(['hidden_nodes']).agg(agg).reset_index()
+        std_tri = std_tri.groupby(['hidden_nodes']).agg(agg).reset_index()
+        std_esn = org_esn.groupby(['hidden_nodes']).agg(agg).reset_index()
+        print(tabulate(std_sq, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_hex, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_tri, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_esn, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
 
     plt.plot(sq['hidden_nodes'], sq['esn_nrmse'], label='Square', color='black', linestyle='solid')
     plt.plot(hex['hidden_nodes'], hex['esn_nrmse'], label='Hexagonal', color='black', linestyle='dashed')
@@ -553,12 +598,21 @@ def regular_tilings_performance_is():
     nrmse_df.to_pickle('experiments/rt_performance_is.pkl')
 
 
-def plot_regular_tilings_performance_is():
+def plot_regular_tilings_performance_is(std=False):
     df = load_experiment('experiments/rt_performance_is.pkl')
 
     sq = df.loc[df['w_res_type'] == 'tetragonal']
     hex = df.loc[df['w_res_type'] == 'hexagonal']
     tri = df.loc[df['w_res_type'] == 'triangular']
+
+    if std:
+        agg = { 'esn_nrmse': ['mean', 'std'] }
+        std_sq = sq.groupby(['hidden_nodes', 'input_scaling']).agg(agg).reset_index()
+        std_hex = hex.groupby(['hidden_nodes', 'input_scaling']).agg(agg).reset_index()
+        std_tri = tri.groupby(['hidden_nodes', 'input_scaling']).agg(agg).reset_index()
+        print(tabulate(std_sq, headers=['Hidden nodes', 'Input scaling', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_hex, headers=['Hidden nodes', 'Input scaling', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_tri, headers=['Hidden nodes', 'Input scaling', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
 
     groupby = ['hidden_nodes', 'input_scaling']
     axes    = ['hidden_nodes', 'input_scaling', 'esn_nrmse']
@@ -611,12 +665,21 @@ def directed_lattice_performance():
     df.to_pickle('experiments/directed_lattice_performance.pkl')
 
 
-def plot_directed_lattice_performance():
+def plot_directed_lattice_performance(std=False):
     df = load_experiment('experiments/directed_lattice_performance.pkl')
     esn_df = load_experiment('experiments/esn_general_performance.pkl')
 
     dense_df = df.loc[df['w_in_density'] == 1.0]
     sparse_df = df.loc[df['w_in_density'] == 0.5]
+
+    if std:
+        agg = { 'esn_nrmse': ['mean', 'std'] }
+        std_dense = dense_df.groupby(['hidden_nodes']).agg(agg).reset_index()
+        std_sparse = sparse_df.groupby(['hidden_nodes']).agg(agg).reset_index()
+        std_esn = esn_df.groupby(['hidden_nodes']).agg(agg).reset_index()
+        print(tabulate(std_dense, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_sparse, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_esn, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
 
     dense_grouped_df = dense_df.groupby(['hidden_nodes']).mean().reset_index()
     sparse_grouped_df = sparse_df.groupby(['hidden_nodes']).mean().reset_index()
@@ -645,13 +708,22 @@ def directed_regular_tilings_performance():
     lattice_dir_df.to_pickle('experiments/lattice_dir.pkl')
 
 
-def plot_directed_regular_tilings_performance():
+def plot_directed_regular_tilings_performance(std=False):
     lattice_dir_df = load_experiment('experiments/lattice_dir.pkl')
     esn_df = load_experiment('experiments/esn_general_performance.pkl')
 
     sq = lattice_dir_df.loc[lattice_dir_df['w_res_type'] == 'tetragonal']
     hex = lattice_dir_df.loc[lattice_dir_df['w_res_type'] == 'hexagonal']
     tri = lattice_dir_df.loc[lattice_dir_df['w_res_type'] == 'triangular']
+
+    if std:
+        agg = { 'esn_nrmse': ['mean', 'std'] }
+        std_sq = sq.groupby(['hidden_nodes', 'dir_frac']).agg(agg).reset_index()
+        std_hex = hex.groupby(['hidden_nodes', 'dir_frac']).agg(agg).reset_index()
+        std_tri = tri.groupby(['hidden_nodes', 'dir_frac']).agg(agg).reset_index()
+        print(tabulate(std_sq, headers=['Hidden nodes', 'Directed edges', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_hex, headers=['Hidden nodes', 'Directed edges', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_tri, headers=['Hidden nodes', 'Directed edges', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
 
     groupby = ['hidden_nodes', 'dir_frac']
     axes    = ['hidden_nodes', 'dir_frac', 'esn_nrmse']
@@ -674,14 +746,26 @@ def plot_directed_regular_tilings_performance():
         save_plot(file_names[i])
         plt.show()
 
+    esn = esn_df.loc[esn_df['hidden_nodes'] <= 230]
     sq = sq.loc[sq['dir_frac'] == 1.0]
-    sq = sq.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
     hex = hex.loc[hex['dir_frac'] == 1.0]
-    hex = hex.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
     tri = tri.loc[tri['dir_frac'] == 1.0]
+
+    if std:
+        agg = { 'esn_nrmse': ['mean', 'std'] }
+        std_sq = sq.groupby(['hidden_nodes']).agg(agg).reset_index()
+        std_hex = hex.groupby(['hidden_nodes']).agg(agg).reset_index()
+        std_tri = tri.groupby(['hidden_nodes']).agg(agg).reset_index()
+        std_esn = esn.groupby(['hidden_nodes']).agg(agg).reset_index()
+        print(tabulate(std_sq, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_hex, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_tri, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_esn, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+
+    sq = sq.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
+    hex = hex.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
     tri = tri.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
-    esn = esn_df.groupby(['hidden_nodes']).mean().reset_index()
-    esn = esn.loc[esn['hidden_nodes'] <= 230]
+    esn = esn.groupby(['hidden_nodes']).mean().reset_index()
 
     plt.plot(sq['hidden_nodes'], sq['esn_nrmse'], color='black', label='Square', linestyle='solid')
     plt.plot(hex['hidden_nodes'], hex['esn_nrmse'], color='black', label='Hexagonal', linestyle='dashed')
@@ -844,7 +928,7 @@ def kq_gen():
     square_grid_gen_df.to_pickle('experiments/square_grid_gen.pkl')
 
 
-def plot_square_grid_kq_gen():
+def plot_square_grid_kq_gen(std=False):
     esn_kq_df = load_experiment('experiments/esn_kq.pkl')
     esn_gen_df = load_experiment('experiments/esn_gen.pkl')
     esn_kq_df = esn_kq_df.loc[esn_kq_df['hidden_nodes'] <= 230]
@@ -852,6 +936,21 @@ def plot_square_grid_kq_gen():
 
     sq_kq_df = load_experiment('experiments/square_grid_kq.pkl')
     sq_gen_df = load_experiment('experiments/square_grid_gen.pkl')
+
+    if std:
+        agg_kq = { 'esn_kq': ['mean', 'std'] }
+        agg_gen = { 'esn_gen': ['mean', 'std'] }
+
+        std_esn_kq = esn_kq_df.groupby(['hidden_nodes']).agg(agg_kq).reset_index()
+        std_esn_gen = esn_gen_df.groupby(['hidden_nodes']).agg(agg_gen).reset_index()
+
+        std_sq_kq = sq_kq_df.groupby(['hidden_nodes']).agg(agg_kq).reset_index()
+        std_sq_gen = sq_gen_df.groupby(['hidden_nodes']).agg(agg_gen).reset_index()
+
+        print(tabulate(std_esn_kq, headers=['Hidden nodes', 'KQ mean', 'KQ std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_esn_gen, headers=['Hidden nodes', 'G mean', 'G std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_sq_kq, headers=['Hidden nodes', 'KQ mean', 'KQ std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_sq_gen, headers=['Hidden nodes', 'G', 'G std'], showindex=False, tablefmt='orgtbl'))
 
     esn_kq_df = esn_kq_df.groupby(['hidden_nodes']).mean().reset_index()
     esn_gen_df = esn_gen_df.groupby(['hidden_nodes']).mean().reset_index()
@@ -934,10 +1033,17 @@ def run_mg_17():
     df.to_pickle('experiments/sq_mg17.pkl')
 
 
-def plot_mg_17():
+def plot_mg_17(std=False):
     esn_df = load_experiment('experiments/esn_mg17.pkl')
     esn_df = esn_df.loc[esn_df['hidden_nodes'] <= 400]
     sq_df = load_experiment('experiments/sq_mg17.pkl')
+
+    if std:
+        agg = { 'esn_nrmse': ['mean', 'std'] }
+        std_esn = esn_df.groupby(['hidden_nodes']).agg(agg).reset_index()
+        std_sq = sq_df.groupby(['hidden_nodes']).agg(agg).reset_index()
+        print(tabulate(std_esn, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
+        print(tabulate(std_sq, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
 
     esn_df = esn_df.groupby(['hidden_nodes']).mean().reset_index()
     sq_df = sq_df.groupby(['hidden_nodes']).mean().reset_index()
