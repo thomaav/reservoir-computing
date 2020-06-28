@@ -1,11 +1,6 @@
 \chapter{Experiments: Lattices}
 \label{ch:regular-tilings}
 
-% (TODO): Overall: standard deviations.
-
-% (TODO): Remember to always specify specifics of experiment setups for all
-% experiments
-
 \begin{figure}[t]
   \centering
   \begin{subfigure}{.32\textwidth}
@@ -313,9 +308,9 @@ values are given as an average across 20 experiment runs (std. dev.).
 
 Table \ref{tab:sq-global-input} shows the simplicity of the square grids used in
 Figure \ref{fig:rt-performance-big}. The input of the entire reservoir is
-decided by a single scalar. Furthermore, there is still only a single unique
-magnitude used for reservoir weights in $\mathbf{W}^{res}$, which is determined
-by the spacing of nodes.
+decided by a single scalar. Furthermore, there is only a single unique magnitude
+used for reservoir weights in $\mathbf{W}^{res}$, which is determined by the
+spacing of nodes.
 
 Simple cyclic reservoirs (SCR) use topology in a similar manner to use a
 deterministic weighting scheme \cite{rodan_minimum_2011}. Units in SCRs are
@@ -328,6 +323,13 @@ values, but instead generate the flow of information in this manner. This leaves
 an opportunity to study the structures that are generated, allowing us to peer
 into the apparent black box of the ESN, as we shall see in Section
 \ref{sec:shrink-grow}.
+
+The time evolution of internal node activations proves to be of interest. Figure
+\ref{fig:activations} depicts an example run, comparing the standard ESN to
+square grids with a fixed, global input scheme. It is clearly visible that nodes
+in Figure \ref{fig:activations-b} receive the same input, while uniform
+distribution of the ESN in \ref{fig:activations-a} seems more sporadic due to
+its uniform input distribution in the interval [-0.5, 0.5].
 
 \begin{figure}[htb]
   \centering
@@ -351,13 +353,6 @@ shown to avoid clutter.
   \label{fig:activations}
 \end{figure}
 
-The evolution of internal node activations proves to be of interest. Figure
-\ref{fig:activations} depicts an example run, comparing the standard ESN to
-square grids with a fixed, global input scheme. It is clearly visible that nodes
-in Figure \ref{fig:activations-b} receive the same input, while uniform
-distribution of the ESN in \ref{fig:activations-a} seems more sporadic due to
-its uniform input distribution in the interval [-0.5, 0.5].
-
 Note also that the activations of nodes in a square lattice reservoir are
 strictly positive, as the NARMA input sequence is strictly positive. This may
 warrant a change of activation to other sigmoid functions, as half of $tanh$
@@ -369,8 +364,8 @@ spatially constrained lattice reservoirs, we have stumbled upon reservoirs that
 perform exceptionally well on the NARMA-10 benchmark. These results suggest
 that, in a physical RC context, physical substrates will show degraded
 performance unless there is a directed flow of information. Additionally, we
-propose directed lattice reservoirs as a means to explore this impact of
-information flow deeper.
+propose directed lattice reservoirs as a means to explore the impact of
+information flow further.
 
 \section{Nonlinear Dynamics in Square Grids}
 
@@ -421,7 +416,7 @@ types. For all reservoirs, $KQ < N$ and $G < N$, given reservoir size $N$. It is
 known that the standard, fully-connected ESN may be tuned to have almost any
 $KQ:G$, while lattice reservoirs cover a smaller area of the $KQ:G$ behavior
 space, as they are unable to achieve a high $KQ$
-\cite{mcquillan_role_2019}. This conclusion is reproduced in Figure
+\cite{mcquillan_role_2019}. This conclusion is partly reproduced in Figure
 \ref{fig:rank}.
 
 In Section \ref{ssec:topology-and-spatial-networks}, we noted a discrepancy
@@ -449,9 +444,9 @@ Figure \ref{fig:mg17} shows NRMSE achieved for square lattice reservoirs on the
 Mackey-Glass delay differential equation with mild chaos, $\tau = 17$. Again,
 see a comparable performance, although in this case the ESN model scales
 slightly better. We would like to stress that previous work commonly compares
-reservoirs up to a size of $N = 200$, in which case Figure
+reservoirs up to a size of $N = 200$, in which case both Figure
 \ref{fig:rt-performance-big} and Figure \ref{fig:mg17} show ESN and square
-lattice reservoirs to almost perform equally. Thus, from these benchmarks we may
+lattice reservoirs to perform equivalently. Thus, from these benchmarks we may
 gather that there is potential in lattice reservoirs as simulation models, most
 pressingly as a tool for theoretical analysis rather than an ESN competitor.
 
@@ -635,8 +630,9 @@ analyzing networks without good heuristics. Consider for example the difference
 between Figure \ref{fig:sq-grid-grow-250}, and the much smaller Figure
 \ref{fig:sq-grid-35}. The latter provides a much clearer picture of what it is
 \textit{doing} during the NARMA-10 benchmark. We thus refer to the approaches
-suggested in the summary of the previous section -- there seems to be tremendous
-potential in researching the creation of structured, deterministic reservoirs.
+suggested in the summary of the previous section on shrinking reservoirs --
+there seems to be tremendous potential in researching the creation of
+structured, deterministic reservoirs.
 
 \begin{figure}[htb]
   \centering

@@ -1,9 +1,6 @@
 \chapter{Background}
 \label{ch:background}
 
-% (TODO): Re-read a lot of papers. Look for pieces of knowledge that are not
-% included, but definitely should be.
-
 Related work and the state of the art were reviewed, and identification of
 relevant background material was carried out in the project preceding this
 thesis \cite{aven_exploring_2019}. This background is herein amended with deeper
@@ -116,9 +113,6 @@ unrestricted synapses, which results in a recurrent network.
 
 \subsection{Echo State Network Internals}
 
-% (TODO): Ask about re-using figures and text. Should be fine as it is cited and
-% specified. Rephrasing is a stupid waste of time.
-
 In Figure \ref{fig:esn}, at time-step $t$ the ESN reservoir is defined by its
 input, internal, and output units, denoted by $\mathbf{u}(t)$, $\mathbf{x}(t)$,
 and $\mathbf{y}(t)$, respectively. The reservoir dynamics are characterized by
@@ -196,7 +190,7 @@ Lastly, stacking layers similarly to deep learning methods has been
 attempted. With the aim of developing and enhancing \textit{hierarchical}
 dynamics, it is intended to allow for multiple time-scales, and increased
 \textit{richness} in the reservoir, measured as the entropy of the reservoir
-states, and it has shown great promise \cite{gallicchio_deep_2017}.
+states, and it has shown great potential \cite{gallicchio_deep_2017}.
 
 \subsection{Real World Applications}
 
@@ -316,8 +310,6 @@ capacity through parameter tuning is often met with a decrease in complex
 information processing, due to a universal trade-off between memory and
 nonlinearity \cite{dambre_information_2012}.
 
-% (TODO): Not entirely orthogonal from generalization (see Burkow).
-
 \subsubsection{Memory-Nonlinearity Trade-off}
 
 Experimentation with a wide range of reservoirs has indicated a crucial
@@ -350,9 +342,9 @@ been adapted, including the Lyapunov exponent
 \cite{gibbons_unifying_2010}.
 
 In summary, given the vast amount of methods for evaluation, choosing a set of
-suitable metrics is a surmountable task. This is especially so, given that few
-metrics are entirely orthogonal, and are can be found to strongly correlate in
-the prediction of performance \cite{chrol-cannon_correlation_2014}.
+suitable metrics is a surmountable task. This is especially so given that few
+metrics are entirely orthogonal, and can often be found to correlate in
+prediction of performance \cite{chrol-cannon_correlation_2014}.
 
 \subsection{Benchmarks}
 

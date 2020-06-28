@@ -249,7 +249,7 @@ results. Although it does not strictly produce the \textit{best} results, we
 found the stability to easier to work with when looking for definitive trends in
 performance. Similar results were seen with $1/d^2$, though less pronounced. We
 also found lowering the input scaling to improve memory capacity, and
-experiments in this section will use an input scaling of 0.1
+experiments in this section use an input scaling of 0.1
 
 \subsection{Results and Discussion}
 
@@ -282,10 +282,10 @@ negative edges is 0.5. This is particularly true for bigger reservoirs.
 
 Firstly, negative weights discard some of the inherent symmetry of the
 network. Although the weight matrix is still symmetric in magnitude, it now
-allows for a wider range of node behavior, especially considering that the lower
-half of $\tanh$ becomes available. The addition of directed edges makes it clear
-that a non-symmetric weight matrix enables richer dynamics, as we move below the
-performance of a delay line.
+allows for a wider range of node behavior, especially considering that the
+negative half of $\tanh$ becomes available. The addition of directed edges makes
+it clear that a non-symmetric weight matrix enables richer dynamics, as we move
+below the performance of a delay line.
 
 \begin{figure}[htb]
   \centering
