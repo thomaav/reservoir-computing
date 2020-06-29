@@ -79,9 +79,10 @@ reservoir topologies.
 \end{figure}
 
 Figure \ref{fig:rt-performance} shows how reservoir error scales with reservoir
-size. We see that restricting reservoir topologies to lattice structures results
-in a significant performance penalty. Additionally, little difference is seen
-between the three types of tilings.
+size, depicting NARMA-10 benchmark NRMSE as a function of the amount of hidden
+nodes $N$. We see that restricting reservoir topologies to lattice structures
+results in a significant performance penalty. Additionally, little difference is
+seen between the three types of tilings.
 
 \begin{figure}[htb]
   \centering
@@ -127,16 +128,17 @@ and the existing reservoir dynamics work as intended.
 
 Curiously, the NRMSE differs only slightly between the three types of
 lattice. It seems that it is the overall lattice structure that is important,
-not the specific type of tiling implementing it. We therefore argue that the
-different tilings, which in practice dictate the amount of incident edges per
-vertex, work mostly as minor tuning parameters. The idea that overall structure
-is important is in accordance with our findings in \ref{sec:restore}, concluding
-that \textit{how information flows} in the network is vital.
+not the type of tiling implementing it. We therefore argue that the different
+tilings, which in practice dictate the amount of incident edges per vertex, work
+mostly as minor tuning parameters. The idea that overall structure is important
+is in accordance with our findings in \ref{sec:restore}, concluding that
+\textit{how information flows} in the network is vital.
 
 Input scaling decreased the benchmark error of lattice reservoirs, but the best
-performing networks of Figure \ref{fig:rt-performance-is} are not quite
-comparable to the ESN. For example, square grid reservoirs of size 200 benchmark
-a mean NRMSE of around 0.35, while corresponding ESNs average around 0.25.
+performing networks of Figure \ref{fig:rt-performance-is}, i.e. the biggest
+reservoirs with the lowest input scaling, are not quite comparable to the
+ESN. For example, square grid reservoirs of size 200 benchmark a mean NRMSE of
+around 0.35, while corresponding ESNs average around 0.25.
 
 Overall, it is interesting that undirected lattice reservoirs perform as well as
 they do. On the other hand, the distribution of the input weights are drawn from
@@ -183,9 +185,9 @@ interest to repeat this experiment with lattice reservoirs, especially since
 information flow is so clearly visible in a lattice structure. We modify the
 generated lattice graphs generated in previous sections of this chapter to have
 a fraction of directed edges. Figure \ref{fig:dir-lattice} illustrates the
-concept for square lattices, where 25\% and 75\% of the edges of the two
-lattices, respectively, have been directed. The directed reservoir edges have a
-50\% chance of going in either direction.
+concept for square lattices, where 25\% (Figure \ref{fig:dir-lattice-a}) and
+75\% (Figure \ref{fig:dir-lattice-b}) of the edges have been directed. The
+directed reservoir edges have a 50\% chance of going in either direction.
 
 \subsection{Results and Discussion}
 
@@ -237,10 +239,11 @@ A small exception is visible for very small square and hexagonal reservoirs,
 where a fully directed reservoir may degrade if the edges align in an
 insufficient manner. Nodes in triangular reservoirs have six incident edges, as
 opposed to the three and four of square and hexagonal, thus giving a smaller
-chance of insufficient reservoirs appearing. Note that this problem disappears
-with bigger reservoirs. This compelling result indicates that our method of
-generating directed edges guarantees good reservoirs as their sizes increase --
-one does not need to ``get lucky'' with directions.
+chance of insufficient reservoirs appearing. Note that this problem of
+generating insufficient directions disappears with bigger reservoirs. This
+compelling result indicates that our method of generating directed edges
+guarantees good reservoirs as their sizes increase -- one does not need to ``get
+lucky'' with directions.
 
 Convincing improvements are exhibited once reservoirs become fully directed and
 sufficiently big, which is especially visible at the sudden drops at the closest
@@ -310,7 +313,9 @@ Table \ref{tab:sq-global-input} shows the simplicity of the square grids used in
 Figure \ref{fig:rt-performance-big}. The input of the entire reservoir is
 decided by a single scalar. Furthermore, there is only a single unique magnitude
 used for reservoir weights in $\mathbf{W}^{res}$, which is determined by the
-spacing of nodes.
+spacing of nodes. ESNs shown in Table \ref{tab:sq-global-input} contain a large
+amount of unique reservoir weights, but achieve a worse NRMSE on the NARMA-10
+benchmark.
 
 Simple cyclic reservoirs (SCR) use topology in a similar manner to use a
 deterministic weighting scheme \cite{rodan_minimum_2011}. Units in SCRs are
@@ -415,9 +420,8 @@ space $KQ:G$, sweeping parameter spaces will reveal the flexibility of reservoir
 types. For all reservoirs, $KQ < N$ and $G < N$, given reservoir size $N$. It is
 known that the standard, fully-connected ESN may be tuned to have almost any
 $KQ:G$, while lattice reservoirs cover a smaller area of the $KQ:G$ behavior
-space, as they are unable to achieve a high $KQ$
-\cite{mcquillan_role_2019}. This conclusion is partly reproduced in Figure
-\ref{fig:rank}.
+space, as they are unable to achieve a high $KQ$ \cite{mcquillan_role_2019},
+which is a conclusion that is partly reproduced in Figure \ref{fig:rank}.
 
 In Section \ref{ssec:topology-and-spatial-networks}, we noted a discrepancy
 between performance predicted by kernel quality and benchmarks used by Rodan and
@@ -519,14 +523,15 @@ Results show that both square lattice reservoirs and ESN reservoirs benefit from
 removal of a few noisy nodes. Furthermore, almost half the reservoirs may be
 removed in this manner before performance degrades to values below that of the
 initial state. Clearly, numerous of the hidden nodes in the reservoirs that were
-generated originally serve little purpose. Pruning ESNs has been attempted
-before. For example, by pruning output connections as regularization methods
-\cite{dutoit_pruning_2009}, or by using the concept of attack tolerance to
-remove nodes which output weights $\mathbf{W}^{out}$ correspond to large or
-small values \cite{haluszczynski_reservoir_2020}. Results that indicate
-optimization potential in network pruning are interesting in a physical RC
-context, as the resources required to realize reservoirs naturally increases
-with size.
+generated originally serve little purpose. Removing such nodes result in a
+marginal increase in benchmark error, or even a decrease in some cases. Pruning
+ESNs has been attempted before. For example, by pruning output connections as
+regularization methods \cite{dutoit_pruning_2009}, or by using the concept of
+attack tolerance to remove nodes which output weights $\mathbf{W}^{out}$
+correspond to large or small values \cite{haluszczynski_reservoir_2020}. Results
+that indicate optimization potential in network pruning are interesting in a
+physical RC context, as the resources required to realize reservoirs naturally
+increases with size.
 
 \begin{figure}[htb]
   \centering
@@ -564,15 +569,15 @@ lattice reservoir.
 \end{figure}
 
 Pruning reservoir size is relevant not only to reduce costs, it is also valuable
-for theoretical analysis. Figure \ref{fig:sq-grid} depicts the state of the
-reservoir at four different points during shrinking. Performance degrades to
-that of a delay line when there is around $N = 20$ nodes left in the reservoir,
-shown Figure \ref{fig:sq-grid-20}. This is also exactly what is remaining: a
-delay line of length 11, and two cycles of length 4. Moreover, an NRMSE of 0.29
-achieved with just $N = 35$ nodes in Figure \ref{fig:sq-grid-35}. We see a
-``core'' providing the required short-term memory, with nodes along this stem
-for processing purposes. This core is also present in the original 144-node
-network, but is now easier to spot.
+for theoretical analysis. Figure \ref{fig:sq-grid} depicts a snapshot of
+reservoir geometry at four different points during shrinking. Performance
+degrades to that of a delay line when there is around $N = 20$ nodes left in the
+reservoir, shown Figure \ref{fig:sq-grid-20}. This is also exactly what is
+remaining: a delay line of length 11, and two cycles of length 4. Moreover, an
+NRMSE of 0.29 achieved with just $N = 35$ nodes in Figure
+\ref{fig:sq-grid-35}. We see a ``core'' providing the required short-term
+memory, with nodes along this stem for processing purposes. This core is also
+present in the original 144-node network, but is now easier to spot.
 
 We have illustrated the value of square lattice reservoirs as an analytical
 tool. This rather simple experiment has deduced that heavy lifting to solve the
@@ -620,10 +625,11 @@ specific tasks will outperform randomly generated ones.
 However, as previously mentioned, our intention with square lattice reservoirs
 is not to provide yet another ESN competitor, but to gain insights into their
 inner workings. Figure \ref{fig:sq-grid-grow} depicts the reservoir at three
-different points during its growth. Curiously, holes appear in the lattice in
-Figure \ref{fig:sq-grid-grow-250}, demonstrating that there are parts of the
-lattice where adding nodes, irrelevant of the directions of its incident edges,
-will cause little performance gain.
+different points during its growth in Figure
+\ref{fig:sq-grow-performance}. Curiously, holes appear in the lattice in Figure
+\ref{fig:sq-grid-grow-250}, demonstrating that there are parts of the lattice
+where adding nodes, irrelevant of the directions of its incident edges, will
+cause little performance gain.
 
 Figure \ref{fig:sq-grid-grow-250} also illustrates the apparent difficulty of
 analyzing networks without good heuristics. Consider for example the difference
@@ -653,7 +659,8 @@ structured, deterministic reservoirs.
   \end{subfigure}
   \caption{
     Evaluation during incremental addition of nodes to a square lattice
-reservoir. The process starts from the reservoir in (a).
+reservoir. The process starts from the reservoir in (a), resulting in a decrease
+in benchmark error according to Figure \protect\ref{fig:sq-grow-performance}.
   }
   \label{fig:sq-grid-grow}
 \end{figure}
