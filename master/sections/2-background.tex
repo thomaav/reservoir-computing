@@ -38,7 +38,7 @@ systems, on the other hand, are wildly unpredictable, making them excessively
 sensitive. This \textit{edge of chaos} is a recurring theme in the investigation
 of the computational capabilities of physical systems
 \cite{langton_computation_1990}. In fact, the edge of chaos has been found to be
-of significance in predicting the computational performance of for neural
+of significance in predicting the computational performance of neural
 microcircuit models, consisting of spiking neurons and dynamic synapses
 \cite{legenstein_edge_2007}.
 
@@ -63,18 +63,18 @@ system, causing non-convergent training \cite{doya_bifurcations_nodate}. To
 circumvent this complexity, alternative methods which leave internal weights
 untrained have been proposed \cite{jaeger_echo_2001, maass_real-time_2002}.
 
-Echo state networks (ESNs) \cite{jaeger_echo_2001} and liquid state machines
-(LSMs) \cite{maass_real-time_2002} independently present supervised learning
+Echo state networks (ESN) \cite{jaeger_echo_2001} and liquid state machines
+(LSM) \cite{maass_real-time_2002} independently present supervised learning
 methods that do not adapt the internal weights of the network. Instead, the
 output is generated using a simple, memoryless classifier or regressor. This
 makes the RNN function much like a kernel in kernel method algorithms, which
-seeks features and general relations in datasets to increase separability.
+seek features and general relations in datasets to increase separability.
 
 Thus, by projecting into a high-dimensional space, temporal information of an
 input may be incorporated in an instantaneous readout. This methodology has been
-unified into the research subfield of RC \cite{schrauwen_overview_2007}, in
-which the focus is on separating the randomly generated \textit{reservoir} from
-the trained readout layer.
+unified into the research subfield of RC, in which the focus is on separating
+the randomly generated \textit{reservoir} from the trained readout layer
+\cite{schrauwen_overview_2007}.
 
 Interestingly, there is no need for the reservoir to be an artificial neural
 network -- any high-dimensional, driven system exhibiting complex dynamic
@@ -105,7 +105,7 @@ providing a least squares optimum.
 
 The ESN is one of the key flavors of RC, and at its core lie untrained, randomly
 initialized RNNs. Its conception introduced a highly practical approach to
-training RNNs that is both simple and computationally feasible. In ESNs inner
+training RNNs that is both simple and computationally feasible. In ESNs, inner
 weights remain fixed, and only the output weights are adapted to construct a
 linear readout. The basic architecture of the ESN model is illustrated in Figure
 \ref{fig:esn}, and it consists primarily of real-valued neurons connected by
@@ -229,7 +229,7 @@ A recent study compares the promising deep echo state network architecture
 recurrent models on multivariate time-series prediction tasks is made
 \cite{gallicchio_comparison_2019}. It is established that the DeepESN
 methodology outperforms other RNN approaches in their prediction ability on
-challenging, real world datasets. The computation time is also lessened about
+challenging, real world datasets. The computation time is also lessened by about
 one order of magnitude compared to fully-trained RNN approaches. Thus, the
 adoption of LSTM and GRU in practice may not necessarily be based on performance
 suitability, but rather software availability and popularity.
@@ -265,7 +265,7 @@ empirical measure of this complex mapping, denoting the potential diversity of
 nonlinear operations carried out by a reservoir. Kernel quality is evaluated by
 presenting a reservoir of size $n$ with $m$ different input sequences, and
 computing the rank of the resulting $m\times n$ matrix consisting of the
-reservoir states resulting at some time step $t$ for the input stream
+reservoir states at some time step $t$ for the input streams
 \cite{busing_connectivity_2010}.
 
 Another metric accompanying the kernel quality is the \textit{generalization
@@ -351,7 +351,7 @@ prediction of performance \cite{chrol-cannon_correlation_2014}.
 Employing benchmarks to measure the performance of reservoirs is a means to
 directly capture performance on specific tasks. Myriads of benchmarks exist
 within the field of time series prediction, generation, and classification. The
-benchmark spectrum range from simple tasks, to complicated, highly dynamic and
+benchmark spectrum ranges from simple tasks, to complicated, highly dynamic and
 autoregressive time series.
 
 Simpler tasks include the XOR problem of which is not linearly separable

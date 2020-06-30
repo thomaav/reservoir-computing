@@ -269,7 +269,7 @@ the input.
 Thus, twice we have found directed edges to improve reservoir performance
 significantly, once in random geometric graph reservoirs in Section
 \ref{sec:restore}, and now again in lattices. Despite this, lattice reservoirs
-still perform slightly worse than ESN.
+still perform slightly worse than ESNs.
 
 In the project preceding this thesis, it was found that a global input scheme,
 i.e. an input scheme where every input weight is set to 1 and then scaled, works
@@ -332,9 +332,9 @@ into the apparent black box of the ESN, as we shall see in Section
 The time evolution of internal node activations proves to be of interest. Figure
 \ref{fig:activations} depicts an example run, comparing the standard ESN to
 square grids with a fixed, global input scheme. It is clearly visible that nodes
-in Figure \ref{fig:activations-b} receive the same input, while uniform
-distribution of the ESN in \ref{fig:activations-a} seems more sporadic due to
-its uniform input distribution in the interval [-0.5, 0.5].
+in Figure \ref{fig:activations-b} receive the same input, while the activations
+of the ESN in \ref{fig:activations-a} seems more sporadic due to its uniform
+input distribution in the interval [-0.5, 0.5].
 
 \begin{figure}[htb]
   \centering
@@ -360,8 +360,8 @@ shown to avoid clutter.
 
 Note also that the activations of nodes in a square lattice reservoir are
 strictly positive, as the NARMA input sequence is strictly positive. This may
-warrant a change of activation to other sigmoid functions, as half of $tanh$
-remains unused, but has not been investigated further.
+warrant a change of activation function to other sigmoid functions, as half of
+$tanh$ remains unused, but this has not been investigated further.
 
 In summary, our experimental results demonstrate the potential of designing
 reservoirs in a non-stochastic manner. By introducing directed edges to
@@ -412,7 +412,7 @@ as in Section \ref{sec:lat-dir-edge}, except a scaling of the ESN spectral
 radius to 0.7, as to avoid complete saturation of the respective ranks. We
 discover that square lattice reservoirs attain lower kernel
 qualities. Additionally the difference between kernel quality and generalization
-is also higher for ESN. This difference is often used as a metric of reservoir
+is also higher for ESNs. This difference is often used as a metric of reservoir
 quality, as a high kernel quality and low generalization rank is desirable.
 
 If we examine kernel quality (KQ) and generalization rank (G) as a behavior
@@ -462,7 +462,7 @@ pressingly as a tool for theoretical analysis rather than an ESN competitor.
 In Section \ref{sec:lat-dir-edge} we asserted that the directedness of square
 lattice reservoirs will allow us to peer into the ``black box'' character of
 reservoirs. Traditional reservoir generation is driven by ad-hoc methodology,
-resulting in reservoirs which internals are difficult to interpret. Hence,
+resulting in reservoirs with internals that are difficult to interpret. Hence,
 constructing simpler, more deterministic reservoirs will allow us a clearer view
 of where and how input will flow in the network. Lattice reservoirs follow a
 straightforward connectivity scheme and are embedded in space, making analysis
@@ -474,7 +474,7 @@ nodes from the lattice in an incremental manner, where each iteration removes
 the node that results in the lowest increase in error. Then we take the opposite
 route, adding nodes along the frontier of the lattice, always adding the node
 and directing the edges in the manner causing the largest decrease in
-error. Both shrinking and growing square lattice reservoirs thus follow a
+error. Both shrinking and growing of square lattice reservoirs thus follow a
 simplistic, exhaustive approach.
 
 \subsection{Results and Discussion}
@@ -515,18 +515,18 @@ randomly a randomly generated ESN of the same size.
 When node removals have been exhausted, the node causing the smallest increase
 in benchmark error is removed. This is then repeated until there is a single
 node left in the reservoir. Figure \ref{fig:sq-shrink-performance} details the
-development of reservoir error for each iteration. We conduct the same
+development of reservoir error for each iteration. We also conduct the same
 experiment with default ESNs, comparing both models to randomly generated ESNs
 of the same size.
 
 Results show that both square lattice reservoirs and ESN reservoirs benefit from
 removal of a few noisy nodes. Furthermore, almost half the reservoirs may be
 removed in this manner before performance degrades to values below that of the
-initial state. Clearly, numerous of the hidden nodes in the reservoirs that were
-generated originally serve little purpose. Removing such nodes result in a
+initial geometry. Clearly, numerous of the hidden nodes in the reservoirs that
+were generated originally serve little purpose. Removing such nodes result in a
 marginal increase in benchmark error, or even a decrease in some cases. Pruning
-ESNs has been attempted before. For example, by pruning output connections as
-regularization methods \cite{dutoit_pruning_2009}, or by using the concept of
+ESNs has been attempted before. For example, by pruning output connections as a
+regularization method \cite{dutoit_pruning_2009}, or by using the concept of
 attack tolerance to remove nodes which output weights $\mathbf{W}^{out}$
 correspond to large or small values \cite{haluszczynski_reservoir_2020}. Results
 that indicate optimization potential in network pruning are interesting in a
@@ -574,17 +574,17 @@ reservoir geometry at four different points during shrinking. Performance
 degrades to that of a delay line when there is around $N = 20$ nodes left in the
 reservoir, shown Figure \ref{fig:sq-grid-20}. This is also exactly what is
 remaining: a delay line of length 11, and two cycles of length 4. Moreover, an
-NRMSE of 0.29 achieved with just $N = 35$ nodes in Figure
+NRMSE of 0.29 is achieved with just $N = 35$ nodes in Figure
 \ref{fig:sq-grid-35}. We see a ``core'' providing the required short-term
 memory, with nodes along this stem for processing purposes. This core is also
 present in the original 144-node network, but is now easier to spot.
 
-We have illustrated the value of square lattice reservoirs as an analytical
+We have thus illustrated the value of square lattice reservoirs as an analytical
 tool. This rather simple experiment has deduced that heavy lifting to solve the
 NARMA-10 benchmark is done by a core stem of memory augmented by surrounding
 nodes. A comparable analysis is harder to make for the corresponding shrunk ESN
 reservoir from Figure \ref{fig:sq-shrink-performance}, as even just embedding
-the network in a metric space requires complicated spring models such as
+the ESN network in a metric space requires complicated spring models such as
 force-directed graph drawing.
 
 In summary, in this section we have deviated slightly from the original goal of
