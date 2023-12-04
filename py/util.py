@@ -1,9 +1,10 @@
 import torch
+import torch.linalg
 import math
 
 
 def spectral_radius(w):
-    return torch.max(torch.abs(torch.eig(w)[0])).item()
+    return torch.max(torch.abs(torch.linalg.eigvals(w))).item()
 
 
 def snr(var_u, var_v):

@@ -80,7 +80,8 @@ def plot_NARMA_nonlinearity():
             ys.append(y)
             xys.append(x*y)
 
-    ax = plt.gca(projection='3d')
+    fig = plt.figure()
+    ax = fig.add_subplot(projection = '3d')
     norm = matplotlib.colors.Normalize(vmin=-0.05, vmax=0.35)
     ax.plot_trisurf(xs, ys, xys, cmap='gray', norm=norm)
 
@@ -106,9 +107,9 @@ def plot_NARMA_nonlinearity():
     ax.yaxis.set_rotate_label(False)
     ax.zaxis.set_rotate_label(False)
 
-    for x in ax.xaxis.get_major_ticks(): x.label.set_fontsize(14)
-    for y in ax.yaxis.get_major_ticks(): y.label.set_fontsize(14)
-    for z in ax.zaxis.get_major_ticks(): z.label.set_fontsize(14)
+    # for x in ax.xaxis.get_major_ticks(): x.label.set_fontsize(14)
+    # for y in ax.yaxis.get_major_ticks(): y.label.set_fontsize(14)
+    # for z in ax.zaxis.get_major_ticks(): z.label.set_fontsize(14)
 
     plt.tight_layout()
     save_plot('NARMA-nonlinearity.png')
@@ -551,6 +552,7 @@ def regular_tilings_performance():
 def plot_regular_tilings_performance(std=False):
     nrmse_df = load_experiment('experiments/lattice_nrmse.pkl')
     org_esn = load_experiment('experiments/esn_general_performance.pkl')
+    org_esn.drop(columns=['readout'], inplace=True)
     org_esn['hidden_nodes'] = org_esn[org_esn['hidden_nodes'] <= 400]['hidden_nodes']
 
     grouped_df = nrmse_df.groupby(['hidden_nodes', 'w_res_type']).mean().reset_index()
@@ -718,9 +720,9 @@ def plot_directed_regular_tilings_performance(std=False):
 
     if std:
         agg = { 'esn_nrmse': ['mean', 'std'] }
-        std_sq = sq.groupby(['hidden_nodes', 'dir_frac']).agg(agg).reset_index()
-        std_hex = hex.groupby(['hidden_nodes', 'dir_frac']).agg(agg).reset_index()
-        std_tri = tri.groupby(['hidden_nodes', 'dir_frac']).agg(agg).reset_index()
+        std_sq = sq.groupby(['hidden_nodes', 'dir_frac']).agg(agg, numeric_only=True).reset_index()
+        std_hex = hex.groupby(['hidden_nodes', 'dir_frac']).agg(agg, numeric_only=True).reset_index()
+        std_tri = tri.groupby(['hidden_nodes', 'dir_frac']).agg(agg, numeric_only=True).reset_index()
         print(tabulate(std_sq, headers=['Hidden nodes', 'Directed edges', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
         print(tabulate(std_hex, headers=['Hidden nodes', 'Directed edges', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
         print(tabulate(std_tri, headers=['Hidden nodes', 'Directed edges', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
@@ -762,10 +764,10 @@ def plot_directed_regular_tilings_performance(std=False):
         print(tabulate(std_tri, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
         print(tabulate(std_esn, headers=['Hidden nodes', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='orgtbl'))
 
-    sq = sq.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
-    hex = hex.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
-    tri = tri.groupby(['hidden_nodes', 'dir_frac']).mean().reset_index()
-    esn = esn.groupby(['hidden_nodes']).mean().reset_index()
+    sq = sq.groupby(['hidden_nodes', 'dir_frac']).mean(numeric_only=True).reset_index()
+    hex = hex.groupby(['hidden_nodes', 'dir_frac']).mean(numeric_only=True).reset_index()
+    tri = tri.groupby(['hidden_nodes', 'dir_frac']).mean(numeric_only=True).reset_index()
+    esn = esn.groupby(['hidden_nodes']).mean(numeric_only=True).reset_index()
 
     plt.plot(sq['hidden_nodes'], sq['esn_nrmse'], color='black', label='Square', linestyle='solid')
     plt.plot(hex['hidden_nodes'], hex['esn_nrmse'], color='black', label='Hexagonal', linestyle='dashed')
@@ -1101,7 +1103,7 @@ def remove_nodes_performance():
     esn = load_experiment('experiments/esn_general_performance.pkl')
 
     esn = esn.loc[esn['hidden_nodes'] <= 140]
-    esn = esn.groupby(['hidden_nodes']).mean().reset_index()
+    esn = esn.groupby(['hidden_nodes']).mean(numeric_only=True).reset_index()
     def_nrmses = esn['esn_nrmse']
     n_nodes = esn['hidden_nodes']
 
@@ -1183,7 +1185,7 @@ def plot_esn_node_removal():
     esn_nrmses = pickle.load(open('experiments/esn_removed_nodes_nrmses.pkl', 'rb'))
 
     linear_esn = esns[len(esns)-31]
-    G = nx.from_numpy_matrix(linear_esn.numpy())
+    G = nx.from_numpy_array(linear_esn.numpy())
     nx.draw(G, pos=nx.spring_layout(G))
     plt.show()
 

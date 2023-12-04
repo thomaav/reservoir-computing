@@ -505,7 +505,7 @@ def plot_lattice(G, title='', ax=None, neigh_color=False, edge_color=False,
     ax.set_title(title)
 
     if neigh_color:
-        A = nx.to_numpy_matrix(G)
+        A = nx.to_numpy_array(G)
         A = torch.FloatTensor(A).data.numpy()
         node_colors = A[0]
     elif cols is not None:
@@ -565,6 +565,8 @@ def plot_df_trisurf(df, groupby, axes, agg=['mean'], show=True, title='', ax=Non
         axs = get_3d_subplot_axs(len(agg))
 
     plt.suptitle(title)
+
+    df = df.select_dtypes([np.number])
 
     for i, _agg in enumerate(agg):
         if _agg == 'min':

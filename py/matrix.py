@@ -111,7 +111,7 @@ def grow_neighborhoods(G, dist_function=euclidean, l=1):
     # I have no idea what is happening with the np matrix here, as there seems
     # to be some sort of infinite recurrence of the first element -- but this
     # does not happen with torch? What in the world is going on…
-    A = nx.to_numpy_matrix(G)
+    A = nx.to_numpy_array(G)
     A = torch.FloatTensor(A).data.numpy()
 
     # Required to get the correct u,v for add_edge.

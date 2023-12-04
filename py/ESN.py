@@ -44,7 +44,7 @@ class ESN(nn.Module):
         if self.w_res_type == 'waxman':
             G = matrix.waxman(n=self.hidden_nodes, alpha=1.0, beta=1.0, connectivity='global', **kwargs)
             self.G = G
-            A = nx.to_numpy_matrix(G)
+            A = nx.to_numpy_array(G)
 
             w_res = torch.FloatTensor(A)
             cur_sr = _spectral_radius(w_res)
@@ -88,7 +88,7 @@ class ESN(nn.Module):
             if self.dir_frac is not None:
                 self.G = matrix.make_graph_directed(self.G, self.dir_frac)
 
-            A = nx.to_numpy_matrix(self.G)
+            A = nx.to_numpy_array(self.G)
             self.hidden_nodes = len(A)
             w_res = torch.FloatTensor(A)
 
@@ -230,7 +230,7 @@ class ESN(nn.Module):
             nodes = list(self.G.nodes)
             self.G.remove_node(nodes[n])
 
-            A = nx.to_numpy_matrix(self.G)
+            A = nx.to_numpy_array(self.G)
             self.hidden_nodes = len(A)
 
             w_res = torch.FloatTensor(A)
@@ -264,7 +264,7 @@ class ESN(nn.Module):
             u, v = edge[0], edge[1]
             self.G.add_edge(v, u)
 
-            A = nx.to_numpy_matrix(self.G)
+            A = nx.to_numpy_array(self.G)
             self.hidden_nodes = len(A)
 
             self.w_res = torch.FloatTensor(A)
@@ -278,7 +278,7 @@ class ESN(nn.Module):
 
     def set_G(self, G):
         if self.w_res_type in ['tetragonal', 'hexagonal', 'triangular']:
-            A = nx.to_numpy_matrix(G)
+            A = nx.to_numpy_array(G)
             self.hidden_nodes = len(A)
             self.G = G
 
