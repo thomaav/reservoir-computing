@@ -1,0 +1,28 @@
+# LaTeX style for publishing
+#
+# Adapted from http://nipunbatra.github.io/2014/08/latexify/
+
+text.latex.preamble: \usepackage{gensymb}
+text.usetex: True
+
+axes.linewidth: 0.5
+axes.grid: True
+
+font.size: 9
+font.family: serif
+axes.labelsize: 9
+axes.titlesize: 9
+legend.fontsize: 9
+xtick.labelsize: 9
+ytick.labelsize: 9
+
+figure.figsize: 6.9, 4.26
+figure.subplot.left    : 0.18
+figure.subplot.right   : 0.95
+figure.subplot.bottom  : 0.22
+savefig.dpi         : 600      # figure dots per inch
+
+lines.linewidth   : 1.0
+lines.markersize  : 3.0            # markersize, in points
+
+figure.facecolor: white

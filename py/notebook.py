@@ -32,6 +32,29 @@ def esn_general_performance():
     df.to_pickle('experiments/esn_general_performance.pkl')
     pass
 
+def paper_esn_general_performance():
+    # Like esn_general_performance, but:
+    #   input_scaling=0.1
+    #   hidden_nodes matches lattice reservoirs
+    params = OrderedDict()
+    params['input_scaling'] = [0.1]
+    params['hidden_nodes'] = [n*n for n in range(3, 21)]
+    params['w_res_density'] = [0.1]
+    params['readout'] = ['rr']
+
+    df = experiment(esn_nrmse, params, runs=20)
+    df.to_pickle('experiments/paper_esn_general_performance.pkl')
+
+def esn_global_input_performance():
+    params = OrderedDict()
+    params['input_scaling'] = [0.1]
+    params['hidden_nodes'] = [n*n for n in range(3, 21)]
+    params['w_res_density'] = [0.1]
+    params['w_in_distrib'] = [Distribution.fixed]
+    params['w_in_density'] = [1.0]
+
+    df = experiment(esn_nrmse, params, runs=20)
+    df.to_pickle('experiments/esn_global_input_performance.pkl')
 
 def default_plot_settings():
     plt.rc('legend', fontsize=14)
@@ -545,9 +568,83 @@ def regular_tilings_performance():
     params = OrderedDict()
     params['hidden_nodes'] = [n*n for n in range(3, 21)]
     params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
-    nrmse_df = experiment(esn_nrmse, params)
+    nrmse_df = experiment(esn_nrmse, params, runs=20)
     nrmse_df.to_pickle('experiments/lattice_nrmse.pkl')
 
+def regular_tilings_performance_is01():
+    # Like regular_tilings_performance, but input_scaling=0.1
+    params = OrderedDict()
+    params['input_scaling'] = [0.1]
+    params['hidden_nodes'] = [n*n for n in range(3, 21)]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    nrmse_df = experiment(esn_nrmse, params, runs=20)
+    nrmse_df.to_pickle('experiments/lattice_nrmse_is0.1.pkl')
+
+def regular_tilings_performance_is001():
+    # Like regular_tilings_performance, but input_scaling=0.01
+    params = OrderedDict()
+    params['input_scaling'] = [0.01]
+    params['hidden_nodes'] = [n*n for n in range(3, 21)]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    nrmse_df = experiment(esn_nrmse, params, runs=20)
+    nrmse_df.to_pickle('experiments/lattice_nrmse_is0.01.pkl')
+
+def regular_tilings_performance_is01_global():
+    params = OrderedDict()
+    params['input_scaling'] = [0.1]
+    params['hidden_nodes'] = [n*n for n in range(3, 21)]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['w_in_distrib'] = [Distribution.fixed]
+    nrmse_df = experiment(esn_nrmse, params, runs=1)
+    nrmse_df.to_pickle('experiments/lattice_nrmse_is0.1_global.pkl')
+
+
+def regular_tilings_performance_is001_global():
+    params = OrderedDict()
+    params['input_scaling'] = [0.01]
+    params['hidden_nodes'] = [n*n for n in range(3, 21)]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['w_in_distrib'] = [Distribution.fixed]
+    nrmse_df = experiment(esn_nrmse, params, runs=1)
+    nrmse_df.to_pickle('experiments/lattice_nrmse_is0.01_global.pkl')
+
+def regular_tilings_performance_is01_periodic():
+    params = OrderedDict()
+    params['input_scaling'] = [0.1]
+    params['hidden_nodes'] = [n*n for n in range(5, 21)]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['periodic'] = [True]
+    nrmse_df = experiment(esn_nrmse, params, runs=20)
+    nrmse_df.to_pickle('experiments/lattice_nrmse_is0.1_periodic.pkl')
+
+def regular_tilings_performance_is001_periodic():
+    params = OrderedDict()
+    params['input_scaling'] = [0.01]
+    params['hidden_nodes'] = [n*n for n in range(5, 21)]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['periodic'] = [True]
+    nrmse_df = experiment(esn_nrmse, params, runs=20)
+    nrmse_df.to_pickle('experiments/lattice_nrmse_is0.01_periodic.pkl')
+
+def regular_tilings_performance_is01_global_periodic():
+    params = OrderedDict()
+    params['input_scaling'] = [0.1]
+    params['hidden_nodes'] = [n*n for n in range(5, 21)]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['w_in_distrib'] = [Distribution.fixed]
+    params['periodic'] = [True]
+    nrmse_df = experiment(esn_nrmse, params, runs=1)
+    nrmse_df.to_pickle('experiments/lattice_nrmse_is0.1_global_periodic.pkl')
+
+def regular_tilings_performance_is001_global_periodic():
+    params = OrderedDict()
+    params['input_scaling'] = [0.01]
+    params['hidden_nodes'] = [n*n for n in range(5, 21)]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['w_in_distrib'] = [Distribution.fixed]
+    params['periodic'] = [True]
+    nrmse_df = experiment(esn_nrmse, params, runs=1)
+    nrmse_df.to_pickle('experiments/lattice_nrmse_is0.01_global_periodic.pkl')
 
 def plot_regular_tilings_performance(std=False):
     nrmse_df = load_experiment('experiments/lattice_nrmse.pkl')
@@ -596,12 +693,16 @@ def regular_tilings_performance_is():
     params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
     params['hidden_nodes'] = [n*n for n in range(5, 16)]
     params['input_scaling'] = np.arange(0.1, 1.6, 0.1)
-    nrmse_df = experiment(esn_nrmse, params)
+    nrmse_df = experiment(esn_nrmse, params, runs=20)
     nrmse_df.to_pickle('experiments/rt_performance_is.pkl')
 
 
-def plot_regular_tilings_performance_is(std=False):
-    df = load_experiment('experiments/rt_performance_is.pkl')
+def plot_regular_tilings_performance_is(
+    std=False,
+    filename="experiments/rt_performance_is.pkl",
+    save="regular-tilings-performance-is",
+):
+    df = load_experiment(filename)
 
     sq = df.loc[df['w_res_type'] == 'tetragonal']
     hex = df.loc[df['w_res_type'] == 'hexagonal']
@@ -620,7 +721,7 @@ def plot_regular_tilings_performance_is(std=False):
     axes    = ['hidden_nodes', 'input_scaling', 'esn_nrmse']
     agg     = ['mean']
     labels  = {'x': 'Hidden nodes', 'y': 'Input scaling', 'z': 'NARMA-10 NRMSE'}
-    zlim    = (0.3, 0.65)
+    #zlim    = (0.3, 0.65)
     xlim    = (min(sq['hidden_nodes']), max(sq['hidden_nodes']))
     ylim    = (min(sq['input_scaling']), max(sq['input_scaling']))
     azim    = -45
@@ -629,12 +730,40 @@ def plot_regular_tilings_performance_is(std=False):
     file_names = ['sq', 'hex', 'tri']
     for i, df in enumerate([sq, hex, tri]):
         plot_df_trisurf(df=df, groupby=groupby, axes=axes, azim=azim, elev=elev, agg=agg,
-                        zlim=zlim, show=False, labels=labels, xlim=xlim, ylim=ylim)
+                        # zlim=zlim,
+                        show=False, labels=labels, xlim=xlim, ylim=ylim)
         plt.tight_layout()
         plt.subplots_adjust(bottom=0.10, right=0.9)
-        save_plot(f'regular-tilings-performance-is-{file_names[i]}.png')
+        save_plot(f'{save}-{file_names[i]}.png')
         plt.show()
 
+def regular_tilings_performance_is_periodic():
+    params = OrderedDict()
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['hidden_nodes'] = [n*n for n in range(5, 16)]
+    params['input_scaling'] = np.arange(0.1, 1.6, 0.1)
+    params['periodic'] = [True]
+    nrmse_df = experiment(esn_nrmse, params, runs=20)
+    nrmse_df.to_pickle('experiments/rt_performance_is_periodic.pkl')
+
+def regular_tilings_performance_is_global():
+    params = OrderedDict()
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['hidden_nodes'] = [n*n for n in range(5, 16)]
+    params['input_scaling'] = np.arange(0.1, 1.6, 0.1)
+    params['w_in_distrib'] = [Distribution.fixed]
+    nrmse_df = experiment(esn_nrmse, params, runs=20)
+    nrmse_df.to_pickle('experiments/rt_performance_is_global.pkl')
+
+def regular_tilings_performance_is_periodic_global():
+    params = OrderedDict()
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['hidden_nodes'] = [n*n for n in range(5, 16)]
+    params['input_scaling'] = np.arange(0.1, 1.6, 0.1)
+    params['periodic'] = [True]
+    params['w_in_distrib'] = [Distribution.fixed]
+    nrmse_df = experiment(esn_nrmse, params, runs=20)
+    nrmse_df.to_pickle('experiments/rt_performance_is_periodic_global.pkl')
 
 def plot_directed_lattice(save=False):
     esn = ESN(hidden_nodes=25, w_res_type='tetragonal', dir_frac=0.25)
@@ -666,6 +795,19 @@ def directed_lattice_performance():
     df = experiment(esn_nrmse, params, runs=20)
     df.to_pickle('experiments/directed_lattice_performance.pkl')
 
+def paper_directed_lattice_performance():
+    # Like directed_lattice_performance, but
+    # hidden_nodes matches rest and dir_frac=1
+    params = OrderedDict()
+    params['w_res_type'] = ['tetragonal']
+    params['hidden_nodes'] = [n*n for n in range(3, 21)]
+    params['input_scaling'] = [0.1]
+    params['w_in_distrib'] = [Distribution.fixed]
+    params['dir_frac'] = [1.0]
+    params['w_in_density'] = [1.0]
+
+    df = experiment(esn_nrmse, params, runs=20)
+    df.to_pickle('experiments/paper_directed_lattice_performance.pkl')
 
 def plot_directed_lattice_performance(std=False):
     df = load_experiment('experiments/directed_lattice_performance.pkl')
@@ -709,6 +851,33 @@ def directed_regular_tilings_performance():
     lattice_dir_df = experiment(esn_nrmse, params, runs=20)
     lattice_dir_df.to_pickle('experiments/lattice_dir.pkl')
 
+def directed_regular_tilings_performance_dir_frac():
+    params = OrderedDict()
+    params['input_scaling'] = [0.1]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['hidden_nodes'] = [20**2]
+    params['dir_frac'] = np.arange(0.0, 1.1, 0.1)
+    lattice_dir_df = experiment(esn_nrmse, params, runs=20)
+    lattice_dir_df.to_pickle('experiments/lattice_dir_frac.pkl')
+
+def directed_regular_tilings_performance_dir_frac_global():
+    params = OrderedDict()
+    params['input_scaling'] = [0.1]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['hidden_nodes'] = [144]
+    params['dir_frac'] = np.arange(0.0, 1.1, 0.1)
+    params['w_in_distrib'] = [Distribution.fixed]
+    lattice_dir_df = experiment(esn_nrmse, params, runs=20)
+    lattice_dir_df.to_pickle('experiments/lattice_dir_frac_global.pkl')
+
+def directed_regular_tilings_performance_dir_full():
+    params = OrderedDict()
+    params['input_scaling'] = [0.1]
+    params['hidden_nodes'] = [n*n for n in range(3, 21)]
+    params['w_res_type'] = ['tetragonal', 'hexagonal', 'triangular']
+    params['dir_frac'] = [1.0]
+    nrmse_df = experiment(esn_nrmse, params, runs=20)
+    nrmse_df.to_pickle('experiments/lattice_dir_full.pkl')
 
 def plot_directed_regular_tilings_performance(std=False):
     lattice_dir_df = load_experiment('experiments/lattice_dir.pkl')
@@ -844,6 +1013,33 @@ def unique_weights():
     del df['w_res']
     df.to_pickle('experiments/unique_weights_esn.pkl')
 
+def paper_unique_weights():
+    from ESN import Distribution
+
+    params = OrderedDict()
+    params['w_in_distrib'] = [Distribution.fixed]
+    params['input_scaling'] = [0.1]
+    params['w_res_type'] = ['tetragonal']
+    params['hidden_nodes'] = [100, 196, 289, 400]
+    params['dir_frac'] = [1.0]
+    df = experiment(esn_nrmse, params, runs=20, esn_attributes=['w_in', 'w_res'])
+    df['uwin'] = df['w_in'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
+    df['uwres'] = df['w_res'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
+    del df['w_in']
+    del df['w_res']
+    df.to_pickle('experiments/paper_unique_weights_square.pkl')
+
+    params = OrderedDict()
+    params['w_res_density'] = [0.1]
+    params['input_scaling'] = [0.1]
+    params['hidden_nodes'] = [100, 196, 289, 400]
+    df = experiment(esn_nrmse, params, runs=20, esn_attributes=['w_in', 'w_res'])
+    df['uwin'] = df['w_in'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
+    df['uwres'] = df['w_res'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
+    del df['w_in']
+    del df['w_res']
+    df.to_pickle('experiments/paper_unique_weights_esn.pkl')
+
 
 def print_unique_weights():
     sq_df = load_experiment('experiments/unique_weights_square.pkl')
@@ -861,6 +1057,21 @@ def print_unique_weights():
     print(sq_df)
     print(esn_df)
 
+def paper_print_unique_weights():
+    sq_df = load_experiment('experiments/paper_unique_weights_square.pkl')
+    esn_df = load_experiment('experiments/paper_unique_weights_esn.pkl')
+
+    agg = {
+        'esn_nrmse': ['mean', 'std'],
+        'uwin': ['mean', 'std'],
+        'uwres': ['mean', 'std'],
+    }
+
+    sq_df = sq_df.groupby(['hidden_nodes']).agg(agg).reset_index()
+    esn_df = esn_df.groupby(['hidden_nodes']).agg(agg).reset_index()
+
+    print(sq_df)
+    print(esn_df)
 
 def plot_global_input_activations(save=False):
     from ESN import Distribution
@@ -1134,6 +1345,15 @@ def general_esn_shrink():
     lattice_dir_df = experiment(esn_nrmse, params, runs=20)
     lattice_dir_df.to_pickle('experiments/esn_general_short.pkl')
 
+def paper_general_esn_shrink():
+    # Like general_esn_shrink, but input_scaling=0.1 and hidden_nodes to match
+    params = OrderedDict()
+    params['input_scaling'] = [0.1]
+    #params['hidden_nodes'] = [1, 3] + list(range(5, 150, 5))
+    params['hidden_nodes'] = np.arange(1, 144)
+    params['w_res_density'] = [0.1]
+    lattice_dir_df = experiment(esn_nrmse, params, runs=20)
+    lattice_dir_df.to_pickle('experiments/paper_esn_general_short.pkl')
 
 def remove_esn_nodes_performance():
     esn_shrink_nrmses = pickle.load(open('experiments/esn_removed_nodes_nrmses.pkl', 'rb'))
