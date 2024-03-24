@@ -495,8 +495,8 @@ def plot_trisurf(data, labels=None, ax=None, title=None, xlim=None, ylim=None,
 
 
 def plot_lattice(G, title='', ax=None, neigh_color=False, edge_color=False,
-                 cols=None, show=True, directed=False, cmap_r=False, alpha=1.0,
-                 color_directed=False, hide_axes=False):
+                 cols=None, show=True, directed=False, cmap_r=False, cmap='binary',
+                 alpha=1.0, color_directed=False, hide_axes=False, **kwargs):
     pos = nx.get_node_attributes(G, 'pos')
 
     if ax is None:
@@ -505,7 +505,7 @@ def plot_lattice(G, title='', ax=None, neigh_color=False, edge_color=False,
     ax.set_title(title)
 
     if neigh_color:
-        A = nx.to_numpy_array(G)
+        A = nx.to_numpy_matrix(G)
         A = torch.FloatTensor(A).data.numpy()
         node_colors = A[0]
     elif cols is not None:
@@ -525,12 +525,13 @@ def plot_lattice(G, title='', ax=None, neigh_color=False, edge_color=False,
     else:
         edge_colors = 'black'
 
-    cmap = 'binary_r' if cmap_r else 'binary'
+    cmap = f'{cmap}_r' if cmap_r else cmap
+    kwargs.setdefault('node_size', 30)
 
     G = G if not directed else G.to_directed()
-    nx.draw(G, pos=pos, ax=ax, with_labels=False, node_size=30,
+    nx.draw(G, pos=pos, ax=ax, with_labels=False,
             node_color=node_colors, edge_color=edge_colors, cmap=cmap,
-            alpha=alpha)
+            alpha=alpha, **kwargs)
 
     x1, x2, y1, y2 = ax.axis()
     ax.axis((x1-0.5, x2+0.5, y1-0.5, y2+0.5))
