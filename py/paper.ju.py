@@ -766,9 +766,9 @@ plt.figure(figsize=figsize, layout='constrained')
 
 x = list(range(len(esn_shrink_nrmses), 0, -1))
 print(set(x))
-plt.plot(esn_general['hidden_nodes'], esn_general['esn_nrmse'], label='Random ESN', color='black', linestyle='dashed')
-plt.plot(x, esn_shrink_nrmses, label='ESN (shrinking)', color='black', linestyle='dotted')
 plt.plot(x, lattice_shrink_nrmses, label='Square', color='black', linestyle='solid')
+plt.plot(x, esn_shrink_nrmses, label='ESN (shrinking)', color='black', linestyle='dotted')
+plt.plot(esn_general['hidden_nodes'], esn_general['esn_nrmse'], label='Random ESN', color='black', linestyle='dashed')
 
 plt.gca().invert_xaxis()
 plt.ylim((0.0, 1.0))
