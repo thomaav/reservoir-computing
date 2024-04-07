@@ -10,6 +10,7 @@ import numpy as np
 import networkx as nx
 import pickle
 import os
+from tabulate import tabulate
 
 # Important for multiprocessing.
 import torch
@@ -1006,3 +1007,147 @@ plt.show()
 from notebook import plot_making_edges_undirected
 plot_making_edges_undirected()
 
+
+# %% [markdown]
+"""
+# Appendix
+"""
+
+# %%
+%%capture cap
+
+print("# Experiment standard deviations\n")
+
+# Figure 2
+df = load_experiment('experiments/lattice_nrmse_is0.1.pkl')
+esn = load_experiment('experiments/paper_esn_general_performance.pkl')
+esn = esn[esn['hidden_nodes'] <= df['hidden_nodes'].max()]
+
+sq = df[df['w_res_type'] == 'tetragonal']
+hex = df[df['w_res_type'] == 'hexagonal']
+tri = df[df['w_res_type'] == 'triangular']
+
+agg = { 'esn_nrmse': ['mean', 'std'] }
+std_sq = sq.groupby(['hidden_nodes']).agg(agg).reset_index()
+std_hex = hex.groupby(['hidden_nodes']).agg(agg).reset_index()
+std_tri = tri.groupby(['hidden_nodes']).agg(agg).reset_index()
+std_esn = esn.groupby(['hidden_nodes']).agg(agg).reset_index()
+
+print("## Figure 2")
+print("\n### Square\n")
+print(tabulate(std_sq, headers=['Reservoir size N', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+print("\n### Hexagonal\n")
+print(tabulate(std_hex, headers=['Reservoir size N', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+print("\n### Triangular\n")
+print(tabulate(std_tri, headers=['Reservoir size N', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+print("\n### ESN\n")
+print(tabulate(std_esn, headers=['Reservoir size N', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+
+
+# Figure 3a
+df = load_experiment('experiments/lattice_dir_frac.pkl')
+
+sq = df[df['w_res_type'] == 'tetragonal']
+hex = df[df['w_res_type'] == 'hexagonal']
+tri = df[df['w_res_type'] == 'triangular']
+
+agg = { 'esn_nrmse': ['mean', 'std'] }
+std_sq = sq.groupby(['dir_frac']).agg(agg).reset_index()
+std_hex = hex.groupby(['dir_frac']).agg(agg).reset_index()
+std_tri = tri.groupby(['dir_frac']).agg(agg).reset_index()
+
+print("\n## Figure 3a")
+print("\n### Square\n")
+print(tabulate(std_sq, headers=['Fraction of directed edges', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+print("\n### Hexagonal\n")
+print(tabulate(std_hex, headers=['Fraction of directed edges', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+print("\n### Triangular\n")
+print(tabulate(std_tri, headers=['Fraction of directed edges', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+
+# Figure 3b
+df = load_experiment('experiments/lattice_dir_full.pkl')
+esn = load_experiment('experiments/paper_esn_general_performance.pkl')
+
+sq = df[df['w_res_type'] == 'tetragonal']
+hex = df[df['w_res_type'] == 'hexagonal']
+tri = df[df['w_res_type'] == 'triangular']
+
+agg = { 'esn_nrmse': ['mean', 'std'] }
+std_sq = sq.groupby(['hidden_nodes']).agg(agg).reset_index()
+std_hex = hex.groupby(['hidden_nodes']).agg(agg).reset_index()
+std_tri = tri.groupby(['hidden_nodes']).agg(agg).reset_index()
+std_esn = esn.groupby(['hidden_nodes']).agg(agg).reset_index()
+
+print("\n## Figure 3b")
+print("\n### Square\n")
+print(tabulate(std_sq, headers=['Reservoir size N', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+print("\n### Hexagonal\n")
+print(tabulate(std_hex, headers=['Reservoir size N', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+print("\n### Triangular\n")
+print(tabulate(std_tri, headers=['Reservoir size N', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+print("\n### ESN\n")
+print(tabulate(std_esn, headers=['Reservoir size N', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+
+# Figure 4
+sq_local = load_experiment('experiments/lattice_dir_full.pkl')
+esn_local = load_experiment('experiments/paper_esn_general_performance.pkl')
+sq_global = load_experiment('experiments/paper_directed_lattice_performance.pkl')
+
+sq_local = sq_local[sq_local['w_res_type'] == 'tetragonal']
+
+agg = { 'esn_nrmse': ['mean', 'std'] }
+std_sq_local = sq_local.groupby(['hidden_nodes']).agg(agg).reset_index()
+std_esn_local = esn_local.groupby(['hidden_nodes']).agg(agg).reset_index()
+std_sq_global = sq_global.groupby(['hidden_nodes']).agg(agg).reset_index()
+
+print("\n## Figure 4")
+print("\n### Square (local)\n")
+print(tabulate(std_sq_local, headers=['Reservoir size N', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+print("\n### Square (global)\n")
+print(tabulate(std_sq_global, headers=['Reservoir size N', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+print("\n### ESN\n")
+print(tabulate(std_esn_local, headers=['Reservoir size N', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+
+# Figure 5
+esn_shrink_nrmses = pickle.load(open('experiments/paper_esn_removed_nodes_nrmses.pkl', 'rb'))
+lattice_shrink_nrmses = pickle.load(open('experiments/deg_lattice_nrmses.pkl', 'rb'))
+x = list(range(len(esn_shrink_nrmses), 0, -1))
+
+esn_shrink = pd.DataFrame({'x': x, 'esn_nrmse': esn_shrink_nrmses})
+lattice_shrink = pd.DataFrame({'x': x, 'esn_nrmse': lattice_shrink_nrmses})
+
+esn_general = load_experiment('experiments/paper_esn_general_short.pkl')
+
+agg = { 'esn_nrmse': ['mean', 'std'] }
+std_esn = esn_general.groupby(['hidden_nodes']).agg(agg).reset_index()
+std_esn = std_esn[::-1]
+
+print("\n## Figure 5")
+
+print("\n### Square\n")
+print(tabulate(lattice_shrink, headers=['Reservoir size N', 'NRMSE'], showindex=False, tablefmt='github'))
+
+print("\n### ESN (shrinking)\n")
+print(tabulate(esn_shrink, headers=['Reservoir size N', 'NRMSE'], showindex=False, tablefmt='github'))
+
+print("\n### Random ESN\n")
+print(tabulate(std_esn, headers=['Reservoir size N', 'NRMSE mean', 'NRMSE std'], showindex=False, tablefmt='github'))
+
+# Figure 7
+nrmses = pickle.load(open('experiments/grow_mid_nrmses.pkl', 'rb'))
+x = list(range(74, 74+len(nrmses)))
+df = pd.DataFrame({'x': x, 'esn_nrmse': nrmses})
+
+print("\n## Figure 7\n")
+print(tabulate(df, headers=['Reservoir size N', 'NRMSE'], showindex=False, tablefmt='github'))
+
+# Figure 9
+nrmses = pickle.load(open('experiments/changed_edges_nrmses.pkl', 'rb'))
+x = [n/264 for n in range(1, 265)]
+df = pd.DataFrame({'x': x, 'esn_nrmse': nrmses})
+
+print("\n## Figure 9\n")
+print(tabulate(df, headers=['Fraction of directed edges', 'NRMSE'], showindex=False, tablefmt='github'))
+
+with open('../paper/appendix.md', 'w') as file:
+    file.write(cap.stdout)
