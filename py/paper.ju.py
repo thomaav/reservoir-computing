@@ -774,7 +774,7 @@ plt.gca().invert_xaxis()
 plt.ylim((0.0, 1.0))
 
 plt.xlabel('Reservoir size $N$')
-plt.ylabel('NARMA-10 NRMSE')
+plt.ylabel('NRMSE')
 
 plt.legend()
 
@@ -917,6 +917,7 @@ Two options:
 # %%
 # Lattices.
 lattices = pickle.load(open('experiments/grow_actual_lattices.pkl', 'rb'))
+nrmses = pickle.load(open('experiments/grow_mid_nrmses.pkl', 'rb'))
 ds.dataset = pickle.load(open('dataset/ds_narma_grow.pkl', 'rb'))
 
 sz = textwidth*.7
@@ -924,8 +925,7 @@ figsize = (sz, sz)
 
 for i in [0, 50, -1]:
     lattice = lattices[i]
-    esn = from_square_G(lattice)
-    nrmse = evaluate_esn(ds.dataset, esn)
+    nrmse = nrmses[i]
     N = len(lattice.nodes)
     print(f'{N} hidden nodes, NRMSE: {nrmse}')
     pos = list(nx.get_node_attributes(lattice, 'pos').values())
@@ -965,7 +965,7 @@ figsize = (sz, sz/1.618)
 plt.figure(figsize=figsize, layout='constrained')
 
 plt.xlabel('Reservoir size $N$')
-plt.ylabel('NARMA-10 NRMSE')
+plt.ylabel('NRMSE')
 
 plt.plot(range(74, 74+len(nrmses)), nrmses, color='black')
 savefig(f'grow-performance.pdf')
@@ -996,7 +996,7 @@ plt.plot([n/264 for n in range(1, 265)], nrmses, color='black')
 plt.ylim((0.0, 1.0))
 
 plt.xlabel('Fraction of edges made undirected')
-plt.ylabel('NARMA-10 NRMSE')
+plt.ylabel('NRMSE')
 
 savefig('undir-performance.svg')
 savefig('undir-performance.pdf')
