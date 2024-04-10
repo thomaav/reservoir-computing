@@ -25,6 +25,8 @@
 |                361 |     0.346797 |  0.00478454 |
 |                400 |     0.348243 |  0.00531972 |
 
+NRMSE pooled mean: 0.411378, std: 0.010129
+
 ### Hexagonal
 
 |   Reservoir size N |   NRMSE mean |   NRMSE std |
@@ -47,6 +49,8 @@
 |                324 |     0.348241 |  0.00641006 |
 |                361 |     0.352073 |  0.00598925 |
 |                400 |     0.35618  |  0.00575724 |
+
+NRMSE pooled mean: 0.388163, std: 0.008471
 
 ### Triangular
 
@@ -71,6 +75,8 @@
 |                361 |     0.379573 |  0.00489355 |
 |                400 |     0.382452 |  0.0033308  |
 
+NRMSE pooled mean: 0.399705, std: 0.008831
+
 ### ESN
 
 |   Reservoir size N |   NRMSE mean |   NRMSE std |
@@ -94,6 +100,8 @@
 |                361 |     0.187872 |  0.0150324  |
 |                400 |     0.1757   |  0.0168829  |
 
+NRMSE pooled mean: 0.330769, std: 0.042488
+
 ## Figure 3a
 
 ### Square
@@ -112,6 +120,8 @@
 |                          0.9 |     0.220715 |  0.0208587  |
 |                          1   |     0.179132 |  0.0135199  |
 
+NRMSE pooled mean: 0.311123, std: 0.010811
+
 ### Hexagonal
 
 |   Fraction of directed edges |   NRMSE mean |   NRMSE std |
@@ -128,6 +138,8 @@
 |                          0.9 |     0.249624 |  0.030402   |
 |                          1   |     0.291538 |  0.0471635  |
 
+NRMSE pooled mean: 0.324541, std: 0.018840
+
 ### Triangular
 
 |   Fraction of directed edges |   NRMSE mean |   NRMSE std |
@@ -143,6 +155,8 @@
 |                          0.8 |     0.34416  |  0.0126357  |
 |                          0.9 |     0.291667 |  0.0159465  |
 |                          1   |     0.232571 |  0.00873286 |
+
+NRMSE pooled mean: 0.353064, std: 0.008093
 
 ## Figure 3b
 
@@ -169,6 +183,8 @@
 |                361 |     0.193941 |  0.0138165  |
 |                400 |     0.181483 |  0.0127888  |
 
+NRMSE pooled mean: 0.354626, std: 0.050041
+
 ### Hexagonal
 
 |   Reservoir size N |   NRMSE mean |   NRMSE std |
@@ -191,6 +207,8 @@
 |                324 |     0.279106 |   0.0369758 |
 |                361 |     0.283146 |   0.0413637 |
 |                400 |     0.270026 |   0.0392533 |
+
+NRMSE pooled mean: 0.422233, std: 0.088363
 
 ### Triangular
 
@@ -215,6 +233,8 @@
 |                361 |     0.247947 |  0.0107484  |
 |                400 |     0.240973 |  0.00896534 |
 
+NRMSE pooled mean: 0.326686, std: 0.010383
+
 ### ESN
 
 |   Reservoir size N |   NRMSE mean |   NRMSE std |
@@ -237,6 +257,8 @@
 |                324 |     0.196139 |  0.0150464  |
 |                361 |     0.187872 |  0.0150324  |
 |                400 |     0.1757   |  0.0168829  |
+
+NRMSE pooled mean: 0.330769, std: 0.042488
 
 ## Figure 4
 
@@ -263,6 +285,8 @@
 |                361 |     0.193941 |  0.0138165  |
 |                400 |     0.181483 |  0.0127888  |
 
+NRMSE pooled mean: 0.354626, std: 0.050041
+
 ### Square (global)
 
 |   Reservoir size N |   NRMSE mean |   NRMSE std |
@@ -286,6 +310,8 @@
 |                361 |     0.155317 |  0.00724504 |
 |                400 |     0.151041 |  0.0092578  |
 
+NRMSE pooled mean: 0.341007, std: 0.043335
+
 ### ESN
 
 |   Reservoir size N |   NRMSE mean |   NRMSE std |
@@ -308,6 +334,8 @@
 |                324 |     0.196139 |  0.0150464  |
 |                361 |     0.187872 |  0.0150324  |
 |                400 |     0.1757   |  0.0168829  |
+
+NRMSE pooled mean: 0.330769, std: 0.042488
 
 ## Figure 5
 
@@ -459,6 +487,8 @@
 |                  2 | 1.36028  |
 |                  1 | 2.08159  |
 
+NRMSE mean: 0.333194
+
 ### ESN (shrinking)
 
 |   Reservoir size N |    NRMSE |
@@ -607,6 +637,8 @@
 |                  2 | 0.806233 |
 |                  1 | 0.984177 |
 
+NRMSE mean: 0.322568
+
 ### Random ESN
 
 |   Reservoir size N |   NRMSE mean |   NRMSE std |
@@ -754,6 +786,8 @@
 |                  3 |     0.936281 |  0.0966168  |
 |                  2 |     0.980552 |  0.0716937  |
 |                  1 |     0.998158 |  0.046101   |
+
+NRMSE pooled mean: 0.402077, std: 0.039334
 
 ## Figure 7
 
@@ -936,6 +970,8 @@
 |                248 | 0.143096 |
 |                249 | 0.142709 |
 |                250 | 0.142443 |
+
+NRMSE mean: 0.172026
 
 ## Figure 9
 
@@ -1205,3 +1241,5 @@
 |                   0.992424   |      0.426035 |
 |                   0.996212   |      0.451592 |
 |                   1          | 798636        |
+
+NRMSE mean: 3025.421467
