@@ -4,7 +4,7 @@ This repository contains code and appendices for multiple reservoir computing ex
 
 ## Paper
 
-For appendices and code related to *Lattice reservoirs: symmetry breaking and information flow in physical reservoir computing*, see [this README](paper/README.md).
+For appendices and code related to *Lattice reservoirs: symmetry breaking and information flow in physical reservoir computing*, see [this README](paper/).
 
 ## Master
 
