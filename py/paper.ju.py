@@ -45,11 +45,6 @@ figsize_full = (textwidth, textwidth * 0.75)
 
 FIG_DIR = '../paper/figures/'
 def savefig(filename, **kwargs):
-    #plt.subplots_adjust(left=0.1, right=0.9)
-    #plt.savefig(os.path.join(figpath, filename), pad_inches=0)
-    #plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, 
-    #            hspace = 0, wspace = 0)
-
     fig = plt.gcf()
     width, height = fig.get_size_inches()*72
     print(f"Saving {filename}: {width:.1f}x{height:.1f}")
@@ -227,11 +222,6 @@ plt.figure()
 df = df[df['input_scaling'] == .1]
 for grp, dfi in df.groupby('w_res_type'):
     plot_nrmse(dfi, label=grp)
-
-# esn = load_experiment('experiments/esn_general_performance.pkl')
-# esn = esn[esn['hidden_nodes'] <= df['hidden_nodes'].max()]
-# esn = esn.groupby(['hidden_nodes']).mean(numeric_only=True).reset_index()
-# plt.plot(esn['hidden_nodes'], esn['esn_nrmse'], label='ESN')
 
 esn = load_experiment('experiments/paper_esn_general_performance.pkl')
 esn = esn[esn['hidden_nodes'] <= df['hidden_nodes'].max()]
@@ -438,8 +428,6 @@ fig, ax = plt.subplots(figsize=(6, 4))
 def animate(i):
     ax.cla()
     cols = esn.X[esn.washout+i].numpy()
-    #cols = np.log(np.abs(cols))
-    # plot_lattice(esn.G, hide_axes=True, show=False, cols=cols, cmap='viridis', ax=ax)
     vlim = np.max(np.abs(cols))
     plot_lattice(esn.G, hide_axes=True, show=False, cols=cols, cmap='RdBu', vmin=-vlim, vmax=vlim, ax=ax)
     ax.set_title(f"{i}, {np.min(cols)}, {np.max(cols)}")
@@ -536,10 +524,6 @@ sq = df[df['w_res_type'] == 'tetragonal']
 hex = df[df['w_res_type'] == 'hexagonal']
 tri = df[df['w_res_type'] == 'triangular']
 
-# sq = sq.groupby(['dir_frac']).mean(numeric_only=True)
-# hex = hex.groupby(['dir_frac']).mean(numeric_only=True)
-# tri = tri.groupby(['dir_frac']).mean(numeric_only=True)
-#
 plt.figure()
 sq.plot(kind='scatter', x='dir_frac', y='esn_nrmse')
 hex.plot(kind='scatter', x='dir_frac', y='esn_nrmse')
@@ -581,7 +565,6 @@ plot_nrmse(hex, 'Hexagonal', color='black', linestyle='dashed')
 plot_nrmse(tri, 'Triangular', color='black', linestyle='dotted')
 plot_nrmse(esn, 'ESN', color='black', linestyle='dashdot')
 
-#plt.legend(fancybox=False, loc='upper right', bbox_to_anchor=(1.0, 1.0))
 plt.legend(fancybox=False)
 plt.ylabel('NRMSE')
 plt.xlabel('Reservoir size $N$')
@@ -724,7 +707,6 @@ remove_nodes_incrementally(ds.dataset, cur_esn, 'experiments/paper_esn_removed_n
 
 # %%
 # From esn.ipynb
-# TODO: Why is this done in two steps?
 from experiment import evaluate_incremental_node_removal
 
 esn_file = 'models/paper_esn_model_removed_nodes.pkl'
@@ -873,9 +855,7 @@ plt.ylabel('NARMA-10 NRMSE')
 
 plt.legend()
 
-# savefig('shrink-performance.svg', bbox_inches='tight', pad_inches=0.01)
-# savefig('shrink-performance.pdf', bbox_inches='tight', pad_inches=0.01)
-#
+
 # %% [markdown]
 """
 The graphs from the two shrinking experiments look pretty similar. What about the resulting networks?
@@ -892,7 +872,6 @@ print(np.array(list(zip(range(max_nodes, 0, -1), lattice_nrmses))))
 
 sz = textwidth/2
 figsize = (sz, sz)
-#for i in [130, 70, 35, 20]:
 for i in [130, 70, 30, 20]:
     title = f'Lattice, {i} nodes, NRMSE {lattice_nrmses[max_nodes-i]:.3f}'
     print(title)
@@ -909,10 +888,6 @@ for i in [130, 70, 30, 20]:
 # %% [markdown]
 """
 They look good, but not as "shift register" like the previous results...
-
-Two options:
-1. Use results as is, but need to explain that growth starts from a new shrinking process.
-2. Use growth shrinking data for both shrink and growth, but then the resulting networks aren't as nice.
 """
 
 # %%
