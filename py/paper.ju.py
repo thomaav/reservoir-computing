@@ -798,6 +798,41 @@ for i in [130, 70, 35, 20]:
     savefig(f'sq-grid-{i}.svg', bbox_inches='tight', pad_inches=0.01)
 
 # %%
+# Coloring book
+dir_esn = pickle.load(open('models/dir_esn.pkl', 'rb'))
+lattice_nrmses = pickle.load(open('experiments/deg_lattice_nrmses.pkl', 'rb'))
+lattices = pickle.load(open('experiments/deg_lattices.pkl', 'rb'))
+
+max_nodes = len(lattices)
+
+sz = textwidth/2
+figsize = (sz, sz)
+for i in [130, 70, 35, 20]:
+#for i in [20]:
+    title = f'Lattice, {i} nodes, NRMSE {lattice_nrmses[max_nodes-i]:.3f}'
+    print(title)
+    plt.figure(figsize=figsize)
+    ax = plt.gca()
+    plot_lattice(dir_esn.G.reverse(), edge_color='0.7', cols='0.7', show=False, ax=ax)
+
+    lattice = lattices[max_nodes - i].reverse()
+    indeg = np.array([v for k,v in lattice.in_degree()])
+    outdeg = np.array([v for k,v in lattice.out_degree()])
+    cols = indeg - outdeg
+    print('indegree:', indeg)
+    print('outdegree:', outdeg)
+    print('diff:', cols)
+    vlim = np.max(np.abs(cols))
+    vlim = 4
+    #cols = np.arange(len(lattice.nodes))
+    # Sources are blue, sinks are red, with variants in-between
+    plot_lattice(lattice, show=False, ax=ax, cols=cols, cmap='coolwarm', vmin=-vlim, vmax=vlim, edgecolors='black')
+    x1, x2, y1, y2 = ax.axis()
+    ax.axis((x1+1.5, x2-1.5, y1+1.5, y2-1.5))
+    ax.set_axis_off()
+
+
+# %%
 # Old plots
 from notebook import plot_node_removal
 plot_node_removal(save=False)
