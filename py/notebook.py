@@ -1020,7 +1020,7 @@ def paper_unique_weights():
     params['w_in_distrib'] = [Distribution.fixed]
     params['input_scaling'] = [0.1]
     params['w_res_type'] = ['tetragonal']
-    params['hidden_nodes'] = [100, 196, 289, 400]
+    params['hidden_nodes'] = [100, 225, 400]
     params['dir_frac'] = [1.0]
     df = experiment(esn_nrmse, params, runs=20, esn_attributes=['w_in', 'w_res'])
     df['uwin'] = df['w_in'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
@@ -1030,9 +1030,9 @@ def paper_unique_weights():
     df.to_pickle('experiments/paper_unique_weights_square.pkl')
 
     params = OrderedDict()
+    params['hidden_nodes'] = [100, 225, 400]
     params['w_res_density'] = [0.1]
     params['input_scaling'] = [0.1]
-    params['hidden_nodes'] = [100, 196, 289, 400]
     df = experiment(esn_nrmse, params, runs=20, esn_attributes=['w_in', 'w_res'])
     df['uwin'] = df['w_in'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
     df['uwres'] = df['w_res'].apply(lambda m: len(np.unique(m[np.nonzero(m.data.numpy())])))
